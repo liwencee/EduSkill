@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* 60/30/10 colour system */
+    --color-bg:         #F1EFE8;   /* 60% — dominant warm cream */
+    --color-bg-alt:     #E8E5DC;
+    --color-blue:       #378ADD;   /* 30% — structural blue */
+    --color-blue-dark:  #1e4f8a;
+    --color-blue-light: #EBF4FF;
+    --color-amber:      #EF9F27;   /* 10% — CTA amber */
+    --color-amber-dark: #C97E0A;
+    --color-ink:        #2C2C2A;   /* body text */
+    --color-ink-mid:    #5A5A58;
+    --color-ink-light:  #9A9A97;
+  }
+
+  html  { scroll-behavior: smooth; background-color: #F1EFE8; }
+  body  { color: #2C2C2A; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  }
+}
+
+@layer components {
+  /* ── Buttons ─────────────────────────────────────────────────────── */
+  .btn-primary {
+    @apply bg-brand-amber text-brand-ink px-6 py-3 rounded-xl font-semibold
+           hover:bg-brand-amberDark hover:text-white transition-colors
+           focus:outline-none focus:ring-2 focus:ring-brand-amber focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-brand-blue text-white px-6 py-3 rounded-xl font-semibold
+           hover:bg-brand-blueDark transition-colors
+           focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-outline {
+    @apply border-2 border-brand-blue text-brand-blue px-6 py-3 rounded-xl font-semibold
+           hover:bg-brand-blue hover:text-white transition-colors
+           focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2;
+  }
+  .btn-ghost {
+    @apply text-brand-blue px-6 py-3 rounded-xl font-semibold
+           hover:bg-brand-blueLight transition-colors;
+  }
+
+  /* ── Cards ───────────────────────────────────────────────────────── */
+  .card {
+    @apply bg-white rounded-2xl border border-[#E0DDD5] shadow-sm hover:shadow-md transition-shadow;
+  }
+  .card-cream {
+    @apply bg-brand-bg rounded-2xl border border-[#DDD9CF] shadow-sm;
+  }
+
+  /* ── Form ────────────────────────────────────────────────────────── */
+  .input {
+    @apply w-full px-4 py-3 border border-[#D5D2C8] rounded-xl
+           focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-transparent
+           bg-white text-brand-ink placeholder-brand-inkLight;
+  }
+  .label {
+    @apply block text-sm font-medium text-brand-ink mb-1.5;
+  }
+
+  /* ── Typography ──────────────────────────────────────────────────── */
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-brand-ink;
+  }
+  .section-subtitle {
+    @apply text-lg text-brand-inkMid mt-3 max-w-2xl;
+  }
+  .heading-blue {
+    @apply text-brand-blue font-bold;
+  }
+
+  /* ── Badges ──────────────────────────────────────────────────────── */
+  .badge          { @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium; }
+  .badge-amber    { @apply badge bg-amber-100 text-amber-800; }
+  .badge-blue     { @apply badge bg-blue-100 text-blue-800; }
+  .badge-cream    { @apply badge bg-[#E8E5DC] text-brand-ink; }
+  .badge-green    { @apply badge bg-green-100 text-green-800; }
+
+  /* ── Section helpers ─────────────────────────────────────────────── */
+  .section-white  { @apply bg-white; }
+  .section-cream  { @apply bg-brand-bg; }         /* 60% */
+  .section-blue   { @apply bg-brand-blue text-white; }   /* 30% */
+  .section-dark   { @apply bg-brand-blueDark text-white; }
+}
