@@ -1,0 +1,19 @@
+node_modules/
+dist/
+build/
+coverage/
+.env
+.env.local
+.env.production
+*.log
+logs/
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+*.cert
+.nyc_output/
+
+# Claude Code workspace files
+.claude/settings.local.json
+.claude/worktrees/
