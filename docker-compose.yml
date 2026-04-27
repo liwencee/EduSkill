@@ -1,11 +1,13 @@
 version: '3.8'
 
 services:
+  # ── Production service ────────────────────────────────────────
   api:
     build:
       context: .
-      target: production
-    container_name: skillbridge-api
+      target: production   # skips the lint stage (already validated in CI)
+    image: eduskill:latest
+    container_name: Eduskill
     ports:
       - '3000:3000'
     env_file: .env
@@ -17,19 +19,22 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 15s
     networks:
-      - skillbridge-net
+      - eduskill-net
     read_only: true
     tmpfs:
       - /tmp
     security_opt:
       - no-new-privileges:true
 
+  # ── Dev service (hot-ish reload via volume mount) ─────────────
   api-dev:
     build:
       context: .
       target: builder
-    container_name: skillbridge-api-dev
+    image: eduskill:dev
+    container_name: Eduskill-dev
     ports:
       - '3000:3000'
     env_file: .env
@@ -39,9 +44,9 @@ services:
       - ./src:/app/src:ro
     command: ['node', 'src/server.js']
     networks:
-      - skillbridge-net
+      - eduskill-net
     profiles: [dev]
 
 networks:
-  skillbridge-net:
+  eduskill-net:
     driver: bridge

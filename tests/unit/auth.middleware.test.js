@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const { authenticate, authorize, generateTokens, verifyRefreshToken } = require('../../src/middleware/auth');
 
 const SECRET = process.env.JWT_SECRET;
-const REFRESH_SECRET = process.env.JWT_REFRESH_SECRET;
+// REFRESH_SECRET is not needed directly — verifyRefreshToken reads it internally via config
 
 function mockRes() {
   const res = {};
