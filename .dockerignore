@@ -1,0 +1,44 @@
+# Dependencies — never copy into build context
+node_modules/
+
+# Test artefacts
+coverage/
+.nyc_output/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+*.log
+logs/
+
+# Secrets
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Version control
+.git/
+.gitignore
+
+# CI / tooling
+.github/
+.claude/
+# .eslintrc.js is intentionally kept — needed by the lint stage
+
+# Docs & DB scripts (not needed at runtime)
+database/
+README*.md
+SECURITY.md
+LICENSE
+
+# Docker files themselves
+Dockerfile
+docker-compose*.yml
+.dockerignore
+
+# OS noise
+.DS_Store
+Thumbs.db

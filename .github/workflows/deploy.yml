@@ -1,0 +1,153 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options: [staging, production]
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  NODE_VERSION: '18'
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  CONTAINER_NAME: Eduskill
+
+jobs:
+  # ── 1. Pre-deploy: full test suite + audit ───────────────────
+  pre-deploy-checks:
+    name: Pre-deploy Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run full test suite
+        run: npm test
+        env:
+          NODE_ENV: test
+          JWT_SECRET: ${{ secrets.JWT_SECRET_TEST }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET_TEST }}
+
+      - name: Security audit
+        run: npm audit --audit-level=high
+
+  # ── 2. Build & push Docker image to GHCR ────────────────────
+  build-image:
+    name: Build & Push Docker Image
+    runs-on: ubuntu-latest
+    needs: pre-deploy-checks
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.tags }}
+      image-digest: ${{ steps.build.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=sha,prefix=sha-
+            type=ref,event=branch
+            type=semver,pattern={{version}}
+          labels: |
+            org.opencontainers.image.title=EduSkill
+
+      # Lint stage runs inside Docker — build fails if ESLint errors
+      - name: Build and push Docker image (lint → production)
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          target: production
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NODE_ENV=production
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ── 3. Deploy to Staging ─────────────────────────────────────
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: build-image
+    environment:
+      name: staging
+      url: https://api-staging.skillbridge.ng
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event.inputs.environment == 'staging'
+    steps:
+      - name: Deploy to Railway (Staging)
+        run: |
+          echo "Deploying ${{ env.CONTAINER_NAME }} image ${{ needs.build-image.outputs.image-tag }} to staging"
+          # railway up --service eduskill-api-staging
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Smoke test staging
+        run: |
+          sleep 15
+          curl -f https://api-staging.skillbridge.ng/api/v1/health || exit 1
+
+  # ── 4. Deploy to Production (manual gate) ───────────────────
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build-image, deploy-staging]
+    environment:
+      name: production
+      url: https://api.skillbridge.ng
+    if: github.event.inputs.environment == 'production'
+    steps:
+      - name: Deploy to Railway (Production)
+        run: |
+          echo "Deploying ${{ env.CONTAINER_NAME }} image ${{ needs.build-image.outputs.image-tag }} to production"
+          # railway up --service eduskill-api-prod
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PROD }}
+
+      - name: Smoke test production
+        run: |
+          sleep 20
+          curl -f https://api.skillbridge.ng/api/v1/health || exit 1
+
+      - name: Notify on success
+        if: success()
+        run: echo "Production deployment successful — ${{ env.CONTAINER_NAME }} image ${{ needs.build-image.outputs.image-tag }}"
