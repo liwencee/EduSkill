@@ -26,6 +26,44 @@
 }
 
 @layer components {
+  /* ── Claymorphism (UI/UX Pro Max — Educational App primary style) ── */
+  .clay-card {
+    @apply bg-white rounded-3xl border border-white/80;
+    box-shadow: 0 8px 32px rgba(0,0,0,.07), 0 2px 8px rgba(0,0,0,.04);
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .clay-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 60px rgba(0,0,0,.11), 0 4px 12px rgba(0,0,0,.06);
+  }
+  .clay-card-blue  { box-shadow: 0 8px 32px rgba(55,138,221,.18), 0 2px 8px rgba(55,138,221,.08); }
+  .clay-card-amber { box-shadow: 0 8px 32px rgba(239,159,39,.18), 0 2px 8px rgba(239,159,39,.08); }
+  .clay-card-green { box-shadow: 0 8px 32px rgba(16,185,129,.18), 0 2px 8px rgba(16,185,129,.08); }
+
+  /* ── Glassmorphism ────────────────────────────────────────────────── */
+  .glass {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  .glass-hover:hover {
+    @apply bg-white/15;
+  }
+
+  /* ── Gradient text utilities ──────────────────────────────────────── */
+  .gradient-text-amber {
+    @apply bg-gradient-to-r from-[#EF9F27] to-amber-300 bg-clip-text text-transparent;
+  }
+  .gradient-text-blue {
+    @apply bg-gradient-to-r from-[#378ADD] to-blue-300 bg-clip-text text-transparent;
+  }
+
+  /* ── Section pill labels ──────────────────────────────────────────── */
+  .section-pill {
+    @apply inline-block text-sm font-semibold px-4 py-1.5 rounded-full mb-4;
+  }
+  .section-pill-blue  { @apply section-pill bg-[#EBF4FF] text-[#378ADD]; }
+  .section-pill-amber { @apply section-pill bg-amber-100 text-amber-700; }
+  .section-pill-green { @apply section-pill bg-emerald-100 text-emerald-700; }
+
   /* ── Buttons ─────────────────────────────────────────────────────── */
   .btn-primary {
     @apply bg-brand-amber text-brand-ink px-6 py-3 rounded-xl font-semibold

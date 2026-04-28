@@ -39,7 +39,7 @@ export default async function DashboardPage() {
     ],
   } as const
 
-  const links = (QUICK_LINKS as Record<string, (typeof QUICK_LINKS.youth)>)[role] ?? QUICK_LINKS.youth
+  const links = (QUICK_LINKS as unknown as Record<string, (typeof QUICK_LINKS.youth)>)[role] ?? QUICK_LINKS.youth
 
   return (
     /* 60% cream page */

@@ -1,0 +1,12 @@
+{
+  "extends": ["next/core-web-vitals"],
+  "rules": {
+    "n/no-missing-import": "off",
+    "no-undef": "off",
+    "no-unused-vars": "warn",
+    "no-empty": "warn",
+    "no-console": "warn",
+    "security/detect-possible-timing-attacks": "warn",
+    "security/detect-object-injection": "warn"
+  }
+}

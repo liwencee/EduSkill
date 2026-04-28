@@ -1,9 +1,24 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Plus_Jakarta_Sans, Nunito } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
-const inter = Inter({ subsets: ['latin'], display: 'swap' })
+/* ── Fonts: Plus Jakarta Sans (headings) + Nunito (body)
+   Skill recommendation: "Friendly SaaS" + "Playful Creative" pairing
+   Best for: EdTech, SaaS products, youth-facing platforms           ── */
+const jakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-jakarta',
+  weight: ['400', '500', '600', '700', '800'],
+})
+
+const nunito = Nunito({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-nunito',
+  weight: ['400', '500', '600', '700'],
+})
 
 export const metadata: Metadata = {
   title: 'SkillBridge Nigeria — Upskill Teachers. Empower Youth. Connect to Opportunity.',
@@ -20,11 +35,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <meta name="theme-color" content="#1a7a4a" />
+        <meta name="theme-color" content="#0d2a4a" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
-      <body className={`${inter.className} bg-white text-gray-900 antialiased`}>
+      <body className={`${jakarta.variable} ${nunito.variable} font-sans bg-brand-bg text-brand-ink antialiased`}>
         {children}
         <Toaster
           position="top-right"
