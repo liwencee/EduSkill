@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # ── Production service ────────────────────────────────────────
+  api:
+    build:
+      context: .
+      target: production   # skips the lint stage (already validated in CI)
+    image: eduskill:latest
+    container_name: Eduskill
+    ports:
+      - '3000:3000'
+    env_file: .env
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/api/v1/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+    networks:
+      - eduskill-net
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+
+  # ── Dev service (hot-ish reload via volume mount) ─────────────
+  api-dev:
+    build:
+      context: .
+      target: builder
+    image: eduskill:dev
+    container_name: Eduskill-dev
+    ports:
+      - '3000:3000'
+    env_file: .env
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./src:/app/src:ro
+    command: ['node', 'src/server.js']
+    networks:
+      - eduskill-net
+    profiles: [dev]
+
+networks:
+  eduskill-net:
+    driver: bridge
