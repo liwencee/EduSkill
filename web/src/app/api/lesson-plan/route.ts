@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { createClient } from '@/lib/supabase/server'
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-
 const SYSTEM_PROMPT = `You are an expert Nigerian educator specialising in curriculum design aligned to the NERDC (Nigerian Educational Research and Development Council) curriculum.
 Generate detailed, practical lesson plans for Nigerian classrooms. Consider:
 - Local examples, contexts, and resources available in Nigerian schools
@@ -16,6 +14,7 @@ Generate detailed, practical lesson plans for Nigerian classrooms. Consider:
 Always respond with valid JSON matching the exact schema provided.`
 
 export async function POST(req: NextRequest) {
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
