@@ -4,7 +4,7 @@
   "description": "SkillBridge Nigeria — two-sided platform for teacher upskilling and youth vocational training",
   "main": "src/server.js",
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "start": "node src/server.js",

@@ -6,7 +6,7 @@
 # =============================================================
 
 # ---- Stage 1: Lint ----
-FROM node:18-alpine AS lint
+FROM node:20-alpine AS lint
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ COPY .eslintrc.js ./
 RUN npm run lint
 
 # ---- Stage 2: Builder ----
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -31,7 +31,7 @@ COPY package*.json ./
 RUN npm ci --only=production && npm cache clean --force
 
 # ---- Stage 3: Production ----
-FROM node:18-alpine AS production
+FROM node:20-alpine AS production
 
 ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
