@@ -4,15 +4,14 @@
 
 @layer base {
   :root {
-    /* 60/30/10 colour system */
-    --color-bg:         #F1EFE8;   /* 60% — dominant warm cream */
+    --color-bg:         #F1EFE8;
     --color-bg-alt:     #E8E5DC;
-    --color-blue:       #378ADD;   /* 30% — structural blue */
+    --color-blue:       #378ADD;
     --color-blue-dark:  #1e4f8a;
     --color-blue-light: #EBF4FF;
-    --color-amber:      #EF9F27;   /* 10% — CTA amber */
+    --color-amber:      #EF9F27;
     --color-amber-dark: #C97E0A;
-    --color-ink:        #2C2C2A;   /* body text */
+    --color-ink:        #2C2C2A;
     --color-ink-mid:    #5A5A58;
     --color-ink-light:  #9A9A97;
   }
@@ -20,12 +19,15 @@
   html  { scroll-behavior: smooth; background-color: #F1EFE8; }
   body  { color: #2C2C2A; }
 
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-jakarta), sans-serif; }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   }
 }
 
 @layer components {
+
   /* ── Buttons ─────────────────────────────────────────────────────── */
   .btn-primary {
     @apply bg-brand-amber text-brand-ink px-6 py-3 rounded-xl font-semibold
@@ -57,6 +59,26 @@
     @apply bg-brand-bg rounded-2xl border border-[#DDD9CF] shadow-sm;
   }
 
+  /* Claymorphism cards */
+  .clay-card {
+    @apply bg-white rounded-3xl shadow-clay border border-white/60
+           hover:-translate-y-1 hover:shadow-clay transition-all duration-300;
+  }
+  .clay-card-blue  { @apply clay-card shadow-clay; }
+  .clay-card-amber { @apply clay-card shadow-clay-amber; }
+  .clay-card-green { @apply clay-card shadow-clay-green; }
+
+  /* Glassmorphism */
+  .glass {
+    @apply backdrop-blur-md bg-white/10 border border-white/20 rounded-2xl;
+  }
+  .glass-dark {
+    @apply backdrop-blur-md bg-black/20 border border-white/10 rounded-2xl;
+  }
+  .glass-hover {
+    @apply glass hover:bg-white/20 transition-colors duration-200;
+  }
+
   /* ── Form ────────────────────────────────────────────────────────── */
   .input {
     @apply w-full px-4 py-3 border border-[#D5D2C8] rounded-xl
@@ -69,13 +91,19 @@
 
   /* ── Typography ──────────────────────────────────────────────────── */
   .section-title {
-    @apply text-3xl md:text-4xl font-bold text-brand-ink;
+    @apply text-3xl md:text-4xl font-bold text-brand-ink font-heading;
   }
   .section-subtitle {
     @apply text-lg text-brand-inkMid mt-3 max-w-2xl;
   }
   .heading-blue {
-    @apply text-brand-blue font-bold;
+    @apply text-brand-blue font-bold font-heading;
+  }
+  .gradient-text-amber {
+    @apply bg-gradient-to-r from-brand-amber to-amber-400 bg-clip-text text-transparent;
+  }
+  .gradient-text-blue {
+    @apply bg-gradient-to-r from-brand-blue to-blue-400 bg-clip-text text-transparent;
   }
 
   /* ── Badges ──────────────────────────────────────────────────────── */
@@ -85,9 +113,15 @@
   .badge-cream    { @apply badge bg-[#E8E5DC] text-brand-ink; }
   .badge-green    { @apply badge bg-green-100 text-green-800; }
 
+  /* ── Section pills ───────────────────────────────────────────────── */
+  .section-pill       { @apply inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold mb-4; }
+  .section-pill-blue  { @apply section-pill bg-brand-blueLight text-brand-blue; }
+  .section-pill-amber { @apply section-pill bg-amber-100 text-amber-700; }
+  .section-pill-green { @apply section-pill bg-green-100 text-green-700; }
+
   /* ── Section helpers ─────────────────────────────────────────────── */
   .section-white  { @apply bg-white; }
-  .section-cream  { @apply bg-brand-bg; }         /* 60% */
-  .section-blue   { @apply bg-brand-blue text-white; }   /* 30% */
+  .section-cream  { @apply bg-brand-bg; }
+  .section-blue   { @apply bg-brand-blue text-white; }
   .section-dark   { @apply bg-brand-blueDark text-white; }
 }
