@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { createClient } from '@supabase/supabase-js'
 
-// Use service role to bypass RLS for webhook processing
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 const PLAN_MAP: Record<string, { plan: string; days: number }> = {
   youth_monthly:      { plan: 'youth_premium',   days: 30 },
   teacher_monthly:    { plan: 'teacher_premium',  days: 30 },
@@ -15,6 +9,12 @@ const PLAN_MAP: Record<string, { plan: string; days: number }> = {
 }
 
 export async function POST(req: NextRequest) {
+  // Use service role to bypass RLS for webhook processing
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
   const body = await req.text()
   const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY!)
     .update(body).digest('hex')
