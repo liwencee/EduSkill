@@ -10,7 +10,7 @@ import Footer from '@/components/Footer'
 const COURSES = [
   {
     // Nigerian man with laptop + multiple phones, shot in Lagos Nigeria
-    image: 'https://images.unsplash.com/photo-xcUVwwdsWis?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1532522953890-ccc87dfeb0b7?w=600&q=80',
     title: 'Digital Marketing Mastery',
     category: 'Business', catBg: 'bg-orange-100', catText: 'text-orange-700',
     cardBorder: 'border-orange-200', shadow: 'shadow-clay-orange',
@@ -19,7 +19,7 @@ const COURSES = [
   },
   {
     // Two Nigerian men coding on laptops, shot in Abuja Nigeria
-    image: 'https://images.unsplash.com/photo-DThlV4dYlnE?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1540058404349-2e5fabf32d75?w=600&q=80',
     title: 'Coding Basics for Beginners',
     category: 'Tech', catBg: 'bg-indigo-100', catText: 'text-indigo-700',
     cardBorder: 'border-indigo-200', shadow: 'shadow-clay-indigo',
@@ -28,7 +28,7 @@ const COURSES = [
   },
   {
     // West African tailor at sewing machine, Accra Ghana
-    image: 'https://images.unsplash.com/photo-VJEAwdodmK0?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1744808336885-c6b2425c3f1e?w=600&q=80',
     title: 'Fashion Design & Business',
     category: 'Creative', catBg: 'bg-pink-100', catText: 'text-pink-700',
     cardBorder: 'border-pink-200', shadow: 'shadow-clay-purple',
@@ -46,7 +46,7 @@ const COURSES = [
   },
   {
     // Nigerian woman standing in open field, by Nigerian photographer Tomiwa Ogunmodede
-    image: 'https://images.unsplash.com/photo-jcKbKG8P_6U?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1562009059-7f43163873a0?w=600&q=80',
     title: 'Agribusiness Fundamentals',
     category: 'Agriculture', catBg: 'bg-green-100', catText: 'text-green-700',
     cardBorder: 'border-green-200', shadow: 'shadow-clay-green',
@@ -55,7 +55,7 @@ const COURSES = [
   },
   {
     // Nigerian man working on MacBook, shot in Lagos Nigeria during lockdown
-    image: 'https://images.unsplash.com/photo-ajWHOi2r2uA?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1588674845784-9d0c32777b3a?w=600&q=80',
     title: 'Financial Literacy Essentials',
     category: 'Finance', catBg: 'bg-teal-100', catText: 'text-teal-700',
     cardBorder: 'border-teal-200', shadow: 'shadow-clay-green',
@@ -167,7 +167,7 @@ export default function LandingPage() {
                 <div className="bg-white/10 border-[3px] border-white/20 rounded-[32px] overflow-hidden
                                 shadow-[0_20px_0_rgba(0,0,0,0.12),0_8px_40px_rgba(0,0,0,0.25)]">
                   <img
-                    src="https://images.unsplash.com/photo-VC6MGt9ZoBA?w=700&q=80"
+                    src="https://images.unsplash.com/photo-1632215861513-130b66fe97f4?w=700&q=80"
                     alt="Nigerian teacher with students in Port Harcourt classroom"
                     className="w-full h-[420px] object-cover"
                     loading="eager"
@@ -433,19 +433,19 @@ export default function LandingPage() {
                 n: '01', title: 'Sign Up Free',
                 desc: 'Create your account in 2 minutes. No credit card needed. Works on any Android phone.',
                 numBg: 'bg-[#4F46E5]', cardBorder: 'border-indigo-200', shadow: 'shadow-clay-indigo',
-                img: 'https://images.unsplash.com/photo-jEEYZsaxbH4?w=400&q=80',
+                img: 'https://images.unsplash.com/photo-1473649085228-583485e6e4d7?w=400&q=80',
               },
               {
                 n: '02', title: 'Choose Your Course',
                 desc: 'Browse 100+ practical courses in business, tech, creative arts, and agriculture.',
                 numBg: 'bg-[#F97316]', cardBorder: 'border-orange-200', shadow: 'shadow-clay-orange',
-                img: 'https://images.unsplash.com/photo-KUzlAah2dog?w=400&q=80',
+                img: 'https://images.unsplash.com/photo-1620829813573-7c9e1877706f?w=400&q=80',
               },
               {
                 n: '03', title: 'Get Certified & Hired',
                 desc: 'Complete courses offline, earn verifiable certificates, connect to real job opportunities.',
                 numBg: 'bg-green-500', cardBorder: 'border-green-200', shadow: 'shadow-clay-green',
-                img: 'https://images.unsplash.com/photo-zOt6a59k2BE?w=400&q=80',
+                img: 'https://images.unsplash.com/photo-1594750852563-5ed8e0421d40?w=400&q=80',
               },
             ].map((step) => (
               <div key={step.n}
@@ -581,7 +581,7 @@ export default function LandingPage() {
               <div className="bg-white/5 border-[3px] border-white/10 rounded-[32px] overflow-hidden
                               shadow-[0_20px_0_rgba(0,0,0,0.2),0_8px_40px_rgba(0,0,0,0.3)]">
                 <img
-                  src="https://images.unsplash.com/photo-I80J6MorGqs?w=700&q=80"
+                  src="https://images.unsplash.com/photo-1652702954883-622efc786f70?w=700&q=80"
                   alt="Nigerian youth using laptop — tagged Yoruba, Hausa, Nigeria"
                   loading="lazy"
                   className="w-full h-80 object-cover opacity-80"
