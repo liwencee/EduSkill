@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
-import { createClient } from '@supabase/supabase-js'
+
+export const dynamic = 'force-dynamic'
 
 const PLAN_MAP: Record<string, { plan: string; days: number }> = {
   youth_monthly:      { plan: 'youth_premium',   days: 30 },
@@ -9,6 +10,9 @@ const PLAN_MAP: Record<string, { plan: string; days: number }> = {
 }
 
 export async function POST(req: NextRequest) {
+  // Dynamic import so @supabase/supabase-js never loads at build time
+  const { createClient } = await import('@supabase/supabase-js')
+
   // Use service role to bypass RLS for webhook processing
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -26,7 +30,7 @@ export async function POST(req: NextRequest) {
   const event = JSON.parse(body)
   if (event.event !== 'charge.success') return NextResponse.json({ ok: true })
 
-  const { reference, amount, customer, metadata } = event.data
+  const { reference, amount, metadata } = event.data
   const userId = metadata?.user_id
   const planKey = metadata?.plan_key ?? 'youth_monthly'
 

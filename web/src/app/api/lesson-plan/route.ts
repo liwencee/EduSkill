@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
 import { createClient } from '@/lib/supabase/server'
+
+export const dynamic = 'force-dynamic'
 
 const SYSTEM_PROMPT = `You are an expert Nigerian educator specialising in curriculum design aligned to the NERDC (Nigerian Educational Research and Development Council) curriculum.
 Generate detailed, practical lesson plans for Nigerian classrooms. Consider:
@@ -14,7 +15,10 @@ Generate detailed, practical lesson plans for Nigerian classrooms. Consider:
 Always respond with valid JSON matching the exact schema provided.`
 
 export async function POST(req: NextRequest) {
+  // Dynamic import so openai package never loads at build time
+  const { default: OpenAI } = await import('openai')
   const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
