@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
-import { Fredoka, Nunito } from 'next/font/google'
+import { Poppins, Nunito } from 'next/font/google'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 
-const fredoka = Fredoka({
+const poppins = Poppins({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-fredoka',
+  variable: '--font-poppins',
   weight: ['400', '500', '600', '700'],
 })
 
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`scroll-smooth ${fredoka.variable} ${nunito.variable}`}>
+    <html lang="en" className={`scroll-smooth ${poppins.variable} ${nunito.variable}`}>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

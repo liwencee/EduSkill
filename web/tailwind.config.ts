@@ -35,7 +35,7 @@ const config: Config = {
         },
       },
       fontFamily: {
-        heading: ['var(--font-fredoka)', 'sans-serif'],
+        heading: ['var(--font-poppins)', 'sans-serif'],
         sans:    ['var(--font-nunito)',  'sans-serif'],
       },
       boxShadow: {

@@ -433,13 +433,13 @@ export default function LandingPage() {
                 n: '01', title: 'Sign Up Free',
                 desc: 'Create your account in 2 minutes. No credit card needed. Works on any Android phone.',
                 numBg: 'bg-[#4F46E5]', cardBorder: 'border-indigo-200', shadow: 'shadow-clay-indigo',
-                img: 'https://images.unsplash.com/photo-oOHBxlGADx4?w=400&q=80',
+                img: 'https://images.unsplash.com/photo-jEEYZsaxbH4?w=400&q=80',
               },
               {
                 n: '02', title: 'Choose Your Course',
                 desc: 'Browse 100+ practical courses in business, tech, creative arts, and agriculture.',
                 numBg: 'bg-[#F97316]', cardBorder: 'border-orange-200', shadow: 'shadow-clay-orange',
-                img: 'https://images.unsplash.com/photo-vWqBjWbc_H4?w=400&q=80',
+                img: 'https://images.unsplash.com/photo-KUzlAah2dog?w=400&q=80',
               },
               {
                 n: '03', title: 'Get Certified & Hired',
