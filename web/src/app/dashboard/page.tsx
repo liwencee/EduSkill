@@ -1,3 +1,4 @@
+import React from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
@@ -21,25 +22,27 @@ export default async function DashboardPage() {
 
   const role = profile?.role ?? 'youth'
 
-  const QUICK_LINKS = {
+  type QuickLink = { href: string; icon: React.ElementType; label: string; iconBg: string; iconColor: string }
+
+  const QUICK_LINKS: Record<string, QuickLink[]> = {
     youth: [
-      { href: '/skillup/courses',       icon: BookOpen,   label: 'Browse Courses',     iconBg: 'bg-brand-blueLight',   iconColor: 'text-brand-blue' },
-      { href: '/opportunity-hub/jobs',  icon: Briefcase,  label: 'Find Jobs',           iconBg: 'bg-brand-blueLight',   iconColor: 'text-brand-blue' },
-      { href: '/dashboard/certificates',icon: Award,      label: 'My Certificates',     iconBg: 'bg-amber-50',          iconColor: 'text-brand-amber' },
+      { href: '/skillup/courses',        icon: BookOpen,   label: 'Browse Courses',    iconBg: 'bg-brand-blueLight', iconColor: 'text-brand-blue'  },
+      { href: '/opportunity-hub/jobs',   icon: Briefcase,  label: 'Find Jobs',         iconBg: 'bg-brand-blueLight', iconColor: 'text-brand-blue'  },
+      { href: '/dashboard/certificates', icon: Award,      label: 'My Certificates',   iconBg: 'bg-amber-50',        iconColor: 'text-brand-amber' },
     ],
     teacher: [
-      { href: '/edupro/courses',         icon: BookOpen,   label: 'My CPD Courses',      iconBg: 'bg-brand-blueLight',   iconColor: 'text-brand-blue' },
-      { href: '/edupro/lesson-planner',  icon: TrendingUp, label: 'AI Lesson Planner',   iconBg: 'bg-brand-blueLight',   iconColor: 'text-brand-blue' },
-      { href: '/edupro/community',       icon: Briefcase,  label: 'Teacher Community',   iconBg: 'bg-amber-50',          iconColor: 'text-brand-amber' },
+      { href: '/edupro/courses',         icon: BookOpen,   label: 'My CPD Courses',    iconBg: 'bg-brand-blueLight', iconColor: 'text-brand-blue'  },
+      { href: '/edupro/lesson-planner',  icon: TrendingUp, label: 'AI Lesson Planner', iconBg: 'bg-brand-blueLight', iconColor: 'text-brand-blue'  },
+      { href: '/edupro/community',       icon: Briefcase,  label: 'Teacher Community', iconBg: 'bg-amber-50',        iconColor: 'text-brand-amber' },
     ],
     employer: [
-      { href: '/employer/dashboard',     icon: Briefcase,  label: 'Manage Listings',     iconBg: 'bg-brand-blueLight',   iconColor: 'text-brand-blue' },
-      { href: '/employer/post-job',      icon: TrendingUp, label: 'Post a Job',           iconBg: 'bg-amber-50',          iconColor: 'text-brand-amber' },
-      { href: '/opportunity-hub',        icon: Award,      label: 'Browse Candidates',   iconBg: 'bg-brand-blueLight',   iconColor: 'text-brand-blue' },
+      { href: '/employer/dashboard',     icon: Briefcase,  label: 'Manage Listings',   iconBg: 'bg-brand-blueLight', iconColor: 'text-brand-blue'  },
+      { href: '/employer/post-job',      icon: TrendingUp, label: 'Post a Job',        iconBg: 'bg-amber-50',        iconColor: 'text-brand-amber' },
+      { href: '/opportunity-hub',        icon: Award,      label: 'Browse Candidates', iconBg: 'bg-brand-blueLight', iconColor: 'text-brand-blue'  },
     ],
-  } as const
+  }
 
-  const links = (QUICK_LINKS as Record<string, (typeof QUICK_LINKS.youth)>)[role] ?? QUICK_LINKS.youth
+  const links = QUICK_LINKS[role] ?? QUICK_LINKS.youth
 
   return (
     /* 60% cream page */
