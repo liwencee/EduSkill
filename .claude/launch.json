@@ -2,16 +2,12 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "SkillBridge API (dev)",
+      "name": "EduSkill Web",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "dev"],
-      "port": 3000
-    },
-    {
-      "name": "SkillBridge API (production)",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["start"],
-      "port": 3000
+      "cwd": "${workspaceFolder}/web",
+      "port": 3000,
+      "autoPort": true
     }
   ]
 }

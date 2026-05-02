@@ -6,7 +6,7 @@
 # =============================================================
 
 # ---- Stage 1: Lint ----
-FROM node:18-alpine AS lint
+FROM node:20-alpine AS lint
 
 WORKDIR /app
 
@@ -23,7 +23,7 @@ COPY .eslintrc.js ./
 RUN npm run lint
 
 # ---- Stage 2: Builder ----
-FROM node:18-alpine AS builder
+FROM node:20-alpine AS builder
 
 WORKDIR /app
 
