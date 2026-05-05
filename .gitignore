@@ -17,3 +17,4 @@ Thumbs.db
 # Claude Code workspace files
 .claude/settings.local.json
 .claude/worktrees/
+EduSkill/
