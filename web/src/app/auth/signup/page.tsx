@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { BookOpen, Eye, EyeOff, Loader2, GraduationCap, Users, Briefcase } from 'lucide-react'
@@ -15,7 +15,7 @@ const ROLES: {
   { role: 'employer', label: 'Employer / SME',  desc: 'Find skilled, certified graduates',  icon: Briefcase     },
 ]
 
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter()
   const params = useSearchParams()
   const defaultRole = (params.get('role') as UserRole) ?? 'youth'
@@ -121,5 +121,13 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense>
+      <SignupForm />
+    </Suspense>
   )
 }
