@@ -22,16 +22,26 @@ function LoginForm() {
     const supabase = createClient()
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) {
-      toast.error(error.message)
-    } else {
-      toast.success('Welcome back! 👋')
-      // Fetch profile to get role and redirect to appropriate dashboard
-      const role = data.user?.user_metadata?.role ?? 'youth'
-      const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
-      router.push(destination)
-      router.refresh()
+      // Surface a friendlier message for the most common errors
+      if (error.message.toLowerCase().includes('email not confirmed')) {
+        toast.error('Please verify your email first. Check your inbox for a confirmation link.')
+      } else if (error.message.toLowerCase().includes('invalid login credentials')) {
+        toast.error('Wrong email or password. Please try again.')
+      } else {
+        toast.error(error.message)
+      }
+      setLoading(false)
+      return
     }
-    setLoading(false)
+
+    toast.success('Welcome back! 👋')
+
+    // Read role from user_metadata (set at signup) and redirect to right dashboard
+    const role = data.user?.user_metadata?.role ?? 'youth'
+    const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
+
+    // Use replace so the login page isn't in browser history after auth
+    router.replace(destination)
   }
 
   return (

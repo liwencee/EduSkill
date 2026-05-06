@@ -32,14 +32,20 @@ function SignupForm() {
     if (password.length < 8) { toast.error('Password must be at least 8 characters'); return }
     setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email, password,
       options: { data: { full_name: fullName, role } },
     })
-    if (error) { toast.error(error.message) }
-    else {
+    if (error) {
+      toast.error(error.message)
+    } else if (data.session) {
+      // Email confirmation is disabled — user is logged in immediately
       toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
       router.push(`/dashboard/${role}`)
+    } else {
+      // Email confirmation is required — send to verify page
+      toast.success('Account created! Please check your email to verify your account.')
+      router.push('/auth/verify-email')
     }
     setLoading(false)
   }
