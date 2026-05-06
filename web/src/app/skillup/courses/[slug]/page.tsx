@@ -62,10 +62,10 @@ export default async function CourseDetailPage({ params }: Props) {
               <p className="text-white/80 leading-relaxed mb-4">{c.description}</p>
               <div className="flex flex-wrap gap-4 text-sm text-white/70">
                 <span className="flex items-center gap-1"><Clock className="w-4 h-4" /> {c.duration_weeks} weeks</span>
-                <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {c.total_enrolled.toLocaleString()} enrolled</span>
+                <span className="flex items-center gap-1"><Users className="w-4 h-4" /> {(c.total_enrolled ?? 0).toLocaleString()} enrolled</span>
                 {/* 10% amber star */}
                 <span className="flex items-center gap-1"><Star className="w-4 h-4 fill-brand-amber text-brand-amber" /> {c.avg_rating || '4.8'}/5</span>
-                <span className="flex items-center gap-1"><Globe className="w-4 h-4" /> {c.available_langs.map((l: string) => LANG_LABELS[l]).join(', ')}</span>
+                <span className="flex items-center gap-1"><Globe className="w-4 h-4" /> {(c.available_langs ?? []).map((l: string) => LANG_LABELS[l] ?? l).join(', ')}</span>
                 {c.is_offline_ready && <span className="flex items-center gap-1"><Download className="w-4 h-4" /> Offline download</span>}
               </div>
               {c.instructor && (
@@ -82,7 +82,7 @@ export default async function CourseDetailPage({ params }: Props) {
                 <PlayCircle className="w-16 h-16 text-brand-blue" />
               </div>
               <div className="text-2xl font-bold text-brand-ink mb-1">
-                {c.is_free ? 'Free' : `₦${c.price_ngn.toLocaleString()}/month`}
+                {c.is_free ? 'Free' : `₦${(c.price_ngn ?? 0).toLocaleString()}/month`}
               </div>
               {!isEnrolled ? (
                 <form action={handleEnroll}>
@@ -97,10 +97,10 @@ export default async function CourseDetailPage({ params }: Props) {
                 </Link>
               )}
               <ul className="mt-4 space-y-2 text-sm text-brand-inkMid">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {c.total_lessons} lessons</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {c.total_lessons ?? 0} lessons</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Verifiable certificate on completion</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Works offline — download on WiFi</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {c.available_langs.map((l: string) => LANG_LABELS[l]).join(', ')} subtitles</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {(c.available_langs ?? []).map((l: string) => LANG_LABELS[l] ?? l).join(', ')} subtitles</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Profile on OpportunityHub after cert</li>
               </ul>
             </div>

@@ -121,9 +121,9 @@ export default async function JobsPage({ searchParams }: Props) {
                         )}
                         {j.deadline && <span>Deadline: {new Date(j.deadline).toLocaleDateString()}</span>}
                       </div>
-                      {j.required_skills.length > 0 && (
+                      {(j.required_skills ?? []).length > 0 && (
                         <div className="flex flex-wrap gap-1 mt-2">
-                          {j.required_skills.slice(0, 4).map((s: string) => (
+                          {(j.required_skills ?? []).slice(0, 4).map((s: string) => (
                             <span key={s} className="bg-brand-blueLight text-brand-blue text-xs px-2 py-0.5 rounded">{s}</span>
                           ))}
                         </div>
