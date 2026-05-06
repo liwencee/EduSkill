@@ -37,7 +37,10 @@ function SignupForm() {
       options: { data: { full_name: fullName, role } },
     })
     if (error) { toast.error(error.message) }
-    else { toast.success('Account created! Check your email to verify.'); router.push('/dashboard') }
+    else {
+      toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
+      router.push(`/dashboard/${role}`)
+    }
     setLoading(false)
   }
 

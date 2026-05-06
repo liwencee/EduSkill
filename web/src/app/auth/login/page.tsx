@@ -20,9 +20,17 @@ function LoginForm() {
     e.preventDefault()
     setLoading(true)
     const supabase = createClient()
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) { toast.error(error.message) }
-    else { toast.success('Welcome back!'); router.push(next); router.refresh() }
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) {
+      toast.error(error.message)
+    } else {
+      toast.success('Welcome back! 👋')
+      // Fetch profile to get role and redirect to appropriate dashboard
+      const role = data.user?.user_metadata?.role ?? 'youth'
+      const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
+      router.push(destination)
+      router.refresh()
+    }
     setLoading(false)
   }
 
