@@ -1,5 +1,5 @@
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
   try {
@@ -13,7 +13,24 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Password must be at least 8 characters.' }, { status: 400 })
     }
 
-    const supabase = createClient()
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!url || !key) {
+      return NextResponse.json(
+        { error: 'Server not configured. Contact support.' },
+        { status: 500 }
+      )
+    }
+
+    const pendingCookies: Array<{ name: string; value: string; options: Record<string, unknown> }> = []
+
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        getAll: () => [],
+        setAll: (cookiesToSet) => { pendingCookies.push(...cookiesToSet) },
+      },
+    })
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -29,13 +46,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: friendly }, { status: 400 })
     }
 
-    // If session is present, email confirmation is disabled → log straight in
-    if (data.session) {
-      return NextResponse.json({ destination: `/dashboard/${role}` })
-    }
+    const destination = data.session ? `/dashboard/${role}` : '/auth/verify-email'
 
-    // Email confirmation required
-    return NextResponse.json({ destination: '/auth/verify-email' })
+    const response = NextResponse.json({ destination })
+
+    pendingCookies.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options as Parameters<typeof response.cookies.set>[2])
+    })
+
+    return response
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message ?? 'Server error. Please try again.' },

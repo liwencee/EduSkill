@@ -32,10 +32,9 @@ function LoginForm() {
       }
 
       toast.success('Welcome back! 👋')
-      // Small delay so the toast is visible, then hard-navigate.
-      // The session cookies were set in the API response (Set-Cookie headers)
-      // so they are already in the browser before this navigation fires.
-      setTimeout(() => { window.location.href = data.destination }, 400)
+      // Cookies are already in the browser (Set-Cookie from the API response).
+      // Navigate immediately — no delay needed.
+      window.location.href = data.destination
     } catch {
       toast.error('Connection failed. Please check your internet and try again.')
     } finally {

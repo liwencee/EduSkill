@@ -44,11 +44,10 @@ function SignupForm() {
 
       if (data.destination === '/auth/verify-email') {
         toast.success('Account created! Check your email to verify your account.')
-        setTimeout(() => { window.location.href = data.destination }, 400)
       } else {
         toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
-        setTimeout(() => { window.location.href = data.destination }, 400)
       }
+      window.location.href = data.destination
     } catch {
       toast.error('Connection failed. Please check your internet and try again.')
     } finally {

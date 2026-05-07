@@ -1,5 +1,5 @@
+import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
 
 export async function POST(request: Request) {
   try {
@@ -8,7 +8,27 @@ export async function POST(request: Request) {
     const password = body.password  as string
     const next     = (body.next     as string) || '/dashboard'
 
-    const supabase = createClient()
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!url || !key) {
+      return NextResponse.json(
+        { error: 'Server not configured. Contact support.' },
+        { status: 500 }
+      )
+    }
+
+    // Collect every cookie Supabase wants to write during sign-in
+    const pendingCookies: Array<{ name: string; value: string; options: Record<string, unknown> }> = []
+
+    const supabase = createServerClient(url, key, {
+      cookies: {
+        // No existing session needed for a fresh login
+        getAll: () => [],
+        // Intercept instead of writing to next/headers (which doesn't merge into NextResponse)
+        setAll: (cookiesToSet) => { pendingCookies.push(...cookiesToSet) },
+      },
+    })
+
     const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
     if (error) {
@@ -27,12 +47,18 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: friendly }, { status: 401 })
     }
 
-    // Cookies are set in the response by createServerClient's setAll callback.
-    // The browser stores them when it receives this response.
-    const role = data.user?.user_metadata?.role ?? 'youth'
+    const role        = data.user?.user_metadata?.role ?? 'youth'
     const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
 
-    return NextResponse.json({ destination })
+    const response = NextResponse.json({ destination })
+
+    // Explicitly attach the session cookies to the response so the browser
+    // stores them (Set-Cookie headers) before window.location.href fires.
+    pendingCookies.forEach(({ name, value, options }) => {
+      response.cookies.set(name, value, options as Parameters<typeof response.cookies.set>[2])
+    })
+
+    return response
   } catch (err: any) {
     return NextResponse.json(
       { error: err.message ?? 'Server error. Please try again.' },
