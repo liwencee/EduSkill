@@ -1,5 +1,3 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import {
@@ -7,32 +5,13 @@ import {
   CheckCircle, Clock, MapPin, ChevronRight, BarChart2, Star
 } from 'lucide-react'
 
-export default async function EmployerDashboard() {
-  const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) redirect('/auth/login?next=/dashboard/employer')
+const SAMPLE_CANDIDATES = [
+  { name: 'Tunde Adeyemi', skill: 'Digital Marketing',  location: 'Lagos', cert: 'Certified', score: 95 },
+  { name: 'Ngozi Obi',     skill: 'Fashion Design',     location: 'Enugu', cert: 'Certified', score: 88 },
+  { name: 'Musa Ibrahim',  skill: 'Solar Installation', location: 'Kano',  cert: 'Certified', score: 91 },
+]
 
-  const { data: profile } = await supabase
-    .from('profiles').select('*').eq('id', user.id).single()
-
-  const { data: listings } = await supabase
-    .from('job_listings')
-    .select('*')
-    .eq('employer_id', user.id)
-    .order('created_at', { ascending: false })
-    .limit(5)
-
-  const firstName = profile?.full_name?.split(' ')[0] ?? 'Employer'
-  const companyName = profile?.company_name ?? 'Your Company'
-
-  const totalApplications = listings?.reduce((sum: number, l: any) => sum + (l.applications ?? 0), 0) ?? 0
-
-  const SAMPLE_CANDIDATES = [
-    { name: 'Tunde Adeyemi', skill: 'Digital Marketing', location: 'Lagos', cert: 'Certified', score: 95 },
-    { name: 'Ngozi Obi',     skill: 'Fashion Design',    location: 'Enugu', cert: 'Certified', score: 88 },
-    { name: 'Musa Ibrahim',  skill: 'Solar Installation', location: 'Kano', cert: 'Certified', score: 91 },
-  ]
-
+export default function EmployerDashboard() {
   return (
     <div className="min-h-screen bg-[#EEF2FF]">
       <Navbar />
@@ -45,7 +24,7 @@ export default async function EmployerDashboard() {
           </div>
           <div className="relative">
             <p className="text-white/70 text-sm font-medium mb-1">OpportunityHub — Employer Portal 🏢</p>
-            <h1 className="text-2xl font-bold mb-1">Welcome, {firstName}</h1>
+            <h1 className="text-2xl font-bold mb-1">Employer Dashboard</h1>
             <p className="text-white/75 text-sm">Connect with Nigeria's next generation of skilled, certified workers.</p>
             <div className="flex flex-wrap gap-3 mt-4">
               <Link href="/employer/post-job"
@@ -63,10 +42,10 @@ export default async function EmployerDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: 'Active Listings',     value: listings?.filter((l: any) => l.is_active)?.length ?? 0, icon: Briefcase,  bg: 'bg-indigo-50', color: 'text-[#4F46E5]' },
-            { label: 'Total Applications',  value: totalApplications,                                       icon: Users,      bg: 'bg-orange-50', color: 'text-[#F97316]' },
-            { label: 'Hired Candidates',    value: 0,                                                       icon: CheckCircle,bg: 'bg-green-50',  color: 'text-green-600'  },
-            { label: 'Saved Profiles',      value: 0,                                                       icon: Star,       bg: 'bg-yellow-50', color: 'text-yellow-600' },
+            { label: 'Active Listings',    value: 0, icon: Briefcase,   bg: 'bg-indigo-50', color: 'text-[#4F46E5]' },
+            { label: 'Total Applications', value: 0, icon: Users,       bg: 'bg-orange-50', color: 'text-[#F97316]' },
+            { label: 'Hired Candidates',   value: 0, icon: CheckCircle, bg: 'bg-green-50',  color: 'text-green-600'  },
+            { label: 'Saved Profiles',     value: 0, icon: Star,        bg: 'bg-yellow-50', color: 'text-yellow-600' },
           ].map(s => (
             <div key={s.label} className="bg-white rounded-2xl border border-indigo-100 p-4 flex items-center gap-3 shadow-sm">
               <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${s.bg}`}>
@@ -83,7 +62,7 @@ export default async function EmployerDashboard() {
         <div className="grid lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
 
-            {/* Active Job Listings */}
+            {/* Active Job Listings placeholder */}
             <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-bold text-[#1E1B4B] text-lg">Active Job Listings</h2>
@@ -92,50 +71,20 @@ export default async function EmployerDashboard() {
                   <PlusCircle className="w-4 h-4" /> Post New
                 </Link>
               </div>
-              {listings && listings.length > 0 ? (
-                <div className="space-y-3">
-                  {listings.map((l: any) => (
-                    <div key={l.id}
-                      className="flex items-center gap-4 p-4 rounded-xl border border-indigo-100 hover:border-indigo-300 transition-colors">
-                      <div className="w-12 h-12 rounded-xl bg-indigo-50 flex items-center justify-center shrink-0">
-                        <Briefcase className="w-6 h-6 text-[#4F46E5]" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-[#1E1B4B] text-sm">{l.title}</p>
-                        <div className="flex items-center gap-3 mt-1">
-                          <span className="flex items-center gap-1 text-xs text-gray-500">
-                            <MapPin className="w-3 h-3" /> {l.location_state ?? 'Remote'}
-                          </span>
-                          <span className="flex items-center gap-1 text-xs text-gray-500">
-                            <Users className="w-3 h-3" /> {l.applications ?? 0} applications
-                          </span>
-                          <span className="flex items-center gap-1 text-xs text-gray-500">
-                            <Clock className="w-3 h-3" /> {l.deadline ? new Date(l.deadline).toLocaleDateString() : 'Open'}
-                          </span>
-                        </div>
-                      </div>
-                      <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${l.is_active ? 'bg-green-50 text-green-600' : 'bg-gray-100 text-gray-500'}`}>
-                        {l.is_active ? 'Active' : 'Closed'}
-                      </span>
-                    </div>
-                  ))}
+              <div className="text-center py-10">
+                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <Briefcase className="w-8 h-8 text-[#4F46E5] opacity-50" />
                 </div>
-              ) : (
-                <div className="text-center py-10">
-                  <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                    <Briefcase className="w-8 h-8 text-[#4F46E5] opacity-50" />
-                  </div>
-                  <p className="font-semibold text-[#1E1B4B] mb-1">No listings yet</p>
-                  <p className="text-sm text-gray-500 mb-4">Post your first job and find certified graduates</p>
-                  <Link href="/employer/post-job"
-                    className="inline-flex items-center gap-2 bg-[#4F46E5] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors">
-                    <PlusCircle className="w-4 h-4" /> Post a Job — Free
-                  </Link>
-                </div>
-              )}
+                <p className="font-semibold text-[#1E1B4B] mb-1">No listings yet</p>
+                <p className="text-sm text-gray-500 mb-4">Post your first job and find certified graduates</p>
+                <Link href="/employer/post-job"
+                  className="inline-flex items-center gap-2 bg-[#4F46E5] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-indigo-700 transition-colors">
+                  <PlusCircle className="w-4 h-4" /> Post a Job — Free
+                </Link>
+              </div>
             </div>
 
-            {/* Top Candidates Preview */}
+            {/* Top Candidates */}
             <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-bold text-[#1E1B4B] text-lg">Top Certified Candidates</h2>
@@ -170,16 +119,15 @@ export default async function EmployerDashboard() {
           {/* Right Sidebar */}
           <div className="space-y-6">
 
-            {/* Quick Actions */}
             <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
               <h2 className="font-bold text-[#1E1B4B] mb-4">Quick Actions</h2>
               <div className="space-y-2">
                 {[
-                  { href: '/employer/post-job',   icon: PlusCircle, label: 'Post a Job',          bg: 'bg-orange-50', color: 'text-[#F97316]' },
-                  { href: '/opportunity-hub',     icon: Users,      label: 'Browse Candidates',   bg: 'bg-indigo-50', color: 'text-[#4F46E5]' },
-                  { href: '/opportunity-hub/jobs',icon: Briefcase,  label: 'Manage Listings',     bg: 'bg-green-50',  color: 'text-green-600'  },
-                  { href: '/opportunity-hub',     icon: BarChart2,  label: 'Hiring Analytics',    bg: 'bg-purple-50', color: 'text-purple-600' },
-                  { href: '/contact',             icon: TrendingUp, label: 'Partner with Us',     bg: 'bg-yellow-50', color: 'text-yellow-600' },
+                  { href: '/employer/post-job',    icon: PlusCircle, label: 'Post a Job',          bg: 'bg-orange-50', color: 'text-[#F97316]' },
+                  { href: '/opportunity-hub',      icon: Users,      label: 'Browse Candidates',   bg: 'bg-indigo-50', color: 'text-[#4F46E5]' },
+                  { href: '/opportunity-hub/jobs', icon: Briefcase,  label: 'Manage Listings',     bg: 'bg-green-50',  color: 'text-green-600'  },
+                  { href: '/opportunity-hub',      icon: BarChart2,  label: 'Hiring Analytics',    bg: 'bg-purple-50', color: 'text-purple-600' },
+                  { href: '/contact',              icon: TrendingUp, label: 'Partner with Us',     bg: 'bg-yellow-50', color: 'text-yellow-600' },
                 ].map(l => (
                   <Link key={l.href + l.label} href={l.href}
                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-50 transition-colors border border-transparent hover:border-indigo-100">
@@ -198,10 +146,10 @@ export default async function EmployerDashboard() {
               <h2 className="font-bold text-[#1E1B4B] mb-4">Platform Talent Pool</h2>
               <div className="space-y-3">
                 {[
-                  { label: 'Certified Graduates', value: '8,400+', color: 'text-[#4F46E5]' },
-                  { label: 'Skills Available', value: '50+', color: 'text-[#F97316]' },
-                  { label: 'Active Job Seekers', value: '3,200+', color: 'text-green-600' },
-                  { label: 'Avg. Hire Time', value: '< 2 weeks', color: 'text-purple-600' },
+                  { label: 'Certified Graduates', value: '8,400+',    color: 'text-[#4F46E5]' },
+                  { label: 'Skills Available',    value: '50+',       color: 'text-[#F97316]' },
+                  { label: 'Active Job Seekers',  value: '3,200+',    color: 'text-green-600' },
+                  { label: 'Avg. Hire Time',      value: '< 2 weeks', color: 'text-purple-600' },
                 ].map(s => (
                   <div key={s.label} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
                     <span className="text-sm text-gray-600">{s.label}</span>
@@ -211,7 +159,6 @@ export default async function EmployerDashboard() {
               </div>
             </div>
 
-            {/* Tip */}
             <div className="bg-gradient-to-br from-[#1E1B4B] to-[#4F46E5] rounded-2xl p-5 text-white">
               <div className="flex items-center gap-2 mb-2">
                 <Star className="w-4 h-4 text-orange-300" />

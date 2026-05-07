@@ -5,13 +5,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 // /opportunity-hub, /employer) are accessible without login; only their
 // authenticated sub-features and all /dashboard routes require a session.
 const PROTECTED = [
-  '/dashboard',
   '/edupro/lesson-planner',
-  '/edupro/courses',
   '/edupro/community',
   '/edupro/certificates',
   '/skillup/my-courses',
-  '/employer/post-job',
   '/admin',
 ]
 const AUTH_PAGES = ['/auth/login', '/auth/signup']
