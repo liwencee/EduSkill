@@ -1,7 +1,7 @@
 'use client'
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { BookOpen, Eye, EyeOff, Loader2, GraduationCap, Users, Briefcase } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
@@ -16,7 +16,6 @@ const ROLES: {
 ]
 
 function SignupForm() {
-  const router = useRouter()
   const params = useSearchParams()
   const defaultRole = (params.get('role') as UserRole) ?? 'youth'
 
@@ -52,11 +51,12 @@ function SignupForm() {
       if (data.session) {
         // Email confirmation disabled — immediately logged in
         toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
-        router.replace(`/dashboard/${role}`)
+        // Hard redirect so the server picks up the new session cookies
+        window.location.href = `/dashboard/${role}`
       } else {
         // Email confirmation required
         toast.success('Account created! Check your email to verify your account.')
-        router.replace('/auth/verify-email')
+        window.location.href = '/auth/verify-email'
       }
     } catch (err) {
       console.error('Signup error:', err)

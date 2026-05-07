@@ -40,7 +40,8 @@ function LoginForm() {
       toast.success('Welcome back! 👋')
       const role = data.user?.user_metadata?.role ?? 'youth'
       const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
-      router.replace(destination)
+      // Hard redirect so the server picks up the new session cookies
+      window.location.href = destination
 
     } catch (err) {
       console.error('Login error:', err)
