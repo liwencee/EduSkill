@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     const supabase = createServerClient(url, key, {
       cookies: {
         getAll: () => [],
-        setAll: (cookiesToSet) => { pendingCookies.push(...cookiesToSet) },
+        setAll: (cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }>) => { pendingCookies.push(...cookiesToSet) },
       },
     })
 

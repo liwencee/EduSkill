@@ -25,7 +25,7 @@ export async function POST(request: Request) {
         // No existing session needed for a fresh login
         getAll: () => [],
         // Intercept instead of writing to next/headers (which doesn't merge into NextResponse)
-        setAll: (cookiesToSet) => { pendingCookies.push(...cookiesToSet) },
+        setAll: (cookiesToSet: Array<{ name: string; value: string; options: Record<string, unknown> }>) => { pendingCookies.push(...cookiesToSet) },
       },
     })
 
