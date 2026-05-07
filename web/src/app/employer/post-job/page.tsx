@@ -1,6 +1,5 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -26,7 +25,6 @@ const STATES = [
 ]
 
 export default function PostJobPage() {
-  const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [submitted, setSubmitted] = useState(false)
 
@@ -52,17 +50,9 @@ export default function PostJobPage() {
     setLoading(true)
 
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-
-    if (!user) {
-      toast.error('You must be logged in to post a job')
-      router.push('/auth/login?next=/employer/post-job')
-      setLoading(false)
-      return
-    }
 
     const { error } = await supabase.from('job_listings').insert({
-      employer_id: user.id,
+      employer_id: null,
       title: form.title,
       category: form.category,
       location_state: form.location_state,

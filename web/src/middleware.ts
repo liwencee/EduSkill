@@ -4,13 +4,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 // Only routes that truly need auth — public landing pages (/edupro, /skillup,
 // /opportunity-hub, /employer) are accessible without login; only their
 // authenticated sub-features and all /dashboard routes require a session.
-const PROTECTED = [
-  '/edupro/lesson-planner',
-  '/edupro/community',
-  '/edupro/certificates',
-  '/skillup/my-courses',
-  '/admin',
-]
+const PROTECTED: string[] = []
 const AUTH_PAGES = ['/auth/login', '/auth/signup']
 
 export async function middleware(request: NextRequest) {

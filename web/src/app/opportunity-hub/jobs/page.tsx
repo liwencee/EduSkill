@@ -26,21 +26,22 @@ const STATES = ['All States','Lagos','Abuja','Kano','Rivers','Ogun','Oyo','Enugu
 interface Props { searchParams: { state?: string; type?: string; q?: string } }
 
 export default async function JobsPage({ searchParams }: Props) {
-  const supabase = createClient()
-
-  let query = supabase
-    .from('job_listings')
-    .select('*, employer:profiles(full_name, avatar_url)')
-    .eq('is_active', true)
-    .order('is_featured', { ascending: false })
-    .order('created_at',  { ascending: false })
-
-  if (searchParams.state && searchParams.state !== 'All States')
-    query = query.eq('location_state', searchParams.state)
-  if (searchParams.type) query = query.eq('job_type', searchParams.type)
-  if (searchParams.q)    query = query.ilike('title', `%${searchParams.q}%`)
-
-  const { data: jobs } = await query.limit(30)
+  let jobs: any[] | null = null
+  try {
+    const supabase = createClient()
+    let query = supabase
+      .from('job_listings')
+      .select('*, employer:profiles(full_name, avatar_url)')
+      .eq('is_active', true)
+      .order('is_featured', { ascending: false })
+      .order('created_at',  { ascending: false })
+    if (searchParams.state && searchParams.state !== 'All States')
+      query = query.eq('location_state', searchParams.state)
+    if (searchParams.type) query = query.eq('job_type', searchParams.type)
+    if (searchParams.q)    query = query.ilike('title', `%${searchParams.q}%`)
+    const { data } = await query.limit(30)
+    jobs = data as any[]
+  } catch { /* env vars missing or DB unavailable — show empty state */ }
 
   return (
     <>
@@ -91,8 +92,7 @@ export default async function JobsPage({ searchParams }: Props) {
           {/* Jobs list */}
           {jobs && jobs.length > 0 ? (
             <div className="space-y-4">
-              {jobs.map((job: any) => {
-                const j = job as JobListing & { employer: { full_name: string } }
+              {jobs.map((j) => {
                 return (
                   <div key={j.id}
                     className={`card p-5 flex flex-col md:flex-row md:items-center gap-4 relative ${

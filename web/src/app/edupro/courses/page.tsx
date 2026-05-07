@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { BookOpen, Clock, Users, ArrowRight, CheckCircle } from 'lucide-react'

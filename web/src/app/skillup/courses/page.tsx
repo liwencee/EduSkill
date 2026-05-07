@@ -20,19 +20,20 @@ interface Props {
 }
 
 export default async function CoursesPage({ searchParams }: Props) {
-  const supabase = createClient()
-
-  let query = supabase
-    .from('courses')
-    .select('*')
-    .eq('is_published', true)
-    .eq('target_role', 'youth')
-    .order('total_enrolled', { ascending: false })
-
-  if (searchParams.category) query = query.eq('category', searchParams.category)
-  if (searchParams.q) query = query.ilike('title', `%${searchParams.q}%`)
-
-  const { data: courses } = await query
+  let courses: Course[] | null = null
+  try {
+    const supabase = createClient()
+    let query = supabase
+      .from('courses')
+      .select('*')
+      .eq('is_published', true)
+      .eq('target_role', 'youth')
+      .order('total_enrolled', { ascending: false })
+    if (searchParams.category) query = query.eq('category', searchParams.category)
+    if (searchParams.q) query = query.ilike('title', `%${searchParams.q}%`)
+    const { data } = await query
+    courses = data
+  } catch { /* env vars missing or DB unavailable — show empty state */ }
 
   return (
     <>
