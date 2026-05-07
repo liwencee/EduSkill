@@ -1,7 +1,19 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PROTECTED = ['/dashboard', '/edupro', '/skillup', '/opportunity-hub', '/employer', '/admin']
+// Only routes that truly need auth — public landing pages (/edupro, /skillup,
+// /opportunity-hub, /employer) are accessible without login; only their
+// authenticated sub-features and all /dashboard routes require a session.
+const PROTECTED = [
+  '/dashboard',
+  '/edupro/lesson-planner',
+  '/edupro/courses',
+  '/edupro/community',
+  '/edupro/certificates',
+  '/skillup/my-courses',
+  '/employer/post-job',
+  '/admin',
+]
 const AUTH_PAGES = ['/auth/login', '/auth/signup']
 
 export async function middleware(request: NextRequest) {

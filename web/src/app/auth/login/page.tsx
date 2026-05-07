@@ -2,45 +2,15 @@
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { BookOpen, Eye, EyeOff, Loader2 } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { BookOpen, Eye, EyeOff, AlertCircle } from 'lucide-react'
+import { loginAction } from './actions'
 
 function LoginForm() {
-  const params = useSearchParams()
-  const next   = params.get('next') ?? '/dashboard'
+  const params   = useSearchParams()
+  const next     = params.get('next')  ?? '/dashboard'
+  const errorMsg = params.get('error') ?? ''
 
-  const [email,    setEmail]    = useState('')
-  const [password, setPassword] = useState('')
-  const [showPwd,  setShowPwd]  = useState(false)
-  const [loading,  setLoading]  = useState(false)
-
-  async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
-    setLoading(true)
-    try {
-      const res = await fetch('/api/auth/login', {
-        method:      'POST',
-        credentials: 'same-origin',          // ensures Set-Cookie is honoured
-        headers:     { 'Content-Type': 'application/json' },
-        body:        JSON.stringify({ email, password, next }),
-      })
-      const data = await res.json()
-
-      if (!res.ok || data.error) {
-        toast.error(data.error ?? 'Login failed. Please try again.')
-        return
-      }
-
-      toast.success('Welcome back! 👋')
-      // Cookies are already in the browser (Set-Cookie from the API response).
-      // Navigate immediately — no delay needed.
-      window.location.href = data.destination
-    } catch {
-      toast.error('Connection failed. Please check your internet and try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [showPwd, setShowPwd] = useState(false)
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
@@ -58,22 +28,40 @@ function LoginForm() {
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Welcome back</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Log in to continue your learning journey</p>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          {/* Inline error (from server action redirect) */}
+          {errorMsg && (
+            <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5">
+              <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+              <p className="text-sm text-red-700">{errorMsg}</p>
+            </div>
+          )}
+
+          {/*
+            Plain <form action={serverAction}> — this is the official Supabase
+            recommended pattern. The Server Action sets cookies via
+            cookies().set() which works correctly in this context, then
+            redirect() sends the browser to the dashboard with the session
+            already committed. No client-side cookie sync needed.
+          */}
+          <form action={loginAction} className="space-y-4">
+            {/* Pass the intended destination through the form */}
+            <input type="hidden" name="next" value={next} />
+
             <div>
               <label className="label" htmlFor="email">Email address</label>
               <input
-                id="email" type="email" required
-                value={email} onChange={e => setEmail(e.target.value)}
+                id="email" name="email" type="email" required
                 className="input" placeholder="you@example.com"
                 autoComplete="email"
               />
             </div>
+
             <div>
               <label className="label" htmlFor="password">Password</label>
               <div className="relative">
                 <input
-                  id="password" type={showPwd ? 'text' : 'password'} required
-                  value={password} onChange={e => setPassword(e.target.value)}
+                  id="password" name="password"
+                  type={showPwd ? 'text' : 'password'} required
                   className="input pr-10" placeholder="••••••••"
                   autoComplete="current-password"
                 />
@@ -93,10 +81,8 @@ function LoginForm() {
               </Link>
             </div>
 
-            <button type="submit" disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2">
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? 'Signing in…' : 'Log In'}
+            <button type="submit" className="btn-primary w-full">
+              Log In
             </button>
           </form>
 

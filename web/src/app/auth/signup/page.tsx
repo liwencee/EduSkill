@@ -2,8 +2,8 @@
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { BookOpen, Eye, EyeOff, Loader2, GraduationCap, Users, Briefcase } from 'lucide-react'
-import toast from 'react-hot-toast'
+import { BookOpen, Eye, EyeOff, AlertCircle, GraduationCap, Users, Briefcase } from 'lucide-react'
+import { signupAction } from './actions'
 import type { UserRole } from '@/types'
 
 const ROLES: { role: UserRole; label: string; desc: string; icon: React.ElementType }[] = [
@@ -15,45 +15,10 @@ const ROLES: { role: UserRole; label: string; desc: string; icon: React.ElementT
 function SignupForm() {
   const params      = useSearchParams()
   const defaultRole = (params.get('role') as UserRole) ?? 'youth'
+  const errorMsg    = params.get('error') ?? ''
 
-  const [role,     setRole]     = useState<UserRole>(defaultRole)
-  const [fullName, setFullName] = useState('')
-  const [email,    setEmail]    = useState('')
-  const [password, setPassword] = useState('')
-  const [showPwd,  setShowPwd]  = useState(false)
-  const [loading,  setLoading]  = useState(false)
-
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
-    if (password.length < 8) { toast.error('Password must be at least 8 characters'); return }
-
-    setLoading(true)
-    try {
-      const res = await fetch('/api/auth/signup', {
-        method:      'POST',
-        credentials: 'same-origin',
-        headers:     { 'Content-Type': 'application/json' },
-        body:        JSON.stringify({ email, password, fullName, role }),
-      })
-      const data = await res.json()
-
-      if (!res.ok || data.error) {
-        toast.error(data.error ?? 'Signup failed. Please try again.')
-        return
-      }
-
-      if (data.destination === '/auth/verify-email') {
-        toast.success('Account created! Check your email to verify your account.')
-      } else {
-        toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
-      }
-      window.location.href = data.destination
-    } catch {
-      toast.error('Connection failed. Please check your internet and try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  const [role,    setRole]    = useState<UserRole>(defaultRole)
+  const [showPwd, setShowPwd] = useState(false)
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
@@ -71,6 +36,14 @@ function SignupForm() {
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Create your account</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Free to start. No credit card needed.</p>
 
+          {errorMsg && (
+            <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5">
+              <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
+              <p className="text-sm text-red-700">{errorMsg}</p>
+            </div>
+          )}
+
+          {/* Role picker — updates the hidden field in the form */}
           <div className="mb-6">
             <p className="label mb-3">I am joining as…</p>
             <div className="grid grid-cols-3 gap-3">
@@ -89,38 +62,43 @@ function SignupForm() {
             </div>
           </div>
 
-          <form onSubmit={handleSignup} className="space-y-4">
+          <form action={signupAction} className="space-y-4">
+            <input type="hidden" name="role" value={role} />
+
             <div>
-              <label className="label">Full Name</label>
-              <input type="text" required value={fullName}
-                onChange={e => setFullName(e.target.value)}
+              <label className="label" htmlFor="fullName">Full Name</label>
+              <input
+                id="fullName" name="fullName" type="text" required
                 className="input" placeholder="Adaeze Okonkwo"
-                autoComplete="name" />
+                autoComplete="name"
+              />
             </div>
             <div>
-              <label className="label">Email address</label>
-              <input type="email" required value={email}
-                onChange={e => setEmail(e.target.value)}
+              <label className="label" htmlFor="email">Email address</label>
+              <input
+                id="email" name="email" type="email" required
                 className="input" placeholder="you@example.com"
-                autoComplete="email" />
+                autoComplete="email"
+              />
             </div>
             <div>
-              <label className="label">Password</label>
+              <label className="label" htmlFor="password">Password</label>
               <div className="relative">
-                <input type={showPwd ? 'text' : 'password'} required
-                  value={password} onChange={e => setPassword(e.target.value)}
+                <input
+                  id="password" name="password"
+                  type={showPwd ? 'text' : 'password'} required
                   className="input pr-10" placeholder="Min. 8 characters"
-                  autoComplete="new-password" />
+                  autoComplete="new-password"
+                />
                 <button type="button" onClick={() => setShowPwd(!showPwd)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-inkLight hover:text-brand-inkMid">
                   {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            <button type="submit" disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2">
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? 'Creating account…' : 'Create Free Account'}
+
+            <button type="submit" className="btn-primary w-full">
+              Create Free Account
             </button>
           </form>
 
