@@ -31,12 +31,6 @@ function SignupForm() {
     e.preventDefault()
     if (password.length < 8) { toast.error('Password must be at least 8 characters'); return }
 
-    // Guard: check env vars are available
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      toast.error('Service is temporarily unavailable. Please try again later.')
-      return
-    }
-
     setLoading(true)
     try {
       const supabase = createClient()
@@ -48,7 +42,7 @@ function SignupForm() {
 
       if (error) {
         if (error.message.toLowerCase().includes('already registered')) {
-          toast.error('An account with this email already exists. Try logging in.')
+          toast.error('An account with this email already exists. Try logging in instead.')
         } else {
           toast.error(error.message)
         }
@@ -56,7 +50,7 @@ function SignupForm() {
       }
 
       if (data.session) {
-        // Email confirmation disabled — user is immediately logged in
+        // Email confirmation disabled — immediately logged in
         toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
         router.replace(`/dashboard/${role}`)
       } else {
@@ -66,7 +60,7 @@ function SignupForm() {
       }
     } catch (err) {
       console.error('Signup error:', err)
-      toast.error('Could not connect. Please check your internet and try again.')
+      toast.error('Connection failed. Please check your internet and try again.')
     } finally {
       setLoading(false)
     }
@@ -88,7 +82,6 @@ function SignupForm() {
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Create your account</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Free to start. No credit card needed.</p>
 
-          {/* Role selection */}
           <div className="mb-6">
             <p className="label mb-3">I am joining as…</p>
             <div className="grid grid-cols-3 gap-3">
@@ -130,7 +123,6 @@ function SignupForm() {
                 </button>
               </div>
             </div>
-
             <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? 'Creating account…' : 'Create Free Account'}
@@ -142,7 +134,6 @@ function SignupForm() {
             <Link href="/terms" className="text-brand-blue hover:underline">Terms</Link> and{' '}
             <Link href="/privacy" className="text-brand-blue hover:underline">Privacy Policy</Link>
           </p>
-
           <p className="text-center text-sm text-brand-inkMid mt-4">
             Already have an account?{' '}
             <Link href="/auth/login" className="text-brand-blue font-semibold hover:underline">Log in</Link>

@@ -18,13 +18,6 @@ function LoginForm() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-
-    // Guard: check env vars are available
-    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-      toast.error('Service is temporarily unavailable. Please try again later.')
-      return
-    }
-
     setLoading(true)
     try {
       const supabase = createClient()
@@ -45,15 +38,13 @@ function LoginForm() {
       }
 
       toast.success('Welcome back! 👋')
-
-      // Read role from user_metadata (set at signup) and redirect to right dashboard
       const role = data.user?.user_metadata?.role ?? 'youth'
       const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
       router.replace(destination)
 
     } catch (err) {
       console.error('Login error:', err)
-      toast.error('Could not connect. Please check your internet and try again.')
+      toast.error('Connection failed. Please check your internet and try again.')
     } finally {
       setLoading(false)
     }
@@ -63,7 +54,6 @@ function LoginForm() {
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
 
-        {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
           <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center">
             <BookOpen className="w-6 h-6 text-white" />
@@ -72,7 +62,6 @@ function LoginForm() {
           <span className="font-bold text-brand-amber text-xl">Nigeria</span>
         </Link>
 
-        {/* Card */}
         <div className="bg-white rounded-2xl border border-[#E0DDD5] shadow-sm p-8">
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Welcome back</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Log in to continue your learning journey</p>
