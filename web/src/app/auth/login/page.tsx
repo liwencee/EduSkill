@@ -1,38 +1,47 @@
 'use client'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { BookOpen, Eye, EyeOff, Loader2 } from 'lucide-react'
-import { useFormState, useFormStatus } from 'react-dom'
-import { loginAction } from './actions'
 import toast from 'react-hot-toast'
-
-/** Submit button reads pending state from the parent <form> automatically */
-function SubmitButton() {
-  const { pending } = useFormStatus()
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="btn-primary w-full flex items-center justify-center gap-2"
-    >
-      {pending && <Loader2 className="w-4 h-4 animate-spin" />}
-      {pending ? 'Signing in…' : 'Log In'}
-    </button>
-  )
-}
 
 function LoginForm() {
   const params = useSearchParams()
   const next   = params.get('next') ?? '/dashboard'
 
-  const [showPwd, setShowPwd] = useState(false)
-  const [state, formAction]   = useFormState(loginAction, null)
+  const [email,    setEmail]    = useState('')
+  const [password, setPassword] = useState('')
+  const [showPwd,  setShowPwd]  = useState(false)
+  const [loading,  setLoading]  = useState(false)
 
-  // Show toast whenever the server action returns an error
-  useEffect(() => {
-    if (state?.error) toast.error(state.error)
-  }, [state])
+  async function handleLogin(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const res = await fetch('/api/auth/login', {
+        method:      'POST',
+        credentials: 'same-origin',          // ensures Set-Cookie is honoured
+        headers:     { 'Content-Type': 'application/json' },
+        body:        JSON.stringify({ email, password, next }),
+      })
+      const data = await res.json()
+
+      if (!res.ok || data.error) {
+        toast.error(data.error ?? 'Login failed. Please try again.')
+        return
+      }
+
+      toast.success('Welcome back! 👋')
+      // Small delay so the toast is visible, then hard-navigate.
+      // The session cookies were set in the API response (Set-Cookie headers)
+      // so they are already in the browser before this navigation fires.
+      setTimeout(() => { window.location.href = data.destination }, 400)
+    } catch {
+      toast.error('Connection failed. Please check your internet and try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
@@ -50,25 +59,22 @@ function LoginForm() {
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Welcome back</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Log in to continue your learning journey</p>
 
-          {/* Hidden next param so the server action knows where to redirect */}
-          <form action={formAction} className="space-y-4">
-            <input type="hidden" name="next" value={next} />
-
+          <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="label" htmlFor="email">Email address</label>
               <input
-                id="email" name="email" type="email" required
+                id="email" type="email" required
+                value={email} onChange={e => setEmail(e.target.value)}
                 className="input" placeholder="you@example.com"
                 autoComplete="email"
               />
             </div>
-
             <div>
               <label className="label" htmlFor="password">Password</label>
               <div className="relative">
                 <input
-                  id="password" name="password"
-                  type={showPwd ? 'text' : 'password'} required
+                  id="password" type={showPwd ? 'text' : 'password'} required
+                  value={password} onChange={e => setPassword(e.target.value)}
                   className="input pr-10" placeholder="••••••••"
                   autoComplete="current-password"
                 />
@@ -76,7 +82,6 @@ function LoginForm() {
                   type="button"
                   onClick={() => setShowPwd(!showPwd)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-inkLight hover:text-brand-inkMid"
-                  aria-label="Toggle password visibility"
                 >
                   {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -89,7 +94,11 @@ function LoginForm() {
               </Link>
             </div>
 
-            <SubmitButton />
+            <button type="submit" disabled={loading}
+              className="btn-primary w-full flex items-center justify-center gap-2">
+              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
+              {loading ? 'Signing in…' : 'Log In'}
+            </button>
           </form>
 
           <div className="relative my-6">
