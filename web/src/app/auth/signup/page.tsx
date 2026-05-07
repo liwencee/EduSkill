@@ -1,70 +1,44 @@
 'use client'
-import { useState, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { BookOpen, Eye, EyeOff, Loader2, GraduationCap, Users, Briefcase } from 'lucide-react'
-import { createClient } from '@/lib/supabase/client'
+import { useFormState, useFormStatus } from 'react-dom'
+import { signupAction } from './actions'
 import toast from 'react-hot-toast'
 import type { UserRole } from '@/types'
 
-const ROLES: {
-  role: UserRole; label: string; desc: string; icon: React.ElementType
-}[] = [
+const ROLES: { role: UserRole; label: string; desc: string; icon: React.ElementType }[] = [
   { role: 'youth',    label: 'Youth Learner',  desc: 'Learn vocational & digital skills',  icon: GraduationCap },
   { role: 'teacher',  label: 'Teacher',         desc: 'CPD courses & AI lesson planning',   icon: Users         },
   { role: 'employer', label: 'Employer / SME',  desc: 'Find skilled, certified graduates',  icon: Briefcase     },
 ]
 
+function SubmitButton() {
+  const { pending } = useFormStatus()
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="btn-primary w-full flex items-center justify-center gap-2"
+    >
+      {pending && <Loader2 className="w-4 h-4 animate-spin" />}
+      {pending ? 'Creating account…' : 'Create Free Account'}
+    </button>
+  )
+}
+
 function SignupForm() {
-  const params = useSearchParams()
+  const params      = useSearchParams()
   const defaultRole = (params.get('role') as UserRole) ?? 'youth'
 
-  const [role, setRole]         = useState<UserRole>(defaultRole)
-  const [fullName, setFullName] = useState('')
-  const [email, setEmail]       = useState('')
-  const [password, setPassword] = useState('')
-  const [showPwd, setShowPwd]   = useState(false)
-  const [loading, setLoading]   = useState(false)
+  const [role, setRole]     = useState<UserRole>(defaultRole)
+  const [showPwd, setShowPwd] = useState(false)
+  const [state, formAction]   = useFormState(signupAction, null)
 
-  async function handleSignup(e: React.FormEvent) {
-    e.preventDefault()
-    if (password.length < 8) { toast.error('Password must be at least 8 characters'); return }
-
-    setLoading(true)
-    try {
-      const supabase = createClient()
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: { data: { full_name: fullName, role } },
-      })
-
-      if (error) {
-        if (error.message.toLowerCase().includes('already registered')) {
-          toast.error('An account with this email already exists. Try logging in instead.')
-        } else {
-          toast.error(error.message)
-        }
-        return
-      }
-
-      if (data.session) {
-        // Email confirmation disabled — immediately logged in
-        toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
-        // Hard redirect so the server picks up the new session cookies
-        window.location.href = `/dashboard/${role}`
-      } else {
-        // Email confirmation required
-        toast.success('Account created! Check your email to verify your account.')
-        window.location.href = '/auth/verify-email'
-      }
-    } catch (err) {
-      console.error('Signup error:', err)
-      toast.error('Connection failed. Please check your internet and try again.')
-    } finally {
-      setLoading(false)
-    }
-  }
+  useEffect(() => {
+    if (state?.error) toast.error(state.error)
+  }, [state])
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
@@ -82,16 +56,21 @@ function SignupForm() {
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Create your account</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Free to start. No credit card needed.</p>
 
+          {/* Role picker (outside form — updates hidden input) */}
           <div className="mb-6">
             <p className="label mb-3">I am joining as…</p>
             <div className="grid grid-cols-3 gap-3">
               {ROLES.map(r => (
-                <button key={r.role} type="button" onClick={() => setRole(r.role)}
+                <button
+                  key={r.role}
+                  type="button"
+                  onClick={() => setRole(r.role)}
                   className={`border-2 rounded-xl p-3 text-center transition-all ${
                     role === r.role
                       ? 'border-brand-blue bg-brand-blueLight'
                       : 'border-[#E0DDD5] bg-white hover:border-brand-blue/30'
-                  }`}>
+                  }`}
+                >
                   <r.icon className={`w-6 h-6 mx-auto mb-1 ${role === r.role ? 'text-brand-blue' : 'text-brand-inkLight'}`} />
                   <p className="text-xs font-semibold text-brand-ink">{r.label}</p>
                   <p className="text-xs text-brand-inkLight hidden sm:block">{r.desc}</p>
@@ -100,33 +79,47 @@ function SignupForm() {
             </div>
           </div>
 
-          <form onSubmit={handleSignup} className="space-y-4">
+          <form action={formAction} className="space-y-4">
+            {/* Pass role as hidden field so the server action can read it */}
+            <input type="hidden" name="role" value={role} />
+
             <div>
-              <label className="label">Full Name</label>
-              <input type="text" required value={fullName} onChange={e => setFullName(e.target.value)}
-                className="input" placeholder="Adaeze Okonkwo" />
+              <label className="label" htmlFor="fullName">Full Name</label>
+              <input
+                id="fullName" name="fullName" type="text" required
+                className="input" placeholder="Adaeze Okonkwo"
+                autoComplete="name"
+              />
             </div>
             <div>
-              <label className="label">Email address</label>
-              <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
-                className="input" placeholder="you@example.com" />
+              <label className="label" htmlFor="email">Email address</label>
+              <input
+                id="email" name="email" type="email" required
+                className="input" placeholder="you@example.com"
+                autoComplete="email"
+              />
             </div>
             <div>
-              <label className="label">Password</label>
+              <label className="label" htmlFor="password">Password</label>
               <div className="relative">
-                <input type={showPwd ? 'text' : 'password'} required
-                  value={password} onChange={e => setPassword(e.target.value)}
-                  className="input pr-10" placeholder="Min. 8 characters" />
-                <button type="button" onClick={() => setShowPwd(!showPwd)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-inkLight hover:text-brand-inkMid">
+                <input
+                  id="password" name="password"
+                  type={showPwd ? 'text' : 'password'} required
+                  className="input pr-10" placeholder="Min. 8 characters"
+                  autoComplete="new-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPwd(!showPwd)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-inkLight hover:text-brand-inkMid"
+                  aria-label="Toggle password visibility"
+                >
                   {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
-            <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
-              {loading && <Loader2 className="w-4 h-4 animate-spin" />}
-              {loading ? 'Creating account…' : 'Create Free Account'}
-            </button>
+
+            <SubmitButton />
           </form>
 
           <p className="text-center text-xs text-brand-inkLight mt-4">
