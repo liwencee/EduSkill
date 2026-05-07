@@ -30,28 +30,49 @@ function SignupForm() {
   async function handleSignup(e: React.FormEvent) {
     e.preventDefault()
     if (password.length < 8) { toast.error('Password must be at least 8 characters'); return }
-    setLoading(true)
-    const supabase = createClient()
-    const { data, error } = await supabase.auth.signUp({
-      email, password,
-      options: { data: { full_name: fullName, role } },
-    })
-    if (error) {
-      toast.error(error.message)
-    } else if (data.session) {
-      // Email confirmation is disabled — user is logged in immediately
-      toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
-      router.push(`/dashboard/${role}`)
-    } else {
-      // Email confirmation is required — send to verify page
-      toast.success('Account created! Please check your email to verify your account.')
-      router.push('/auth/verify-email')
+
+    // Guard: check env vars are available
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      toast.error('Service is temporarily unavailable. Please try again later.')
+      return
     }
-    setLoading(false)
+
+    setLoading(true)
+    try {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName, role } },
+      })
+
+      if (error) {
+        if (error.message.toLowerCase().includes('already registered')) {
+          toast.error('An account with this email already exists. Try logging in.')
+        } else {
+          toast.error(error.message)
+        }
+        return
+      }
+
+      if (data.session) {
+        // Email confirmation disabled — user is immediately logged in
+        toast.success('Account created! Welcome to SkillBridge Nigeria 🎉')
+        router.replace(`/dashboard/${role}`)
+      } else {
+        // Email confirmation required
+        toast.success('Account created! Check your email to verify your account.')
+        router.replace('/auth/verify-email')
+      }
+    } catch (err) {
+      console.error('Signup error:', err)
+      toast.error('Could not connect. Please check your internet and try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    /* 60% cream bg */
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
 
@@ -109,7 +130,7 @@ function SignupForm() {
                 </button>
               </div>
             </div>
-            {/* 10% amber CTA */}
+
             <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? 'Creating account…' : 'Create Free Account'}
@@ -124,7 +145,6 @@ function SignupForm() {
 
           <p className="text-center text-sm text-brand-inkMid mt-4">
             Already have an account?{' '}
-            {/* 30% blue link */}
             <Link href="/auth/login" className="text-brand-blue font-semibold hover:underline">Log in</Link>
           </p>
         </div>

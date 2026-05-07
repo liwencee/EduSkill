@@ -18,49 +18,61 @@ function LoginForm() {
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
-    const supabase = createClient()
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {
-      // Surface a friendlier message for the most common errors
-      if (error.message.toLowerCase().includes('email not confirmed')) {
-        toast.error('Please verify your email first. Check your inbox for a confirmation link.')
-      } else if (error.message.toLowerCase().includes('invalid login credentials')) {
-        toast.error('Wrong email or password. Please try again.')
-      } else {
-        toast.error(error.message)
-      }
-      setLoading(false)
+
+    // Guard: check env vars are available
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      toast.error('Service is temporarily unavailable. Please try again later.')
       return
     }
 
-    toast.success('Welcome back! 👋')
+    setLoading(true)
+    try {
+      const supabase = createClient()
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
-    // Read role from user_metadata (set at signup) and redirect to right dashboard
-    const role = data.user?.user_metadata?.role ?? 'youth'
-    const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
+      if (error) {
+        if (error.message.toLowerCase().includes('email not confirmed')) {
+          toast.error('Please verify your email first — check your inbox for the confirmation link.')
+        } else if (
+          error.message.toLowerCase().includes('invalid login') ||
+          error.message.toLowerCase().includes('invalid credentials')
+        ) {
+          toast.error('Wrong email or password. Please try again.')
+        } else {
+          toast.error(error.message)
+        }
+        return
+      }
 
-    // Use replace so the login page isn't in browser history after auth
-    router.replace(destination)
+      toast.success('Welcome back! 👋')
+
+      // Read role from user_metadata (set at signup) and redirect to right dashboard
+      const role = data.user?.user_metadata?.role ?? 'youth'
+      const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
+      router.replace(destination)
+
+    } catch (err) {
+      console.error('Login error:', err)
+      toast.error('Could not connect. Please check your internet and try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
-    /* 60% cream page background */
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
 
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          {/* 30% blue logo container */}
           <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center">
             <BookOpen className="w-6 h-6 text-white" />
           </div>
           <span className="font-bold text-brand-ink text-xl">SkillBridge</span>
-          {/* 10% amber brand word */}
           <span className="font-bold text-brand-amber text-xl">Nigeria</span>
         </Link>
 
-        {/* Card — white surface on cream bg */}
+        {/* Card */}
         <div className="bg-white rounded-2xl border border-[#E0DDD5] shadow-sm p-8">
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Welcome back</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Log in to continue your learning journey</p>
@@ -89,7 +101,6 @@ function LoginForm() {
                 Forgot password?
               </Link>
             </div>
-            {/* 10% amber primary button */}
             <button type="submit" disabled={loading} className="btn-primary w-full flex items-center justify-center gap-2">
               {loading && <Loader2 className="w-4 h-4 animate-spin" />}
               {loading ? 'Signing in…' : 'Log In'}
@@ -103,7 +114,6 @@ function LoginForm() {
 
           <p className="text-center text-sm text-brand-inkMid">
             Don&apos;t have an account?{' '}
-            {/* 30% blue link */}
             <Link href="/auth/signup" className="text-brand-blue font-semibold hover:underline">Sign up free</Link>
           </p>
         </div>
