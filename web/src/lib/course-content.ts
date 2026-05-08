@@ -4,6 +4,7 @@ export interface CurriculumLesson {
   duration_mins: number
   order_index: number
   is_free_preview: boolean
+  youtube_url?: string   // full YouTube URL, e.g. https://www.youtube.com/watch?v=VIDEO_ID
 }
 
 export interface CurriculumModule {
@@ -15,9 +16,9 @@ export interface CurriculumModule {
 
 function lesson(
   id: string, title: string, duration_mins: number,
-  order_index: number, is_free_preview = false
+  order_index: number, is_free_preview = false, youtube_url?: string
 ): CurriculumLesson {
-  return { id, title, duration_mins, order_index, is_free_preview }
+  return { id, title, duration_mins, order_index, is_free_preview, youtube_url }
 }
 
 function mod(
@@ -32,7 +33,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'digital-marketing-mastery': [
     mod('dmm-m1', 'Foundations of Digital Marketing', 1, [
-      lesson('dmm-m1-l1', 'What is Digital Marketing?', 15, 1, true),
+      lesson('dmm-m1-l1', 'What is Digital Marketing?', 15, 1, true, 'https://www.youtube.com/watch?v=bixR-KIJKYM'),
       lesson('dmm-m1-l2', 'The Nigerian Digital Landscape in 2025', 15, 2),
       lesson('dmm-m1-l3', 'Understanding Your Target Audience', 20, 3),
       lesson('dmm-m1-l4', 'Key Digital Marketing Channels', 20, 4),
@@ -68,7 +69,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'social-media-management': [
     mod('smm-m1', 'Platform Mastery', 1, [
-      lesson('smm-m1-l1', 'Understanding Social Media Algorithms', 15, 1, true),
+      lesson('smm-m1-l1', 'Understanding Social Media Algorithms', 15, 1, true, 'https://www.youtube.com/watch?v=F6GaYMkGzzg'),
       lesson('smm-m1-l2', 'Instagram Growth Strategy', 20, 2),
       lesson('smm-m1-l3', 'Facebook Page Management', 20, 3),
       lesson('smm-m1-l4', 'Twitter / X for Brands', 15, 4),
@@ -96,7 +97,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'coding-basics': [
     mod('cb-m1', 'HTML Fundamentals', 1, [
-      lesson('cb-m1-l1', 'What is Coding? Your First Webpage', 15, 1, true),
+      lesson('cb-m1-l1', 'What is Coding? Your First Webpage', 15, 1, true, 'https://www.youtube.com/watch?v=UB1O30fR-EE'),
       lesson('cb-m1-l2', 'Setting Up VS Code & Your Workspace', 20, 2),
       lesson('cb-m1-l3', 'HTML Tags, Structure & Headings', 25, 3),
       lesson('cb-m1-l4', 'Links, Images & Media', 20, 4),
@@ -136,7 +137,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'python-data-skills': [
     mod('pds-m1', 'Python Foundations', 1, [
-      lesson('pds-m1-l1', 'Why Python? Installing & Running Code', 20, 1, true),
+      lesson('pds-m1-l1', 'Why Python? Installing & Running Code', 20, 1, true, 'https://www.youtube.com/watch?v=rfscVS0vtbw'),
       lesson('pds-m1-l2', 'Variables, Strings & Numbers', 20, 2),
       lesson('pds-m1-l3', 'Lists, Tuples & Dictionaries', 25, 3),
       lesson('pds-m1-l4', 'If/Else Statements & Logic', 20, 4),
@@ -185,7 +186,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'fashion-design-fundamentals': [
     mod('fdf-m1', 'Design Basics & Materials', 1, [
-      lesson('fdf-m1-l1', 'Introduction to Fashion Design in Nigeria', 15, 1, true),
+      lesson('fdf-m1-l1', 'Introduction to Fashion Design in Nigeria', 15, 1, true, 'https://www.youtube.com/watch?v=q-P-4sjHZ4c'),
       lesson('fdf-m1-l2', 'Fabrics: Ankara, Lace, Aso-oke & More', 20, 2),
       lesson('fdf-m1-l3', 'Taking Body Measurements Accurately', 20, 3),
       lesson('fdf-m1-l4', 'Essential Sewing Tools & Their Uses', 20, 4),
@@ -227,7 +228,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'solar-installation-tech': [
     mod('sit-m1', 'Solar Energy Fundamentals', 1, [
-      lesson('sit-m1-l1', 'How Solar Energy Works', 20, 1, true),
+      lesson('sit-m1-l1', 'How Solar Energy Works', 20, 1, true, 'https://www.youtube.com/watch?v=xKxrkht7CpY'),
       lesson('sit-m1-l2', 'Types of Solar Systems (On-Grid, Off-Grid, Hybrid)', 20, 2),
       lesson('sit-m1-l3', 'Nigeria\'s Energy Crisis & Solar Opportunity', 15, 3),
       lesson('sit-m1-l4', 'Solar Panel Types & Efficiency Ratings', 25, 4),
@@ -267,7 +268,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'agribusiness-fundamentals': [
     mod('ab-m1', 'Modern Farming Basics', 1, [
-      lesson('ab-m1-l1', 'Agriculture as a Business, Not a Subsistence', 15, 1, true),
+      lesson('ab-m1-l1', 'Agriculture as a Business, Not a Subsistence', 15, 1, true, 'https://www.youtube.com/watch?v=pJm5c8-sJXA'),
       lesson('ab-m1-l2', 'Understanding Nigerian Farming Seasons & Climate Zones', 20, 2),
       lesson('ab-m1-l3', 'Soil Health & Fertility Management', 20, 3),
       lesson('ab-m1-l4', 'Water Management & Irrigation for SME Farmers', 20, 4),
@@ -299,7 +300,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'financial-literacy-nigeria': [
     mod('fl-m1', 'Money Mindset & Foundations', 1, [
-      lesson('fl-m1-l1', 'Why Most Nigerians Struggle with Money', 15, 1, true),
+      lesson('fl-m1-l1', 'Why Most Nigerians Struggle with Money', 15, 1, true, 'https://www.youtube.com/watch?v=HQzoZfc3GwQ'),
       lesson('fl-m1-l2', 'Income Types: Salary, Business, Passive Income', 20, 2),
       lesson('fl-m1-l3', 'Understanding Needs vs. Wants', 15, 3),
       lesson('fl-m1-l4', 'Setting SMART Financial Goals', 20, 4),
@@ -324,7 +325,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'entrepreneurship-nigeria': [
     mod('en-m1', 'The Entrepreneur Mindset', 1, [
-      lesson('en-m1-l1', 'What Makes a Successful Nigerian Entrepreneur?', 15, 1, true),
+      lesson('en-m1-l1', 'What Makes a Successful Nigerian Entrepreneur?', 15, 1, true, 'https://www.youtube.com/watch?v=ZoqgAy3h4DM'),
       lesson('en-m1-l2', 'Identifying Problems Worth Solving', 20, 2),
       lesson('en-m1-l3', 'From Idea to Opportunity — The Validation Test', 20, 3),
       lesson('en-m1-l4', 'Building Resilience & Managing Failure', 15, 4),
@@ -358,7 +359,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'graphic-design-canva': [
     mod('gdc-m1', 'Design Fundamentals', 1, [
-      lesson('gdc-m1-l1', 'What Makes a Great Design?', 15, 1, true),
+      lesson('gdc-m1-l1', 'What Makes a Great Design?', 15, 1, true, 'https://www.youtube.com/watch?v=qB2H5Q62s-Y'),
       lesson('gdc-m1-l2', 'Colour Theory & Psychology', 20, 2),
       lesson('gdc-m1-l3', 'Typography — Choosing & Pairing Fonts', 20, 3),
       lesson('gdc-m1-l4', 'Layout, Balance & White Space', 20, 4),
@@ -396,7 +397,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'catering-food-business': [
     mod('cfb-m1', 'Food Business Foundations', 1, [
-      lesson('cfb-m1-l1', 'Is a Food Business Right for You?', 15, 1, true),
+      lesson('cfb-m1-l1', 'Is a Food Business Right for You?', 15, 1, true, 'https://www.youtube.com/watch?v=EUXnJraKM3k'),
       lesson('cfb-m1-l2', 'Nigerian Food Market Opportunities', 20, 2),
       lesson('cfb-m1-l3', 'Food Safety, Hygiene & NAFDAC Basics', 20, 3),
       lesson('cfb-m1-l4', 'Choosing Your Food Business Model', 20, 4),
@@ -424,7 +425,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'logistics-supply-chain': [
     mod('lsc-m1', 'Supply Chain Fundamentals', 1, [
-      lesson('lsc-m1-l1', 'What is Supply Chain & Why It Matters in Nigeria', 15, 1, true),
+      lesson('lsc-m1-l1', 'What is Supply Chain & Why It Matters in Nigeria', 15, 1, true, 'https://www.youtube.com/watch?v=Mi6OJ4zbLX4'),
       lesson('lsc-m1-l2', 'The Supply Chain — From Farm to Consumer', 20, 2),
       lesson('lsc-m1-l3', 'Key Players in Nigerian Logistics', 20, 3),
       lesson('lsc-m1-l4', 'Supply Chain Disruptions & Solutions', 20, 4),

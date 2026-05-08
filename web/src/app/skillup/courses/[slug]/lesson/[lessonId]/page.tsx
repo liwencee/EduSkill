@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import {
@@ -9,6 +9,12 @@ import {
 } from 'lucide-react'
 import { COURSE_CURRICULUM, findLesson, allLessons } from '@/lib/course-content'
 import { STATIC_COURSES } from '@/lib/static-courses'
+
+/** Extract YouTube video ID from any YouTube URL format */
+function getYouTubeId(url: string): string | null {
+  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&\n?#]{11})/)
+  return m ? m[1] : null
+}
 
 interface QuizQuestion {
   question: string
@@ -28,7 +34,6 @@ interface LessonContent {
 
 export default function LessonPage() {
   const params   = useParams()
-  const router   = useRouter()
   const slug     = params.slug as string
   const lessonId = params.lessonId as string
 
@@ -147,6 +152,29 @@ export default function LessonPage() {
                 <span>Lesson {lessonIdx + 1} of {lessons.length}</span>
               </div>
             </div>
+
+            {/* ── YouTube Video Player ── */}
+            {lesson.youtube_url && (() => {
+              const vid = getYouTubeId(lesson.youtube_url)
+              if (!vid) return null
+              return (
+                <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                  <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1`}
+                      title={lesson.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                      className="absolute inset-0 w-full h-full"
+                    />
+                  </div>
+                  <div className="px-4 py-2 bg-indigo-50 flex items-center gap-2">
+                    <span className="text-xs text-[#4F46E5] font-semibold">🎬 Video Lesson</span>
+                    <span className="text-xs text-gray-400">· Continue with the AI lesson notes below</span>
+                  </div>
+                </div>
+              )
+            })()}
 
             {/* Loading State */}
             {loading && (
