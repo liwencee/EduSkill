@@ -4,7 +4,9 @@ import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import { Clock, Users, Download, Globe, CheckCircle, Star, PlayCircle, Lock } from 'lucide-react'
 import Link from 'next/link'
-import type { Course, Lesson } from '@/types'
+import type { Course } from '@/types'
+import { STATIC_COURSES } from '@/lib/static-courses'
+import { COURSE_CURRICULUM } from '@/lib/course-content'
 
 interface Props { params: { slug: string } }
 
@@ -12,7 +14,7 @@ const LANG_LABELS: Record<string, string> = { en: 'English', yo: 'Yoruba', ig: '
 
 export default async function CourseDetailPage({ params }: Props) {
   let course: any = null
-  let modules: any[] | null = null
+  let dbModules: any[] | null = null
 
   try {
     const supabase = createClient()
@@ -32,11 +34,19 @@ export default async function CourseDetailPage({ params }: Props) {
         .select('*, lessons(*)')
         .eq('course_id', course.id)
         .order('order_index')
-      modules = mods
+      if (mods && mods.length > 0) dbModules = mods
     }
-  } catch { /* env vars missing — show not found */ }
+  } catch { /* env vars missing — fall through to static */ }
+
+  // Fall back to static course data when DB is unavailable
+  if (!course) {
+    course = STATIC_COURSES.find(c => c.slug === params.slug) ?? null
+  }
 
   if (!course) notFound()
+
+  // Use static curriculum when DB has no modules
+  const staticCurriculum = COURSE_CURRICULUM[params.slug] ?? []
 
   async function handleEnroll() {
     'use server'
@@ -50,13 +60,16 @@ export default async function CourseDetailPage({ params }: Props) {
     redirect('/skillup/courses/' + params.slug + '?enrolled=1')
   }
 
-  const c = course as Course & { instructor: { full_name: string; bio?: string } }
+  const c = course as Course & { instructor?: { full_name: string; bio?: string } }
+
+  // First lesson in curriculum for the "Start Learning" CTA
+  const firstLesson = staticCurriculum[0]?.lessons[0] ?? null
 
   return (
     <>
       <Navbar />
 
-      {/* Hero — 30% blue */}
+      {/* Hero — brand blue */}
       <div className="bg-brand-blue text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid lg:grid-cols-3 gap-10 items-start">
@@ -89,13 +102,22 @@ export default async function CourseDetailPage({ params }: Props) {
               <div className="text-2xl font-bold text-brand-ink mb-1">
                 {c.is_free ? 'Free' : `₦${(c.price_ngn ?? 0).toLocaleString()}/month`}
               </div>
-              <form action={handleEnroll}>
-                <button type="submit" className="btn-primary w-full mt-3 text-base">
-                  {c.is_free ? 'Enrol Free' : 'Enrol Now'}
-                </button>
-              </form>
+              {firstLesson ? (
+                <Link
+                  href={`/skillup/courses/${params.slug}/lesson/${firstLesson.id}`}
+                  className="btn-primary w-full mt-3 text-base text-center block">
+                  {c.is_free ? 'Start Learning Free' : 'Start Learning'}
+                </Link>
+              ) : (
+                <form action={handleEnroll}>
+                  <button type="submit" className="btn-primary w-full mt-3 text-base">
+                    {c.is_free ? 'Enrol Free' : 'Enrol Now'}
+                  </button>
+                </form>
+              )}
               <ul className="mt-4 space-y-2 text-sm text-brand-inkMid">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {c.total_lessons ?? 0} lessons</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {c.total_lessons ?? staticCurriculum.reduce((acc, m) => acc + m.lessons.length, 0)} lessons</li>
+                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> AI-powered personalised lessons</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Verifiable certificate on completion</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Works offline — download on WiFi</li>
                 <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {(c.available_langs ?? []).map((l: string) => LANG_LABELS[l] ?? l).join(', ')} subtitles</li>
@@ -106,19 +128,21 @@ export default async function CourseDetailPage({ params }: Props) {
         </div>
       </div>
 
-      {/* Curriculum — 60% cream */}
+      {/* Curriculum */}
       <div id="lessons" className="bg-brand-bg">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <h2 className="text-xl font-bold text-brand-ink mb-6">Course Curriculum</h2>
-          {modules && modules.length > 0 ? (
+
+          {/* DB modules take priority; otherwise show static curriculum */}
+          {dbModules && dbModules.length > 0 ? (
             <div className="space-y-4">
-              {modules.map((mod: any) => (
+              {dbModules.map((mod: any) => (
                 <div key={mod.id} className="card overflow-hidden">
                   <div className="bg-brand-blueLight px-5 py-3 border-b border-[#D5D2C8]">
                     <h3 className="font-semibold text-brand-ink">{mod.title}</h3>
                   </div>
                   <div className="divide-y divide-[#F1EFE8]">
-                    {(mod.lessons as Lesson[]).map(lesson => (
+                    {mod.lessons.map((lesson: any) => (
                       <div key={lesson.id} className="px-5 py-3 flex items-center gap-3">
                         {lesson.is_free_preview
                           ? <PlayCircle className="w-4 h-4 text-brand-blue shrink-0" />
@@ -132,6 +156,35 @@ export default async function CourseDetailPage({ params }: Props) {
                         )}
                         {lesson.is_free_preview && <span className="badge badge-amber">Preview</span>}
                       </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : staticCurriculum.length > 0 ? (
+            <div className="space-y-4">
+              {staticCurriculum.map((mod, mi) => (
+                <div key={mod.id} className="card overflow-hidden">
+                  <div className="bg-brand-blueLight px-5 py-3 border-b border-[#D5D2C8] flex items-center justify-between">
+                    <h3 className="font-semibold text-brand-ink">{mod.title}</h3>
+                    <span className="text-xs text-brand-inkLight">{mod.lessons.length} lessons</span>
+                  </div>
+                  <div className="divide-y divide-[#F1EFE8]">
+                    {mod.lessons.map((lesson, li) => (
+                      <Link
+                        key={lesson.id}
+                        href={`/skillup/courses/${params.slug}/lesson/${lesson.id}`}
+                        className="px-5 py-3 flex items-center gap-3 hover:bg-brand-blueLight transition-colors group">
+                        <PlayCircle className="w-4 h-4 text-brand-blue shrink-0 group-hover:text-brand-blue" />
+                        <span className="text-sm flex-1 text-brand-ink group-hover:text-brand-blue">
+                          <span className="text-brand-inkLight text-xs mr-2">
+                            {mi + 1}.{li + 1}
+                          </span>
+                          {lesson.title}
+                        </span>
+                        <span className="text-xs text-brand-inkLight">{lesson.duration_mins}m</span>
+                        {lesson.is_free_preview && <span className="badge badge-amber">Preview</span>}
+                      </Link>
                     ))}
                   </div>
                 </div>

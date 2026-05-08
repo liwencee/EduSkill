@@ -1,0 +1,152 @@
+import { NextRequest, NextResponse } from 'next/server'
+
+export const dynamic = 'force-dynamic'
+
+const SYSTEM_PROMPT = `You are SkillBridge AI, a friendly and expert vocational skills tutor for Nigerian youth and professionals.
+Your lessons are:
+- Practical and immediately applicable in the Nigerian context
+- Written in clear, simple English (B1 level) with occasional Pidgin phrases for warmth
+- Full of local examples (Lagos markets, Kano traders, Abuja professionals, rural farmers)
+- Structured for learners who may have limited data — concise but complete
+- Encouraging and motivational
+
+Always respond with valid JSON matching the exact schema provided.`
+
+export async function POST(req: NextRequest) {
+  const { courseTitle, lessonTitle, moduleTitle } = await req.json()
+  if (!courseTitle || !lessonTitle) {
+    return NextResponse.json({ error: 'courseTitle and lessonTitle are required' }, { status: 400 })
+  }
+
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) {
+    // Return rich static fallback so the page still works without OpenAI
+    return NextResponse.json({ content: buildFallback(courseTitle, lessonTitle, moduleTitle) })
+  }
+
+  try {
+    const { default: OpenAI } = await import('openai')
+    const openai = new OpenAI({ apiKey })
+
+    const prompt = `
+Create a complete, engaging lesson for the SkillBridge Nigeria platform.
+
+Course: "${courseTitle}"
+Module: "${moduleTitle ?? ''}"
+Lesson: "${lessonTitle}"
+
+Return ONLY valid JSON in this exact schema:
+{
+  "ai_intro": "2-3 sentence warm, motivating introduction by the AI tutor (use 'you' and local Nigerian context)",
+  "key_concepts": ["concept 1", "concept 2", "concept 3", "concept 4"],
+  "sections": [
+    { "heading": "Section heading", "body": "3-5 sentence explanation with Nigerian examples. Be practical and specific." },
+    { "heading": "Section heading", "body": "..." },
+    { "heading": "Section heading", "body": "..." }
+  ],
+  "practical_tip": "One actionable tip a learner can try today in Nigeria",
+  "quiz": [
+    {
+      "question": "Clear, specific question testing the lesson content",
+      "options": ["Option A", "Option B", "Option C", "Option D"],
+      "answer": 0,
+      "explanation": "Why this answer is correct, with Nigerian context"
+    },
+    {
+      "question": "...",
+      "options": ["...", "...", "...", "..."],
+      "answer": 1,
+      "explanation": "..."
+    },
+    {
+      "question": "...",
+      "options": ["...", "...", "...", "..."],
+      "answer": 2,
+      "explanation": "..."
+    }
+  ],
+  "summary": "2-sentence lesson summary and what the learner can now do"
+}`
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4o',
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user',   content: prompt },
+      ],
+      temperature: 0.7,
+      max_tokens: 2000,
+      response_format: { type: 'json_object' },
+    })
+
+    const raw = completion.choices[0].message.content ?? '{}'
+    const content = JSON.parse(raw)
+    return NextResponse.json({ content })
+  } catch (err) {
+    console.error('Lesson content error:', err)
+    return NextResponse.json({ content: buildFallback(courseTitle, lessonTitle, moduleTitle) })
+  }
+}
+
+function buildFallback(courseTitle: string, lessonTitle: string, moduleTitle?: string) {
+  return {
+    ai_intro: `Welcome to "${lessonTitle}" — part of your ${courseTitle} journey! This lesson will give you practical knowledge you can apply immediately, whether you're in Lagos, Kano, Enugu or anywhere across Nigeria. Let's dive in!`,
+    key_concepts: [
+      `Core principles of ${lessonTitle}`,
+      'Practical application in the Nigerian market',
+      'Tools and resources you need',
+      'Common mistakes to avoid',
+    ],
+    sections: [
+      {
+        heading: `What is ${lessonTitle}?`,
+        body: `${lessonTitle} is a foundational topic within ${moduleTitle ?? courseTitle}. Understanding this concept will help you build real-world skills that employers and clients in Nigeria are actively looking for. Many successful Nigerian professionals started exactly where you are now — with curiosity and the willingness to learn.`,
+      },
+      {
+        heading: 'Why This Matters in Nigeria',
+        body: `Nigeria has one of the youngest and fastest-growing populations in Africa, which means there is enormous demand for skilled professionals in every sector. Whether you are in a major city or a smaller town, mastering this topic can open doors to new income streams, better employment, and the ability to start your own business.`,
+      },
+      {
+        heading: 'How to Apply This Practically',
+        body: `Start small and be consistent. Many successful Nigerian entrepreneurs and professionals began by practising their skills on small projects — helping neighbours, taking on low-cost jobs, or offering free services to build their portfolio. The key is to take action, learn from each experience, and improve every week.`,
+      },
+    ],
+    practical_tip: `Today, write down three ways you could use what you learned in "${lessonTitle}" to earn money or improve your work within the next 30 days.`,
+    quiz: [
+      {
+        question: `What is the most important reason to study ${lessonTitle}?`,
+        options: [
+          'To pass an exam',
+          'To build practical skills for employment and business',
+          'To impress friends',
+          'Because it is compulsory',
+        ],
+        answer: 1,
+        explanation: `Building practical, applicable skills is the core purpose of SkillBridge. Every lesson is designed to help you earn more, work better, or start a business in the Nigerian context.`,
+      },
+      {
+        question: 'What is the best way to master a new skill?',
+        options: [
+          'Read about it once and move on',
+          'Watch videos without practising',
+          'Practise consistently and apply it to real projects',
+          'Wait until you feel completely ready',
+        ],
+        answer: 2,
+        explanation: `Consistent practice and real-world application is how skills become second nature. Every professional you admire got there through deliberate, repeated practice — not just theory.`,
+      },
+      {
+        question: 'How can skills learned on SkillBridge be monetised in Nigeria?',
+        options: [
+          'They cannot — only degrees matter',
+          'Only in Lagos and Abuja',
+          'Through freelancing, employment, or starting a small business',
+          'Only after 10 years of experience',
+        ],
+        answer: 2,
+        explanation: `SkillBridge skills are designed to be immediately monetisable. Learners are finding freelance clients, getting hired, and launching businesses across all 36 states of Nigeria.`,
+      },
+    ],
+    summary: `You have completed "${lessonTitle}" and gained a solid understanding of how this topic applies in the Nigerian context. Apply what you have learned today and move confidently to the next lesson.`,
+  }
+}
