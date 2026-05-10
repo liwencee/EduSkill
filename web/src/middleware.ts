@@ -31,7 +31,14 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  let user = null
+  try {
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    // Auth error (e.g. invalid/missing key) — treat as unauthenticated
+  }
+
   const { pathname } = request.nextUrl
 
   // Redirect unauthenticated users away from protected routes
