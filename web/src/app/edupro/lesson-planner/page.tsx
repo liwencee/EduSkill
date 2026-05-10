@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Navbar from '@/components/Navbar'
-import { Wand2, Loader2, Download, RefreshCw, BookOpen, Target, Star, Lightbulb, Users, Home, Link2, Tag, Eye } from 'lucide-react'
+import { Wand2, Loader2, Download, RefreshCw, BookOpen, Target, Star, Lightbulb, Users, Home, Link2, Tag, Eye, FileText, Printer } from 'lucide-react'
 import toast from 'react-hot-toast'
 
 // ── NERDC-aligned subject list ────────────────────────────────────────────────
@@ -128,9 +128,10 @@ export default function LessonPlannerPage() {
   const [grade, setGrade]         = useState('')
   const [duration, setDuration]   = useState('45 minutes')
   const [objectives, setObjectives] = useState('')
-  const [loading, setLoading]     = useState(false)
-  const [plan, setPlan]           = useState<LessonPlan | null>(null)
-  const [planMeta, setPlanMeta]   = useState({ subject: '', topic: '', subTopic: '', grade: '' })
+  const [loading, setLoading]       = useState(false)
+  const [downloading, setDownloading] = useState(false)
+  const [plan, setPlan]             = useState<LessonPlan | null>(null)
+  const [planMeta, setPlanMeta]     = useState({ subject: '', topic: '', subTopic: '', grade: '' })
 
   async function generatePlan() {
     if (!subject || !topic || !grade) {
@@ -156,6 +157,39 @@ export default function LessonPlannerPage() {
       toast.error('Could not generate plan. Please try again.')
     }
     setLoading(false)
+  }
+
+  async function downloadDocx() {
+    if (!plan) return
+    setDownloading(true)
+    try {
+      const res = await fetch('/api/lesson-plan/docx', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          plan,
+          subject: planMeta.subject,
+          topic: planMeta.topic,
+          subTopic: planMeta.subTopic,
+          grade: planMeta.grade,
+          duration,
+        }),
+      })
+      if (!res.ok) throw new Error('Failed')
+      const blob = await res.blob()
+      const url  = URL.createObjectURL(blob)
+      const a    = document.createElement('a')
+      a.href     = url
+      a.download = `NERDC-Lesson-Plan-${(planMeta.subTopic || planMeta.topic).replace(/\s+/g, '-')}.docx`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+      toast.success('Word document downloaded!')
+    } catch {
+      toast.error('Could not generate Word document. Please try again.')
+    }
+    setDownloading(false)
   }
 
   return (
@@ -294,7 +328,7 @@ export default function LessonPlannerPage() {
                         )}
                       </p>
                     </div>
-                    <div className="flex gap-2 shrink-0">
+                    <div className="flex gap-2 shrink-0 flex-wrap">
                       <button
                         onClick={() => { setPlan(null); setPlanMeta({ subject: '', topic: '', subTopic: '', grade: '' }) }}
                         className="btn-outline text-sm py-2 px-3 flex items-center gap-1"
@@ -303,9 +337,18 @@ export default function LessonPlannerPage() {
                       </button>
                       <button
                         onClick={() => window.print()}
+                        className="btn-outline text-sm py-2 px-3 flex items-center gap-1"
+                      >
+                        <Printer className="w-3 h-3" /> Print / PDF
+                      </button>
+                      <button
+                        onClick={downloadDocx}
+                        disabled={downloading}
                         className="btn-primary text-sm py-2 px-3 flex items-center gap-1"
                       >
-                        <Download className="w-3 h-3" /> Print / PDF
+                        {downloading
+                          ? <><Loader2 className="w-3 h-3 animate-spin" /> Generating…</>
+                          : <><FileText className="w-3 h-3" /> Download Word</>}
                       </button>
                     </div>
                   </div>
@@ -488,13 +531,24 @@ export default function LessonPlannerPage() {
                     <p className="text-xs text-brand-inkLight mt-2">Fill in pupil names and observations during/after the lesson.</p>
                   </Section>
 
-                  {/* Print button */}
-                  <button
-                    onClick={() => window.print()}
-                    className="btn-primary w-full flex items-center justify-center gap-2"
-                  >
-                    <Download className="w-4 h-4" /> Print / Save as PDF
-                  </button>
+                  {/* Download buttons */}
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      onClick={() => window.print()}
+                      className="btn-outline w-full flex items-center justify-center gap-2"
+                    >
+                      <Printer className="w-4 h-4" /> Print / Save PDF
+                    </button>
+                    <button
+                      onClick={downloadDocx}
+                      disabled={downloading}
+                      className="btn-primary w-full flex items-center justify-center gap-2"
+                    >
+                      {downloading
+                        ? <><Loader2 className="w-4 h-4 animate-spin" /> Generating…</>
+                        : <><FileText className="w-4 h-4" /> Download Word (.docx)</>}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
