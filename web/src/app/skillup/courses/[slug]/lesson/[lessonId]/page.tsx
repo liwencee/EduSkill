@@ -234,7 +234,7 @@ export default function LessonPage() {
                         <Lightbulb className="w-4 h-4 text-white" />
                       </div>
                       <div>
-                        <p className="text-xs font-bold text-[#F97316] uppercase tracking-wide mb-1">Today's Action Step</p>
+                        <p className="text-xs font-bold text-[#F97316] uppercase tracking-wide mb-1">Today&apos;s Action Step</p>
                         <p className="text-sm text-orange-900 font-medium">{content.practical_tip}</p>
                       </div>
                     </div>
@@ -246,7 +246,7 @@ export default function LessonPage() {
                   <h2 className="font-bold text-[#1E1B4B] text-lg mb-1 flex items-center gap-2">
                     <Trophy className="w-5 h-5 text-[#F97316]" /> Knowledge Check
                   </h2>
-                  <p className="text-sm text-gray-400 mb-6">Test what you've learned in this lesson</p>
+                  <p className="text-sm text-gray-400 mb-6">Test what you&apos;ve learned in this lesson</p>
 
                   {content.quiz.map((q, qi) => (
                     <div key={qi} className="mb-6">

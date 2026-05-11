@@ -25,7 +25,7 @@ export default function EmployerDashboard() {
           <div className="relative">
             <p className="text-white/70 text-sm font-medium mb-1">OpportunityHub — Employer Portal 🏢</p>
             <h1 className="text-2xl font-bold mb-1">Employer Dashboard</h1>
-            <p className="text-white/75 text-sm">Connect with Nigeria's next generation of skilled, certified workers.</p>
+            <p className="text-white/75 text-sm">Connect with Nigeria&apos;s next generation of skilled, certified workers.</p>
             <div className="flex flex-wrap gap-3 mt-4">
               <Link href="/employer/post-job"
                 className="inline-flex items-center gap-2 bg-[#F97316] text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-orange-600 transition-colors">
