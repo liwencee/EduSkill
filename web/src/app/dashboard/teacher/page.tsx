@@ -4,12 +4,7 @@ import {
   BookOpen, Award, Users, ArrowRight, Zap, FileText,
   TrendingUp, MessageSquare, ChevronRight, Lightbulb, Star
 } from 'lucide-react'
-
-const CPD_COURSES = [
-  { title: 'Digital Classroom Essentials', category: 'Digital Teaching', weeks: 2, enrolled: '1.2K', slug: 'digital-classroom' },
-  { title: 'AI Tools for Teachers',         category: 'Technology',       weeks: 3, enrolled: '890',  slug: 'ai-tools-teachers'  },
-  { title: 'Inclusive Education Nigeria',  category: 'Pedagogy',         weeks: 4, enrolled: '2.1K', slug: 'inclusive-education' },
-]
+import { CPD_COURSES } from '@/lib/static-cpd-courses'
 
 export default function TeacherDashboard() {
   return (
@@ -93,17 +88,17 @@ export default function TeacherDashboard() {
                 </Link>
               </div>
               <div className="space-y-3">
-                {CPD_COURSES.map(c => (
-                  <Link key={c.slug} href="/edupro/courses"
+                {CPD_COURSES.slice(0, 3).map(c => (
+                  <Link key={c.slug} href={`/edupro/courses/${c.slug}`}
                     className="flex items-center gap-4 p-3 rounded-xl hover:bg-indigo-50 transition-colors border border-indigo-100">
-                    <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center shrink-0">
-                      <BookOpen className="w-6 h-6 text-[#4F46E5]" />
+                    <div className="w-12 h-12 rounded-xl bg-indigo-100 flex items-center justify-center shrink-0 text-2xl">
+                      {c.emoji}
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-semibold text-[#1E1B4B] text-sm">{c.title}</p>
-                      <p className="text-xs text-gray-500">{c.weeks} weeks · {c.enrolled} enrolled</p>
+                      <p className="text-xs text-gray-500">{c.weeks} weeks · {c.total_enrolled.toLocaleString()} enrolled</p>
                     </div>
-                    <span className="text-xs font-bold text-[#4F46E5] bg-indigo-50 px-2 py-0.5 rounded-full">Enrol</span>
+                    <span className="text-xs font-bold text-[#4F46E5] bg-indigo-50 px-2 py-0.5 rounded-full">Start</span>
                   </Link>
                 ))}
               </div>
