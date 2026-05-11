@@ -20,6 +20,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   vocational_teaching: 'badge-blue',
   inclusive_education: 'badge-blue',
   entrepreneurship: 'badge-amber',
+  languages: 'badge-purple',
 }
 
 export default function CourseCard({ course, showEnroll = true }: Props) {

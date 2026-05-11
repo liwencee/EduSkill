@@ -109,4 +109,33 @@ export const STATIC_COURSES: Course[] = [
     is_published: true, is_offline_ready: false, price_ngn: 10000,
     total_lessons: 18, total_enrolled: 820, avg_rating: 4.5, tags: ['logistics', 'supply chain', 'operations'],
   },
+
+  // ── Nigerian Languages ────────────────────────────────────────────────────
+  {
+    id: 'static-13', slug: 'yoruba-language-teaching',
+    title: 'Yoruba Language: Speak, Read & Teach',
+    description: 'Master Yoruba tones, grammar, proverbs and literature. Ideal for teachers, heritage speakers and anyone who wants to connect with Yoruba culture.',
+    category: 'languages', target_role: 'youth', language: 'yo',
+    available_langs: ['yo', 'en'], duration_weeks: 5, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    total_lessons: 24, total_enrolled: 1850, avg_rating: 4.9, tags: ['yoruba', 'language', 'culture', 'teaching'],
+  },
+  {
+    id: 'static-14', slug: 'igbo-language-teaching',
+    title: 'Igbo Language: Speak, Read & Teach',
+    description: 'Learn Igbo alphabet, tones, grammar, proverbs and oral traditions. Perfect for teachers, the diaspora and learners reconnecting with Igbo identity.',
+    category: 'languages', target_role: 'youth', language: 'ig',
+    available_langs: ['ig', 'en'], duration_weeks: 5, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    total_lessons: 24, total_enrolled: 1620, avg_rating: 4.8, tags: ['igbo', 'language', 'culture', 'teaching'],
+  },
+  {
+    id: 'static-15', slug: 'hausa-language-teaching',
+    title: 'Hausa Language: Speak, Read & Teach',
+    description: 'Learn Hausa pronunciation, grammar, literature and proverbs. A vital language of trade and education across northern Nigeria and West Africa.',
+    category: 'languages', target_role: 'youth', language: 'ha',
+    available_langs: ['ha', 'en'], duration_weeks: 5, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    total_lessons: 24, total_enrolled: 1430, avg_rating: 4.8, tags: ['hausa', 'language', 'culture', 'teaching'],
+  },
 ]

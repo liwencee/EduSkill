@@ -14,6 +14,7 @@ const CATEGORIES = [
   { value: 'agribusiness',      label: 'Agribusiness'      },
   { value: 'financial_literacy',label: 'Financial Literacy'},
   { value: 'entrepreneurship',  label: 'Entrepreneurship'  },
+  { value: 'languages',         label: '🇳🇬 Nigerian Languages' },
 ]
 
 interface Props {
