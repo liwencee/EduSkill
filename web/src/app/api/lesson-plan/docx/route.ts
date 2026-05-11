@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
   AlignmentType, BorderStyle, WidthType, ShadingType, LevelFormat,
-  Header, PageNumber, UnderlineType,
+  Header,
 } from 'docx'
 
 export const dynamic = 'force-dynamic'
@@ -24,13 +24,6 @@ const singleBorder = (color = C_GREY_LINE) =>
 const allBorders = (color = C_GREY_LINE) => ({
   top: singleBorder(color), bottom: singleBorder(color),
   left: singleBorder(color), right: singleBorder(color),
-})
-
-const noBorders = () => ({
-  top:    { style: BorderStyle.NONE },
-  bottom: { style: BorderStyle.NONE },
-  left:   { style: BorderStyle.NONE },
-  right:  { style: BorderStyle.NONE },
 })
 
 const cellMargins = { top: 80, bottom: 80, left: 140, right: 140 }
@@ -66,17 +59,6 @@ function body(text: string, opts: { bold?: boolean; colour?: string; indent?: nu
         color: opts.colour ?? C_INK_MID,
         bold: opts.bold ?? false,
       }),
-    ],
-  })
-}
-
-/** Amber-accented label + value on one line */
-function labelValue(label: string, value: string): Paragraph {
-  return new Paragraph({
-    spacing: { after: 80 },
-    children: [
-      new TextRun({ text: `${label}: `, bold: true, color: C_BLUE, size: 22, font: 'Arial' }),
-      new TextRun({ text: value || '_______________', size: 22, font: 'Arial', color: C_INK }),
     ],
   })
 }
@@ -470,7 +452,10 @@ export async function POST(req: NextRequest) {
     const buffer = await Packer.toBuffer(doc)
     const safeName = `NERDC-Lesson-Plan-${(subTopic || topic).replace(/[^a-z0-9]/gi, '-')}.docx`
 
-    return new NextResponse(buffer, {
+    // Wrap Node Buffer in Uint8Array — Buffer extends Uint8Array but the
+    // NextResponse type signature only accepts BodyInit (Uint8Array, Blob,
+    // ArrayBuffer, etc.) so we convert explicitly.
+    return new NextResponse(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'Content-Disposition': `attachment; filename="${safeName}"`,
