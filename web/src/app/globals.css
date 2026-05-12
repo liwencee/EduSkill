@@ -14,12 +14,14 @@
     --color-ink:        #2C2C2A;
     --color-ink-mid:    #5A5A58;
     --color-ink-light:  #9A9A97;
+    --font-poppins:     'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-nunito:      'Nunito', system-ui, -apple-system, 'Segoe UI', sans-serif;
   }
 
   html  { scroll-behavior: smooth; background-color: #F1EFE8; }
-  body  { color: #2C2C2A; }
+  body  { color: #2C2C2A; font-family: var(--font-nunito); }
 
-  h1, h2, h3, h4, h5, h6 { font-family: var(--font-poppins), sans-serif; }
+  h1, h2, h3, h4, h5, h6 { font-family: var(--font-poppins); }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
