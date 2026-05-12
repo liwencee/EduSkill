@@ -4,12 +4,12 @@ import Footer from '@/components/Footer'
 import { ArrowRight, CheckCircle, Download, Globe, Star } from 'lucide-react'
 
 const COURSE_TRACKS = [
-  { emoji: '📱', title: 'Digital Marketing',        desc: 'Social media, content, paid ads for Nigerian SMEs',         weeks: 4, lang: 'EN · Pidgin',  badge: 'Popular', slug: 'digital-marketing-fundamentals' },
-  { emoji: '💻', title: 'Coding Basics',             desc: 'HTML, CSS, JavaScript — build your first real website',     weeks: 6, lang: 'EN · Yoruba', badge: 'New',     slug: 'coding-basics-web' },
-  { emoji: '👗', title: 'Fashion Design & Business', desc: 'Pattern-making, pricing, and selling fashion in Nigeria',   weeks: 4, lang: 'EN · Igbo',   badge: 'Offline', slug: 'fashion-design-business' },
-  { emoji: '☀️', title: 'Solar Installation',        desc: 'Install, wire, and maintain solar panels professionally',   weeks: 4, lang: 'EN · Hausa',  badge: 'Offline', slug: 'solar-installation' },
-  { emoji: '🌱', title: 'Agribusiness',              desc: 'Modern farming, post-harvest, and selling your produce',    weeks: 4, lang: 'EN · Hausa',  badge: 'Free',    slug: 'agribusiness-farm-to-market' },
-  { emoji: '💰', title: 'Financial Literacy',        desc: 'Budget, save, bank, and start a business with ₦50K',       weeks: 2, lang: 'EN · Pidgin', badge: 'Free',    slug: 'financial-literacy-youth' },
+  { emoji: '📱', title: 'Digital Marketing',        desc: 'Social media, content, paid ads for Nigerian SMEs',         weeks: 4, lang: 'EN · Pidgin',  badge: 'Popular', slug: 'digital-marketing-mastery' },
+  { emoji: '💻', title: 'Coding Basics',             desc: 'HTML, CSS, JavaScript — build your first real website',     weeks: 6, lang: 'EN · Yoruba', badge: 'New',     slug: 'coding-basics' },
+  { emoji: '👗', title: 'Fashion Design & Business', desc: 'Pattern-making, pricing, and selling fashion in Nigeria',   weeks: 4, lang: 'EN · Igbo',   badge: 'Offline', slug: 'fashion-design-fundamentals' },
+  { emoji: '☀️', title: 'Solar Installation',        desc: 'Install, wire, and maintain solar panels professionally',   weeks: 4, lang: 'EN · Hausa',  badge: 'Offline', slug: 'solar-installation-tech' },
+  { emoji: '🌱', title: 'Agribusiness',              desc: 'Modern farming, post-harvest, and selling your produce',    weeks: 4, lang: 'EN · Hausa',  badge: 'Free',    slug: 'agribusiness-fundamentals' },
+  { emoji: '💰', title: 'Financial Literacy',        desc: 'Budget, save, bank, and start a business with ₦50K',       weeks: 2, lang: 'EN · Pidgin', badge: 'Free',    slug: 'financial-literacy-nigeria' },
 ]
 
 const BADGE_STYLE: Record<string, string> = {

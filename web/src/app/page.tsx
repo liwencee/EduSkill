@@ -12,6 +12,7 @@ const COURSES = [
     // Nigerian man with laptop + multiple phones, shot in Lagos Nigeria
     image: 'https://images.unsplash.com/photo-1532522953890-ccc87dfeb0b7?w=600&q=80',
     title: 'Digital Marketing Mastery',
+    slug: 'digital-marketing-mastery',
     category: 'Business', catBg: 'bg-orange-100', catText: 'text-orange-700',
     cardBorder: 'border-orange-200', shadow: 'shadow-clay-orange',
     badgeText: 'Most Popular', badgeBg: 'bg-orange-500',
@@ -21,6 +22,7 @@ const COURSES = [
     // Two Nigerian men coding on laptops, shot in Abuja Nigeria
     image: 'https://images.unsplash.com/photo-1540058404349-2e5fabf32d75?w=600&q=80',
     title: 'Coding Basics for Beginners',
+    slug: 'coding-basics',
     category: 'Tech', catBg: 'bg-indigo-100', catText: 'text-indigo-700',
     cardBorder: 'border-indigo-200', shadow: 'shadow-clay-indigo',
     badgeText: 'New', badgeBg: 'bg-indigo-500',
@@ -30,6 +32,7 @@ const COURSES = [
     // West African tailor at sewing machine, Accra Ghana
     image: 'https://images.unsplash.com/photo-1744808336885-c6b2425c3f1e?w=600&q=80',
     title: 'Fashion Design & Business',
+    slug: 'fashion-design-fundamentals',
     category: 'Creative', catBg: 'bg-pink-100', catText: 'text-pink-700',
     cardBorder: 'border-pink-200', shadow: 'shadow-clay-purple',
     badgeText: 'Offline', badgeBg: 'bg-pink-500',
@@ -39,6 +42,7 @@ const COURSES = [
     // Solar installation (universal technical skill in Nigeria)
     image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=600&q=80',
     title: 'Solar Panel Installation',
+    slug: 'solar-installation-tech',
     category: 'Technical', catBg: 'bg-yellow-100', catText: 'text-yellow-700',
     cardBorder: 'border-yellow-200', shadow: 'shadow-clay',
     badgeText: 'Offline', badgeBg: 'bg-yellow-500',
@@ -48,6 +52,7 @@ const COURSES = [
     // Nigerian woman standing in open field, by Nigerian photographer Tomiwa Ogunmodede
     image: 'https://images.unsplash.com/photo-1562009059-7f43163873a0?w=600&q=80',
     title: 'Agribusiness Fundamentals',
+    slug: 'agribusiness-fundamentals',
     category: 'Agriculture', catBg: 'bg-green-100', catText: 'text-green-700',
     cardBorder: 'border-green-200', shadow: 'shadow-clay-green',
     badgeText: 'Free', badgeBg: 'bg-green-500',
@@ -57,6 +62,7 @@ const COURSES = [
     // Nigerian man working on MacBook, shot in Lagos Nigeria during lockdown
     image: 'https://images.unsplash.com/photo-1588674845784-9d0c32777b3a?w=600&q=80',
     title: 'Financial Literacy Essentials',
+    slug: 'financial-literacy-nigeria',
     category: 'Finance', catBg: 'bg-teal-100', catText: 'text-teal-700',
     cardBorder: 'border-teal-200', shadow: 'shadow-clay-green',
     badgeText: 'Free', badgeBg: 'bg-teal-500',
@@ -244,7 +250,7 @@ export default function LandingPage() {
           {/* Grid */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {COURSES.map((c) => (
-              <Link key={c.title} href="/skillup/courses"
+              <Link key={c.title} href={`/skillup/courses/${c.slug}`}
                 className={`group bg-white border-[3px] ${c.cardBorder} rounded-3xl overflow-hidden ${c.shadow}
                             hover:-translate-y-2 hover:shadow-none transition-all duration-200 cursor-pointer`}>
                 {/* Image */}
