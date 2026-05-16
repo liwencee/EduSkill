@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, getClientIp, rateLimitHeaders, LIMITS } from '@/lib/rate-limit'
+import { logger, logRequest, logResponse } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -13,15 +15,34 @@ Your lessons are:
 Always respond with valid JSON matching the exact schema provided.`
 
 export async function POST(req: NextRequest) {
+  const ctx = logRequest('/api/lesson-content', req)
+
+  // ── Rate limiting ────────────────────────────────────────────────
+  const ip = getClientIp(req)
+  const rl  = rateLimit(ip, 'lessonContent', LIMITS.lessonContent.max, LIMITS.lessonContent.windowMs)
+  if (!rl.success) {
+    logger.warn('Rate limit exceeded — lesson-content', { ip, route: '/api/lesson-content' })
+    logResponse('/api/lesson-content', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait before loading the next lesson.' },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    )
+  }
+
   const { courseTitle, lessonTitle, moduleTitle } = await req.json()
   if (!courseTitle || !lessonTitle) {
+    logResponse('/api/lesson-content', ctx, 400)
     return NextResponse.json({ error: 'courseTitle and lessonTitle are required' }, { status: 400 })
   }
 
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey) {
-    // Return rich static fallback so the page still works without OpenAI
-    return NextResponse.json({ content: buildFallback(courseTitle, lessonTitle, moduleTitle) })
+    logger.warn('No OPENAI_API_KEY — using fallback lesson content', { route: '/api/lesson-content' })
+    logResponse('/api/lesson-content', ctx, 200, { fallback: true })
+    return NextResponse.json(
+      { content: buildFallback(courseTitle, lessonTitle, moduleTitle) },
+      { headers: rateLimitHeaders(rl) }
+    )
   }
 
   try {
@@ -81,10 +102,19 @@ Return ONLY valid JSON in this exact schema:
 
     const raw = completion.choices[0].message.content ?? '{}'
     const content = JSON.parse(raw)
-    return NextResponse.json({ content })
+    logResponse('/api/lesson-content', ctx, 200)
+    return NextResponse.json({ content }, { headers: { 'X-Cache': 'MISS', ...rateLimitHeaders(rl) } })
   } catch (err) {
-    console.error('Lesson content error:', err)
-    return NextResponse.json({ content: buildFallback(courseTitle, lessonTitle, moduleTitle) })
+    const error = err instanceof Error ? err : new Error(String(err))
+    logger.error('Lesson content generation failed', {
+      route: '/api/lesson-content',
+      error: { message: error.message, name: error.name },
+    })
+    logResponse('/api/lesson-content', ctx, 200, { fallback: true, error: { message: error.message } })
+    return NextResponse.json(
+      { content: buildFallback(courseTitle, lessonTitle, moduleTitle) },
+      { headers: rateLimitHeaders(rl) }
+    )
   }
 }
 

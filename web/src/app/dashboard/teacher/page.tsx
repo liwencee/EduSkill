@@ -2,7 +2,8 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import {
   BookOpen, Award, Users, ArrowRight, Zap, FileText,
-  TrendingUp, MessageSquare, ChevronRight, Lightbulb, Star
+  TrendingUp, MessageSquare, ChevronRight, Lightbulb, Star,
+  ClipboardList,
 } from 'lucide-react'
 import { CPD_COURSES } from '@/lib/static-cpd-courses'
 
@@ -25,6 +26,10 @@ export default function TeacherDashboard() {
               <Link href="/edupro/lesson-planner"
                 className="inline-flex items-center gap-2 bg-[#F97316] text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-orange-600 transition-colors">
                 <Zap className="w-4 h-4" /> AI Lesson Planner
+              </Link>
+              <Link href="/edupro/result-generator"
+                className="inline-flex items-center gap-2 bg-amber-400 text-[#1E1B4B] text-sm font-bold px-4 py-2 rounded-xl hover:bg-amber-300 transition-colors">
+                <ClipboardList className="w-4 h-4" /> Generate Result
               </Link>
               <Link href="/edupro/courses"
                 className="inline-flex items-center gap-2 bg-white/20 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
@@ -79,6 +84,31 @@ export default function TeacherDashboard() {
               </div>
             </div>
 
+            {/* Student Results */}
+            <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-bold text-[#1E1B4B] text-lg">Student Results</h2>
+                <Link href="/edupro/result-generator"
+                  className="text-sm font-bold text-[#F97316] hover:underline flex items-center gap-1">
+                  + Generate New
+                </Link>
+              </div>
+              <div className="text-center py-10">
+                <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                  <ClipboardList className="w-8 h-8 text-amber-400" />
+                </div>
+                <p className="font-semibold text-[#1E1B4B] mb-1">No results generated yet</p>
+                <p className="text-sm text-gray-500 mb-4">
+                  Enter student scores and get ranked results, letter grades,
+                  and AI career recommendations in seconds.
+                </p>
+                <Link href="/edupro/result-generator"
+                  className="inline-flex items-center gap-2 bg-amber-400 text-[#1E1B4B] text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-amber-300 transition-colors">
+                  <ClipboardList className="w-4 h-4" /> Generate Result Sheet
+                </Link>
+              </div>
+            </div>
+
             {/* CPD Courses */}
             <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
               <div className="flex items-center justify-between mb-4">
@@ -112,11 +142,12 @@ export default function TeacherDashboard() {
               <h2 className="font-bold text-[#1E1B4B] mb-4">Quick Actions</h2>
               <div className="space-y-2">
                 {[
-                  { href: '/edupro/lesson-planner', icon: Zap,           label: 'AI Lesson Planner',   bg: 'bg-orange-50',  color: 'text-[#F97316]' },
-                  { href: '/edupro/courses',         icon: BookOpen,      label: 'Browse CPD Courses',  bg: 'bg-indigo-50',  color: 'text-[#4F46E5]' },
-                  { href: '/edupro/community',       icon: MessageSquare, label: 'Teacher Community',   bg: 'bg-purple-50',  color: 'text-purple-600' },
-                  { href: '/dashboard/certificates', icon: Award,         label: 'My Certificates',     bg: 'bg-yellow-50',  color: 'text-yellow-600' },
-                  { href: '/edupro',                 icon: TrendingUp,    label: 'Teaching Materials',  bg: 'bg-green-50',   color: 'text-green-600'  },
+                  { href: '/edupro/lesson-planner',   icon: Zap,           label: 'AI Lesson Planner',    bg: 'bg-orange-50',  color: 'text-[#F97316]' },
+                  { href: '/edupro/result-generator', icon: ClipboardList, label: 'Generate Result Sheet', bg: 'bg-amber-50',   color: 'text-amber-500' },
+                  { href: '/edupro/courses',           icon: BookOpen,      label: 'Browse CPD Courses',   bg: 'bg-indigo-50',  color: 'text-[#4F46E5]' },
+                  { href: '/edupro/community',         icon: MessageSquare, label: 'Teacher Community',    bg: 'bg-purple-50',  color: 'text-purple-600' },
+                  { href: '/dashboard/certificates',   icon: Award,         label: 'My Certificates',      bg: 'bg-yellow-50',  color: 'text-yellow-600' },
+                  { href: '/edupro',                   icon: TrendingUp,    label: 'Teaching Materials',   bg: 'bg-green-50',   color: 'text-green-600'  },
                 ].map(l => (
                   <Link key={l.href} href={l.href}
                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-indigo-50 transition-colors border border-transparent hover:border-indigo-100">
@@ -146,9 +177,19 @@ export default function TeacherDashboard() {
                 <Lightbulb className="w-4 h-4 text-orange-300" />
                 <span className="text-xs font-bold text-orange-300 uppercase tracking-wide">Pro Tip</span>
               </div>
-              <p className="text-sm font-medium leading-relaxed">
-                Use the AI Lesson Planner to generate NERDC-aligned lesson plans. Save 3–5 hours of prep time every week! ⚡
+              <p className="text-sm font-medium leading-relaxed mb-3">
+                Use the <span className="text-orange-300 font-bold">AI Lesson Planner</span> to generate NERDC-aligned plans in 10 seconds. Then use <span className="text-amber-300 font-bold">Generate Result</span> to rank your students and get AI career guidance — all in one place. ⚡
               </p>
+              <div className="flex flex-col gap-2">
+                <Link href="/edupro/lesson-planner"
+                  className="text-xs font-bold text-center bg-orange-400/20 hover:bg-orange-400/30 text-orange-200 px-3 py-1.5 rounded-lg transition-colors">
+                  → Open Lesson Planner
+                </Link>
+                <Link href="/edupro/result-generator"
+                  className="text-xs font-bold text-center bg-amber-400/20 hover:bg-amber-400/30 text-amber-200 px-3 py-1.5 rounded-lg transition-colors">
+                  → Generate Result Sheet
+                </Link>
+              </div>
             </div>
           </div>
         </div>

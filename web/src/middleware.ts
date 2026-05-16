@@ -8,11 +8,21 @@ const PROTECTED: string[] = []
 const AUTH_PAGES = ['/auth/login', '/auth/signup']
 
 export async function middleware(request: NextRequest) {
+  // ── Inject X-Request-ID for end-to-end tracing ────────────────
+  // The ID is generated here (edge) so it flows through every server
+  // component, API handler, and log line for the same request.
+  const requestId = crypto.randomUUID()
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-request-id', requestId)
+
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
-    return NextResponse.next()
+    const res = NextResponse.next({ request: { headers: requestHeaders } })
+    res.headers.set('x-request-id', requestId)
+    return res
   }
 
-  let supabaseResponse = NextResponse.next({ request })
+  let supabaseResponse = NextResponse.next({ request: { headers: requestHeaders } })
+  supabaseResponse.headers.set('x-request-id', requestId)
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -22,7 +32,8 @@ export async function middleware(request: NextRequest) {
         getAll() { return request.cookies.getAll() },
         setAll(cookiesToSet: { name: string; value: string; options: CookieOptions }[]) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({ request })
+          supabaseResponse = NextResponse.next({ request: { headers: requestHeaders } })
+          supabaseResponse.headers.set('x-request-id', requestId)
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )

@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Wand2, BookOpen, Users, Award, ArrowRight, CheckCircle, ClipboardList } from 'lucide-react'
 
+
 const FEATURES = [
   { icon: Wand2,         title: 'AI Lesson Planner',       desc: 'Input topic + grade level → get a full NERDC-aligned lesson plan in 10 seconds. Save hours every week.',                                    href: '/edupro/lesson-planner',      cta: 'Try the AI Planner' },
   { icon: ClipboardList, title: 'Student Result Generator', desc: 'Enter scores for any number of pupils and subjects → get ranked results, letter grades, AI-powered recommendations and career guidance.',   href: '/edupro/result-generator',    cta: 'Generate Results' },
@@ -28,17 +29,14 @@ export default function EduProPage() {
             Spend less time preparing and more time teaching.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
-            {/* 10% amber CTA */}
+            {/* Primary CTA — sign up */}
             <Link href="/auth/signup?role=teacher" className="btn-primary inline-flex items-center gap-2 text-lg">
               Join as a Teacher <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/edupro/lesson-planner"
+            {/* Secondary CTA — log in to access tools */}
+            <Link href="/auth/login"
               className="border-2 border-white/60 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center gap-2 text-lg">
-              Try AI Lesson Planner
-            </Link>
-            <Link href="/edupro/result-generator"
-              className="border-2 border-brand-amber text-brand-amber font-semibold px-6 py-3 rounded-xl hover:bg-brand-amber hover:text-brand-ink transition-colors inline-flex items-center gap-2 text-lg">
-              <ClipboardList className="w-5 h-5" /> Generate Result
+              Log In to Your Dashboard
             </Link>
           </div>
         </div>

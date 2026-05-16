@@ -90,6 +90,8 @@ export function rateLimit(
 export const LIMITS = {
   /** AI Lesson Planner — 10 plans per minute per IP */
   lessonPlan:     { max: 10,  windowMs: 60_000 },
+  /** AI Lesson Content (SkillUp) — 20 per minute per IP */
+  lessonContent:  { max: 20,  windowMs: 60_000 },
   /** Result Generator — 20 per minute per IP */
   generateResult: { max: 20,  windowMs: 60_000 },
   /** Login — 5 attempts per minute per IP (brute-force guard) */
