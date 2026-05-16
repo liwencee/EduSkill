@@ -1,12 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 import {
   Briefcase, MapPin, Clock, DollarSign, ArrowLeft,
-  CheckCircle, Loader2, ChevronDown
+  CheckCircle, Loader2, ChevronDown, AlertCircle,
 } from 'lucide-react'
 
 const SKILL_CATEGORIES = [
@@ -24,51 +24,93 @@ const STATES = [
   'Sokoto', 'Taraba', 'Yobe', 'Zamfara', 'Remote / Nationwide',
 ]
 
+// Job type values must match the job_type enum in Supabase:
+// full_time | part_time | apprenticeship | freelance | internship
+const JOB_TYPES = [
+  { value: 'full_time',      label: 'Full-Time' },
+  { value: 'part_time',      label: 'Part-Time' },
+  { value: 'freelance',      label: 'Contract / Freelance' },
+  { value: 'apprenticeship', label: 'Apprenticeship' },
+  { value: 'internship',     label: 'Internship' },
+]
+
 export default function PostJobPage() {
-  const [loading, setLoading] = useState(false)
+  const [loading,   setLoading]   = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [userId,    setUserId]    = useState<string | null>(null)
+  const [authError, setAuthError] = useState('')
 
   const [form, setForm] = useState({
-    title: '',
-    category: '',
+    title:          '',
+    company_name:   '',
+    category:       '',
     location_state: '',
-    job_type: 'full_time',
-    salary_min: '',
-    salary_max: '',
-    description: '',
-    requirements: '',
-    deadline: '',
-    require_cert: true,
-    is_active: true,
+    job_type:       'full_time',
+    salary_min:     '',
+    salary_max:     '',
+    description:    '',
+    requirements:   '',
+    deadline:       '',
+    require_cert:   true,
   })
 
   const set = (field: string, value: string | boolean) =>
     setForm(prev => ({ ...prev, [field]: value }))
 
+  // ── Load current user + pre-fill company_name from employer profile ──
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) {
+        setAuthError('You must be logged in as an employer to post a job.')
+        return
+      }
+      setUserId(user.id)
+
+      // Try to pre-fill company name from employer_profiles
+      const { data: ep } = await supabase
+        .from('employer_profiles')
+        .select('company_name')
+        .eq('id', user.id)
+        .single()
+
+      if (ep?.company_name) {
+        setForm(prev => ({ ...prev, company_name: ep.company_name }))
+      }
+    })
+  }, [])
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
 
+    if (!userId) {
+      toast.error('You must be logged in to post a job.')
+      return
+    }
+
+    setLoading(true)
     const supabase = createClient()
 
     const { error } = await supabase.from('job_listings').insert({
-      employer_id: null,
-      title: form.title,
-      category: form.category,
+      employer_id:    userId,                                          // FIX 1: real user ID
+      title:          form.title,
+      company_name:   form.company_name,                              // FIX 2: required column
+      description:    form.description + (form.requirements
+        ? `\n\nRequirements:\n${form.requirements}` : ''),
+      job_type:       form.job_type,
       location_state: form.location_state,
-      job_type: form.job_type,
-      salary_min: form.salary_min ? parseInt(form.salary_min) : null,
-      salary_max: form.salary_max ? parseInt(form.salary_max) : null,
-      description: form.description,
-      requirements: form.requirements,
-      deadline: form.deadline || null,
-      require_cert: form.require_cert,
-      is_active: true,
-      applications: 0,
+      salary_min_ngn: form.salary_min ? parseFloat(form.salary_min) : null,  // FIX 3: correct column names
+      salary_max_ngn: form.salary_max ? parseFloat(form.salary_max) : null,
+      deadline:       form.deadline || null,
+      required_skills: form.category ? [form.category] : [],
+      is_active:      true,
+      is_featured:    false,
+      applications:   0,
     })
 
     if (error) {
       toast.error(error.message)
+      console.error('Post job error:', error)
     } else {
       setSubmitted(true)
       toast.success('Job posted successfully! 🎉')
@@ -76,6 +118,27 @@ export default function PostJobPage() {
     setLoading(false)
   }
 
+  // ── Auth guard ────────────────────────────────────────────────────────────
+  if (authError) {
+    return (
+      <div className="min-h-screen bg-[#EEF2FF]">
+        <Navbar />
+        <div className="max-w-lg mx-auto px-4 py-20 text-center">
+          <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-8 h-8 text-red-500" />
+          </div>
+          <h1 className="text-xl font-bold text-[#1E1B4B] mb-2">Login Required</h1>
+          <p className="text-gray-500 text-sm mb-6">{authError}</p>
+          <Link href="/auth/login?next=/employer/post-job"
+            className="inline-flex items-center gap-2 bg-[#4F46E5] text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors">
+            Log In to Continue
+          </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Success screen ────────────────────────────────────────────────────────
   if (submitted) {
     return (
       <div className="min-h-screen bg-[#EEF2FF]">
@@ -103,6 +166,7 @@ export default function PostJobPage() {
     )
   }
 
+  // ── Form ──────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-[#EEF2FF]">
       <Navbar />
@@ -122,12 +186,13 @@ export default function PostJobPage() {
 
         <form onSubmit={handleSubmit} className="space-y-6">
 
-          {/* Basic Info */}
+          {/* ── Basic Info ────────────────────────────────────────────── */}
           <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
             <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
               <Briefcase className="w-5 h-5 text-[#4F46E5]" /> Job Details
             </h2>
             <div className="space-y-4">
+
               <div>
                 <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
                   Job Title <span className="text-red-500">*</span>
@@ -136,6 +201,18 @@ export default function PostJobPage() {
                   type="text" required
                   value={form.title} onChange={e => set('title', e.target.value)}
                   placeholder="e.g. Digital Marketing Officer"
+                  className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent text-sm"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                  Company / Organisation Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text" required
+                  value={form.company_name} onChange={e => set('company_name', e.target.value)}
+                  placeholder="e.g. Dangote Industries Ltd"
                   className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent text-sm"
                 />
               </div>
@@ -162,10 +239,9 @@ export default function PostJobPage() {
                   <div className="relative">
                     <select value={form.job_type} onChange={e => set('job_type', e.target.value)}
                       className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
-                      <option value="full_time">Full-Time</option>
-                      <option value="part_time">Part-Time</option>
-                      <option value="contract">Contract / Freelance</option>
-                      <option value="internship">Internship / Apprenticeship</option>
+                      {JOB_TYPES.map(t => (
+                        <option key={t.value} value={t.value}>{t.label}</option>
+                      ))}
                     </select>
                     <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                   </div>
@@ -174,12 +250,13 @@ export default function PostJobPage() {
             </div>
           </div>
 
-          {/* Location & Salary */}
+          {/* ── Location & Salary ─────────────────────────────────────── */}
           <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
             <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-[#F97316]" /> Location & Compensation
+              <MapPin className="w-5 h-5 text-[#F97316]" /> Location &amp; Compensation
             </h2>
             <div className="space-y-4">
+
               <div>
                 <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
                   State / Location <span className="text-red-500">*</span>
@@ -233,7 +310,7 @@ export default function PostJobPage() {
             </div>
           </div>
 
-          {/* Description */}
+          {/* ── Description ───────────────────────────────────────────── */}
           <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
             <h2 className="font-bold text-[#1E1B4B] mb-4">Job Description</h2>
             <div className="space-y-4">
@@ -261,7 +338,7 @@ export default function PostJobPage() {
             </div>
           </div>
 
-          {/* Options */}
+          {/* ── Preferences ───────────────────────────────────────────── */}
           <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
             <h2 className="font-bold text-[#1E1B4B] mb-4">Preferences</h2>
             <label className="flex items-start gap-3 cursor-pointer">
@@ -273,15 +350,19 @@ export default function PostJobPage() {
               />
               <div>
                 <p className="text-sm font-semibold text-[#1E1B4B]">Require SkillBridge Certification</p>
-                <p className="text-xs text-gray-500 mt-0.5">Only show your listing to candidates who hold a verified SkillBridge certificate in the relevant skill.</p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Only show your listing to candidates who hold a verified SkillBridge certificate in the relevant skill.
+                </p>
               </div>
             </label>
           </div>
 
-          {/* Submit */}
-          <button type="submit" disabled={loading}
+          {/* ── Submit ────────────────────────────────────────────────── */}
+          <button type="submit" disabled={loading || !userId}
             className="w-full inline-flex items-center justify-center gap-2 bg-[#F97316] text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-60 text-base">
-            {loading ? <><Loader2 className="w-5 h-5 animate-spin" /> Posting…</> : <>Post Job — Free <CheckCircle className="w-5 h-5" /></>}
+            {loading
+              ? <><Loader2 className="w-5 h-5 animate-spin" /> Posting…</>
+              : <><CheckCircle className="w-5 h-5" /> Post Job — Free</>}
           </button>
         </form>
       </div>
