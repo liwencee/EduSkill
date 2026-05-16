@@ -129,3 +129,71 @@
   .section-blue   { @apply bg-brand-blue text-white; }
   .section-dark   { @apply bg-brand-blueDark text-white; }
 }
+
+/* ────────────────────────────────────────────────────────────────────
+   Print styles for "Save as PDF" on the Lesson Planner
+   Hides navbar, sidebar form, and action buttons.
+   Only the lesson plan output (#lesson-plan-output) is printed.
+   ──────────────────────────────────────────────────────────────────── */
+@media print {
+  /* hide app chrome */
+  header, nav, footer, .no-print { display: none !important; }
+
+  /* clean white background, full width */
+  html, body {
+    background: #ffffff !important;
+    color: #000 !important;
+  }
+
+  /* keep only the lesson plan column at full width */
+  #lesson-plan-output {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* hide the sticky form column when printing */
+  .lg\:col-span-2 {
+    display: none !important;
+  }
+  #lesson-plan-output.lg\:col-span-3 {
+    display: block !important;
+    grid-column: span 5 / span 5 !important;
+  }
+
+  /* hide all buttons (download / print / new) */
+  button { display: none !important; }
+
+  /* tighten card padding for print */
+  .card, .bg-white {
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+
+  /* link colours remain readable on paper */
+  a { color: #1e4f8a !important; text-decoration: none !important; }
+
+  /* ── Result Generator print layout ── */
+  #result-output {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1rem !important;
+  }
+
+  /* show the hidden print-only student comment section */
+  .print-only { display: block !important; }
+
+  /* make result table fit page */
+  #result-output table {
+    font-size: 10px !important;
+  }
+
+  /* avoid row breaking across pages */
+  #result-output tr { page-break-inside: avoid; }
+
+  /* each student comment block on its own area */
+  .page-break-inside-avoid { page-break-inside: avoid; }
+}

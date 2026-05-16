@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { Wand2, BookOpen, Users, Award, ArrowRight, CheckCircle } from 'lucide-react'
+import { Wand2, BookOpen, Users, Award, ArrowRight, CheckCircle, ClipboardList } from 'lucide-react'
 
 const FEATURES = [
-  { icon: Wand2,    title: 'AI Lesson Planner',  desc: 'Input topic + grade level → get a full NERDC-aligned lesson plan in 10 seconds. Save hours every week.',  href: '/edupro/lesson-planner', cta: 'Try the AI Planner' },
-  { icon: BookOpen, title: 'CPD Short Courses',   desc: '2–6 week self-paced courses: Digital Classroom, Vocational Teaching, Inclusive Education, and more.',       href: '/edupro/courses',        cta: 'Browse CPD Courses' },
-  { icon: Users,    title: 'Teacher Community',   desc: 'Subject-specific forums, mentorship matching, and expert Q&A. Connect with teachers across Nigeria.',         href: '/edupro/community',      cta: 'Join the Community' },
-  { icon: Award,    title: 'CPD Certificates',    desc: 'Earn blockchain-verifiable CPD certificates for every course. Build your digital teaching portfolio.',         href: '/edupro/certificates',   cta: 'View Certificates' },
+  { icon: Wand2,         title: 'AI Lesson Planner',       desc: 'Input topic + grade level → get a full NERDC-aligned lesson plan in 10 seconds. Save hours every week.',                                    href: '/edupro/lesson-planner',      cta: 'Try the AI Planner' },
+  { icon: ClipboardList, title: 'Student Result Generator', desc: 'Enter scores for any number of pupils and subjects → get ranked results, letter grades, AI-powered recommendations and career guidance.',   href: '/edupro/result-generator',    cta: 'Generate Results' },
+  { icon: BookOpen,      title: 'CPD Short Courses',        desc: '2–6 week self-paced courses: Digital Classroom, Vocational Teaching, Inclusive Education, and more.',                                      href: '/edupro/courses',             cta: 'Browse CPD Courses' },
+  { icon: Users,         title: 'Teacher Community',        desc: 'Subject-specific forums, mentorship matching, and expert Q&A. Connect with teachers across Nigeria.',                                      href: '/edupro/community',           cta: 'Join the Community' },
+  { icon: Award,         title: 'CPD Certificates',         desc: 'Earn blockchain-verifiable CPD certificates for every course. Build your digital teaching portfolio.',                                     href: '/edupro/certificates',        cta: 'View Certificates' },
 ]
 
 export default function EduProPage() {
@@ -26,7 +27,7 @@ export default function EduProPage() {
             Professional development courses, AI lesson planning, and a peer community — built for Nigeria&apos;s teachers.
             Spend less time preparing and more time teaching.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-4 flex-wrap">
             {/* 10% amber CTA */}
             <Link href="/auth/signup?role=teacher" className="btn-primary inline-flex items-center gap-2 text-lg">
               Join as a Teacher <ArrowRight className="w-5 h-5" />
@@ -34,6 +35,10 @@ export default function EduProPage() {
             <Link href="/edupro/lesson-planner"
               className="border-2 border-white/60 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center gap-2 text-lg">
               Try AI Lesson Planner
+            </Link>
+            <Link href="/edupro/result-generator"
+              className="border-2 border-brand-amber text-brand-amber font-semibold px-6 py-3 rounded-xl hover:bg-brand-amber hover:text-brand-ink transition-colors inline-flex items-center gap-2 text-lg">
+              <ClipboardList className="w-5 h-5" /> Generate Result
             </Link>
           </div>
         </div>

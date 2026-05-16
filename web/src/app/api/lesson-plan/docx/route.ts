@@ -180,6 +180,93 @@ export async function POST(req: NextRequest) {
     children.push(body(plan.prior_learning ?? ''))
     children.push(spacer())
 
+    // ── Lesson Notes Breakdown ──────────────────────────────────────────────
+    if (plan.lesson_notes) {
+      const ln = plan.lesson_notes
+
+      // Definition
+      if (ln.definition) {
+        children.push(sectionBar('Lesson Note — Definition'))
+        children.push(
+          new Paragraph({
+            spacing: { after: 160 },
+            shading: { type: ShadingType.CLEAR, fill: C_BLUE_LIGHT },
+            indent: { left: 100, right: 100 },
+            children: [
+              new TextRun({ text: ln.definition, size: 22, font: 'Arial', color: C_INK, bold: true }),
+            ],
+          }),
+        )
+        children.push(spacer())
+      }
+
+      // Detailed Explanation
+      if (Array.isArray(ln.detailed_explanation) && ln.detailed_explanation.length) {
+        children.push(sectionBar('Lesson Note — Detailed Explanation'))
+        ln.detailed_explanation.forEach((para: string, i: number) =>
+          children.push(
+            new Paragraph({
+              spacing: { after: 140 },
+              indent: { left: 60 },
+              children: [
+                new TextRun({ text: `${i + 1}.  `, bold: true, size: 22, font: 'Arial', color: C_BLUE }),
+                new TextRun({ text: para, size: 22, font: 'Arial', color: C_INK_MID }),
+              ],
+            }),
+          ),
+        )
+        children.push(spacer())
+      }
+
+      // Worked Examples
+      if (Array.isArray(ln.examples) && ln.examples.length) {
+        children.push(sectionBar('Lesson Note — Worked Examples'))
+        ln.examples.forEach((ex: { title: string; description: string }, i: number) => {
+          children.push(
+            new Paragraph({
+              spacing: { before: 80, after: 40 },
+              shading: { type: ShadingType.CLEAR, fill: 'FFFBEB' },
+              indent: { left: 100, right: 100 },
+              children: [
+                new TextRun({ text: `Example ${i + 1}: `, bold: true, size: 22, font: 'Arial', color: C_AMBER }),
+                new TextRun({ text: ex.title ?? '', bold: true, size: 22, font: 'Arial', color: C_INK }),
+              ],
+            }),
+          )
+          children.push(
+            new Paragraph({
+              spacing: { after: 120 },
+              shading: { type: ShadingType.CLEAR, fill: 'FFFBEB' },
+              indent: { left: 100, right: 100 },
+              children: [
+                new TextRun({ text: ex.description ?? '', size: 22, font: 'Arial', color: C_INK_MID }),
+              ],
+            }),
+          )
+        })
+        children.push(spacer())
+      }
+
+      // Daily Life Application
+      if (Array.isArray(ln.daily_life_application) && ln.daily_life_application.length) {
+        children.push(sectionBar('Lesson Note — Application in Daily Life'))
+        ln.daily_life_application.forEach((app: string) =>
+          children.push(
+            new Paragraph({
+              spacing: { after: 100 },
+              shading: { type: ShadingType.CLEAR, fill: 'F0FFF4' },
+              indent: { left: 100, right: 100 },
+              children: [
+                new TextRun({ text: '→  ', bold: true, size: 22, font: 'Arial', color: '16A34A' }),
+                new TextRun({ text: app, size: 22, font: 'Arial', color: C_INK_MID }),
+              ],
+            }),
+          ),
+        )
+        children.push(spacer())
+      }
+    }
+
     // ── Starter Activity ────────────────────────────────────────────────────
     children.push(sectionBar('Starter Activity  (5–8 minutes)'))
     children.push(body(plan.starter_activity ?? ''))
@@ -233,10 +320,41 @@ export async function POST(req: NextRequest) {
     )
     children.push(spacer())
 
-    // ── Tasks ────────────────────────────────────────────────────────────────
-    children.push(sectionBar('Tasks'))
-    if (plan.class_task?.length) {
-      children.push(body('Class Task:', { bold: true, colour: C_INK }))
+    // ── Class Work (rich format with marks + model answers) ────────────────
+    if (Array.isArray(plan.class_work) && plan.class_work.length) {
+      children.push(sectionBar('Class Work  (with Model Answers)'))
+      plan.class_work.forEach(
+        (q: { question: string; marks: number; model_answer: string }, i: number) => {
+          // Question header
+          children.push(
+            new Paragraph({
+              spacing: { before: 100, after: 40 },
+              shading: { type: ShadingType.CLEAR, fill: C_BLUE_LIGHT },
+              indent: { left: 100, right: 100 },
+              children: [
+                new TextRun({ text: `Q${i + 1}.  `, bold: true, size: 22, font: 'Arial', color: C_BLUE_DARK }),
+                new TextRun({ text: q.question ?? '', size: 22, font: 'Arial', color: C_INK }),
+                new TextRun({ text: `   [${q.marks ?? 0} marks]`, bold: true, size: 20, font: 'Arial', color: C_AMBER }),
+              ],
+            }),
+          )
+          // Model answer
+          children.push(
+            new Paragraph({
+              spacing: { after: 140 },
+              indent: { left: 240, right: 100 },
+              children: [
+                new TextRun({ text: '✓ Model Answer: ', bold: true, size: 20, font: 'Arial', color: '16A34A' }),
+                new TextRun({ text: q.model_answer ?? '', size: 20, font: 'Arial', color: C_INK_MID, italics: true }),
+              ],
+            }),
+          )
+        },
+      )
+      children.push(spacer())
+    } else if (plan.class_task?.length) {
+      // Legacy class_task fallback
+      children.push(sectionBar('Class Task'))
       plan.class_task.forEach((t: string) =>
         children.push(
           new Paragraph({
@@ -246,9 +364,12 @@ export async function POST(req: NextRequest) {
           }),
         ),
       )
+      children.push(spacer())
     }
+
+    // ── Home Task ───────────────────────────────────────────────────────────
     if (plan.home_task?.length) {
-      children.push(body('Home Task:', { bold: true, colour: C_INK }))
+      children.push(sectionBar('Home Task'))
       plan.home_task.forEach((t: string) =>
         children.push(
           new Paragraph({
@@ -258,8 +379,8 @@ export async function POST(req: NextRequest) {
           }),
         ),
       )
+      children.push(spacer())
     }
-    children.push(spacer())
 
     // ── Cross-curricular Links ───────────────────────────────────────────────
     if (plan.links && Object.keys(plan.links).length) {
