@@ -1,8 +1,17 @@
 import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
-import { Briefcase, MapPin, Clock, Search } from 'lucide-react'
+import { Briefcase, MapPin, Clock, Search, DollarSign, CalendarDays } from 'lucide-react'
 import Link from 'next/link'
 import type { JobListing } from '@/types'
+
+const RATE_SUFFIX: Record<string, string> = {
+  hourly:   '/hr',
+  daily:    '/day',
+  weekly:   '/wk',
+  monthly:  '/mo',
+  per_term: '/term',
+  fixed:    ' fixed',
+}
 
 const JOB_TYPES: Record<string, string> = {
   full_time:      'Full-time',
@@ -117,7 +126,18 @@ export default async function JobsPage({ searchParams }: Props) {
                         )}
                         {j.is_remote && <span className="flex items-center gap-1"><Clock className="w-3 h-3" />Remote</span>}
                         {j.salary_min_ngn && (
-                          <span>₦{j.salary_min_ngn.toLocaleString()}–₦{j.salary_max_ngn?.toLocaleString()}/mo</span>
+                          <span className="flex items-center gap-1 font-medium text-green-700">
+                            <DollarSign className="w-3 h-3" />
+                            ₦{Number(j.salary_min_ngn).toLocaleString()}
+                            {j.salary_max_ngn && j.rate_type !== 'fixed'
+                              ? `–₦${Number(j.salary_max_ngn).toLocaleString()}` : ''}
+                            {RATE_SUFFIX[j.rate_type] ?? '/mo'}
+                          </span>
+                        )}
+                        {j.engagement_duration && (
+                          <span className="flex items-center gap-1 text-indigo-600 font-medium">
+                            <CalendarDays className="w-3 h-3" />{j.engagement_duration}
+                          </span>
                         )}
                         {j.deadline && <span>Deadline: {new Date(j.deadline).toLocaleDateString()}</span>}
                       </div>

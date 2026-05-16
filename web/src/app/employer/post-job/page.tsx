@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 import {
   Briefcase, MapPin, Clock, DollarSign, ArrowLeft,
-  CheckCircle, Loader2, ChevronDown, AlertCircle,
+  CheckCircle, Loader2, ChevronDown, AlertCircle, CalendarDays,
 } from 'lucide-react'
 
 const SKILL_CATEGORIES = [
@@ -34,6 +34,31 @@ const JOB_TYPES = [
   { value: 'internship',     label: 'Internship' },
 ]
 
+// How the pay is structured — used to label the rate amount fields
+const RATE_TYPES = [
+  { value: '',          label: 'Select pay structure',  suffix: '' },
+  { value: 'hourly',    label: 'Per Hour',              suffix: '/hr' },
+  { value: 'daily',     label: 'Per Day',               suffix: '/day' },
+  { value: 'weekly',    label: 'Per Week',              suffix: '/wk' },
+  { value: 'monthly',   label: 'Per Month (Salary)',    suffix: '/mo' },
+  { value: 'per_term',  label: 'Per School Term',       suffix: '/term' },
+  { value: 'fixed',     label: 'Fixed / One-off Price', suffix: ' fixed' },
+]
+
+// How long the engagement runs
+const DURATIONS = [
+  '1 Week',
+  '2 Weeks',
+  '1 Month',
+  '3 Months',
+  '6 Months',
+  '1 School Term',
+  '2 School Terms',
+  'Full Academic Year',
+  'Ongoing / Permanent',
+  'Flexible / Negotiable',
+]
+
 export default function PostJobPage() {
   const [loading,   setLoading]   = useState(false)
   const [submitted, setSubmitted] = useState(false)
@@ -41,17 +66,19 @@ export default function PostJobPage() {
   const [authError, setAuthError] = useState('')
 
   const [form, setForm] = useState({
-    title:          '',
-    company_name:   '',
-    category:       '',
-    location_state: '',
-    job_type:       'full_time',
-    salary_min:     '',
-    salary_max:     '',
-    description:    '',
-    requirements:   '',
-    deadline:       '',
-    require_cert:   true,
+    title:               '',
+    company_name:        '',
+    category:            '',
+    location_state:      '',
+    job_type:            'full_time',
+    rate_type:           '',
+    salary_min:          '',
+    salary_max:          '',
+    engagement_duration: '',
+    description:         '',
+    requirements:        '',
+    deadline:            '',
+    require_cert:        true,
   })
 
   const set = (field: string, value: string | boolean) =>
@@ -92,20 +119,22 @@ export default function PostJobPage() {
     const supabase = createClient()
 
     const { error } = await supabase.from('job_listings').insert({
-      employer_id:    userId,                                          // FIX 1: real user ID
-      title:          form.title,
-      company_name:   form.company_name,                              // FIX 2: required column
-      description:    form.description + (form.requirements
+      employer_id:         userId,
+      title:               form.title,
+      company_name:        form.company_name,
+      description:         form.description + (form.requirements
         ? `\n\nRequirements:\n${form.requirements}` : ''),
-      job_type:       form.job_type,
-      location_state: form.location_state,
-      salary_min_ngn: form.salary_min ? parseFloat(form.salary_min) : null,  // FIX 3: correct column names
-      salary_max_ngn: form.salary_max ? parseFloat(form.salary_max) : null,
-      deadline:       form.deadline || null,
-      required_skills: form.category ? [form.category] : [],
-      is_active:      true,
-      is_featured:    false,
-      applications:   0,
+      job_type:            form.job_type,
+      location_state:      form.location_state,
+      rate_type:           form.rate_type || null,
+      salary_min_ngn:      form.salary_min ? parseFloat(form.salary_min) : null,
+      salary_max_ngn:      form.salary_max ? parseFloat(form.salary_max) : null,
+      engagement_duration: form.engagement_duration || null,
+      deadline:            form.deadline || null,
+      required_skills:     form.category ? [form.category] : [],
+      is_active:           true,
+      is_featured:         false,
+      applications:        0,
     })
 
     if (error) {
@@ -250,13 +279,12 @@ export default function PostJobPage() {
             </div>
           </div>
 
-          {/* ── Location & Salary ─────────────────────────────────────── */}
+          {/* ── Location ──────────────────────────────────────────────── */}
           <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
             <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-[#F97316]" /> Location &amp; Compensation
+              <MapPin className="w-5 h-5 text-[#F97316]" /> Location &amp; Deadline
             </h2>
             <div className="space-y-4">
-
               <div>
                 <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
                   State / Location <span className="text-red-500">*</span>
@@ -271,31 +299,6 @@ export default function PostJobPage() {
                 </div>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
-                    <DollarSign className="w-3.5 h-3.5 inline" /> Min Salary (₦/month)
-                  </label>
-                  <input
-                    type="number" min={0}
-                    value={form.salary_min} onChange={e => set('salary_min', e.target.value)}
-                    placeholder="e.g. 50000"
-                    className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
-                    <DollarSign className="w-3.5 h-3.5 inline" /> Max Salary (₦/month)
-                  </label>
-                  <input
-                    type="number" min={0}
-                    value={form.salary_max} onChange={e => set('salary_max', e.target.value)}
-                    placeholder="e.g. 150000"
-                    className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
-                  />
-                </div>
-              </div>
-
               <div>
                 <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
                   <Clock className="w-3.5 h-3.5 inline" /> Application Deadline
@@ -307,6 +310,112 @@ export default function PostJobPage() {
                   className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* ── Engagement Terms (pay + duration) ─────────────────────── */}
+          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E1B4B] mb-1 flex items-center gap-2">
+              <DollarSign className="w-5 h-5 text-green-600" /> Engagement Terms
+            </h2>
+            <p className="text-xs text-gray-400 mb-4">
+              Set the pay structure and how long the engagement runs — especially important for teacher postings.
+            </p>
+            <div className="space-y-4">
+
+              {/* Pay structure + duration side-by-side */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                    Pay Structure
+                  </label>
+                  <div className="relative">
+                    <select value={form.rate_type} onChange={e => set('rate_type', e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
+                      {RATE_TYPES.map(r => (
+                        <option key={r.value} value={r.value}>{r.label}</option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                    <CalendarDays className="w-3.5 h-3.5 inline" /> Engagement Duration
+                  </label>
+                  <div className="relative">
+                    <select value={form.engagement_duration} onChange={e => set('engagement_duration', e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
+                      <option value="">Select duration</option>
+                      {DURATIONS.map(d => <option key={d}>{d}</option>)}
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Rate amount fields — label adapts to chosen pay structure */}
+              <div className="grid sm:grid-cols-2 gap-4">
+                {(() => {
+                  const suffix = RATE_TYPES.find(r => r.value === form.rate_type)?.suffix || ''
+                  const isFixed = form.rate_type === 'fixed'
+                  return (
+                    <>
+                      <div>
+                        <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                          {isFixed ? 'Fixed Price (₦)' : `Min Rate (₦${suffix})`}
+                        </label>
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">₦</span>
+                          <input
+                            type="number" min={0}
+                            value={form.salary_min} onChange={e => set('salary_min', e.target.value)}
+                            placeholder={isFixed ? 'e.g. 200000' : 'e.g. 5000'}
+                            className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
+                          />
+                        </div>
+                      </div>
+                      {!isFixed && (
+                        <div>
+                          <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                            Max Rate (₦{suffix})
+                          </label>
+                          <div className="relative">
+                            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm font-medium">₦</span>
+                            <input
+                              type="number" min={0}
+                              value={form.salary_max} onChange={e => set('salary_max', e.target.value)}
+                              placeholder="e.g. 10000"
+                              className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )
+                })()}
+              </div>
+
+              {/* Live preview chip */}
+              {(form.salary_min || form.engagement_duration) && (
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {form.salary_min && (
+                    <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-green-100">
+                      ₦{Number(form.salary_min).toLocaleString()}
+                      {form.rate_type === 'fixed' ? ' fixed' : ''}
+                      {form.salary_max && form.rate_type !== 'fixed'
+                        ? ` – ₦${Number(form.salary_max).toLocaleString()}` : ''}
+                      {RATE_TYPES.find(r => r.value === form.rate_type)?.suffix ?? ''}
+                    </span>
+                  )}
+                  {form.engagement_duration && (
+                    <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-indigo-100">
+                      <CalendarDays className="w-3 h-3" /> {form.engagement_duration}
+                    </span>
+                  )}
+                </div>
+              )}
             </div>
           </div>
 
