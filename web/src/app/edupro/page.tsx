@@ -1,15 +1,14 @@
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
-import { Wand2, BookOpen, Users, Award, ArrowRight, CheckCircle, ClipboardList } from 'lucide-react'
+import { BookOpen, Users, Award, ArrowRight, CheckCircle } from 'lucide-react'
 
-
+// AI tools (Lesson Planner & Result Generator) are dashboard-only features
+// and are not shown here on the public marketing page.
 const FEATURES = [
-  { icon: Wand2,         title: 'AI Lesson Planner',       desc: 'Input topic + grade level → get a full NERDC-aligned lesson plan in 10 seconds. Save hours every week.',                                    href: '/edupro/lesson-planner',      cta: 'Try the AI Planner' },
-  { icon: ClipboardList, title: 'Student Result Generator', desc: 'Enter scores for any number of pupils and subjects → get ranked results, letter grades, AI-powered recommendations and career guidance.',   href: '/edupro/result-generator',    cta: 'Generate Results' },
-  { icon: BookOpen,      title: 'CPD Short Courses',        desc: '2–6 week self-paced courses: Digital Classroom, Vocational Teaching, Inclusive Education, and more.',                                      href: '/edupro/courses',             cta: 'Browse CPD Courses' },
-  { icon: Users,         title: 'Teacher Community',        desc: 'Subject-specific forums, mentorship matching, and expert Q&A. Connect with teachers across Nigeria.',                                      href: '/edupro/community',           cta: 'Join the Community' },
-  { icon: Award,         title: 'CPD Certificates',         desc: 'Earn blockchain-verifiable CPD certificates for every course. Build your digital teaching portfolio.',                                     href: '/edupro/certificates',        cta: 'View Certificates' },
+  { icon: BookOpen, title: 'CPD Short Courses',  desc: '2–6 week self-paced courses: Digital Classroom, Vocational Teaching, Inclusive Education, and more.',                   href: '/edupro/courses',       cta: 'Browse CPD Courses' },
+  { icon: Users,    title: 'Teacher Community',  desc: 'Subject-specific forums, mentorship matching, and expert Q&A. Connect with teachers across Nigeria.',                   href: '/edupro/community',     cta: 'Join the Community' },
+  { icon: Award,    title: 'CPD Certificates',   desc: 'Earn blockchain-verifiable CPD certificates for every course completed. Build your digital teaching portfolio.',        href: '/edupro/certificates',  cta: 'View Certificates'  },
 ]
 
 export default function EduProPage() {
@@ -47,9 +46,9 @@ export default function EduProPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="section-title">Everything a Nigerian Teacher Needs</h2>
-            <p className="section-subtitle mx-auto">One subscription covers all four tools.</p>
+            <p className="section-subtitle mx-auto">Courses, community, and certified CPD — all in one place.</p>
           </div>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             {FEATURES.map(f => (
               <div key={f.title} className="card p-6">
                 {/* blue icon bg */}
