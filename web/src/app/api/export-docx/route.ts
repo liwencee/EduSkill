@@ -1,11 +1,30 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, getClientIp, rateLimitHeaders, LIMITS } from '@/lib/rate-limit'
+import { logger, logRequest, logResponse } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
+  const ctx = logRequest('/api/export-docx', req)
+
+  // ── Rate limiting: 15 DOCX exports / minute per IP ──────────────
+  const ip = getClientIp(req)
+  const rl  = rateLimit(ip, 'docxExport', LIMITS.docxExport.max, LIMITS.docxExport.windowMs)
+  if (!rl.success) {
+    logger.warn('DOCX export rate limit exceeded', { ip, route: '/api/export-docx' })
+    logResponse('/api/export-docx', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many export requests. Please wait before downloading again.' },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    )
+  }
+
   try {
     const { plan, subject, topic, grade } = await req.json()
-    if (!plan) return NextResponse.json({ error: 'plan is required' }, { status: 400 })
+    if (!plan) {
+      logResponse('/api/export-docx', ctx, 400)
+      return NextResponse.json({ error: 'plan is required' }, { status: 400 })
+    }
 
     const {
       Document, Packer, Paragraph, TextRun, HeadingLevel,
@@ -257,15 +276,22 @@ export async function POST(req: NextRequest) {
     const filename = `Lesson-Plan-${subject}-${topic}-${grade}.docx`
       .replace(/[^a-zA-Z0-9.\-_]/g, '-')
 
+    logResponse('/api/export-docx', ctx, 200)
     return new NextResponse(uint8, {
       status: 200,
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'Content-Disposition': `attachment; filename="${filename}"`,
+        ...rateLimitHeaders(rl),
       },
     })
   } catch (err) {
-    console.error('DOCX export error:', err)
+    const error = err instanceof Error ? err : new Error(String(err))
+    logger.error('DOCX export failed', {
+      route: '/api/export-docx',
+      error: { message: error.message, name: error.name },
+    })
+    logResponse('/api/export-docx', ctx, 500, { error: { message: error.message } })
     return NextResponse.json({ error: 'Failed to generate DOCX' }, { status: 500 })
   }
 }

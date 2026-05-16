@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, getClientIp, rateLimitHeaders, LIMITS } from '@/lib/rate-limit'
+import { logger, logRequest, logResponse } from '@/lib/logger'
+import { resultRecsCache, CACHE_TTL, cacheKey } from '@/lib/cache'
 
 export const dynamic = 'force-dynamic'
 
@@ -96,17 +99,49 @@ function buildFallbackRecommendations(students: StudentInput[]) {
 }
 
 export async function POST(req: NextRequest) {
+  const ctx = logRequest('/api/generate-result', req)
+
+  // ── Rate limiting ────────────────────────────────────────────────
+  const ip = getClientIp(req)
+  const rl  = rateLimit(ip, 'generateResult', LIMITS.generateResult.max, LIMITS.generateResult.windowMs)
+  if (!rl.success) {
+    logger.warn('Rate limit exceeded — generate-result', { ip, route: '/api/generate-result' })
+    logResponse('/api/generate-result', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait before generating again.' },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    )
+  }
+
   const body: { classInfo: ClassInfo; students: StudentInput[] } = await req.json()
   const { classInfo, students } = body
 
   if (!students || students.length === 0) {
+    logResponse('/api/generate-result', ctx, 400)
     return NextResponse.json({ error: 'No student data provided' }, { status: 400 })
+  }
+
+  // ── Cache check ──────────────────────────────────────────────────
+  const key = cacheKey({
+    class:   classInfo.className,
+    term:    classInfo.term,
+    session: classInfo.session,
+    // Hash student names + percentages for a compact key
+    students: students.map(s => `${s.name}:${s.percentage}`).join('|'),
+  })
+  const cached = resultRecsCache.get(key)
+  if (cached) {
+    logger.info('Cache HIT — generate-result', { route: '/api/generate-result', key })
+    logResponse('/api/generate-result', ctx, 200, { cached: true })
+    return NextResponse.json(cached, { headers: { 'X-Cache': 'HIT', ...rateLimitHeaders(rl) } })
   }
 
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey) {
-    // Return rule-based fallback when no AI key configured
-    return NextResponse.json(buildFallbackRecommendations(students))
+    logger.warn('No OPENAI_API_KEY — using fallback recommendations', { route: '/api/generate-result' })
+    const fallback = buildFallbackRecommendations(students)
+    logResponse('/api/generate-result', ctx, 200, { fallback: true })
+    return NextResponse.json(fallback, { headers: rateLimitHeaders(rl) })
   }
 
   const userPrompt = `Analyse the following ${classInfo.term} term results for ${classInfo.className} (${classInfo.session}) and provide recommendations for each student.
@@ -146,7 +181,13 @@ Generate personalised recommendations for ALL ${students.length} students. Retur
     })
 
     if (!res.ok) {
-      return NextResponse.json(buildFallbackRecommendations(students))
+      logger.warn('OpenAI API non-OK response — using fallback', {
+        route: '/api/generate-result',
+        statusCode: res.status,
+      })
+      const fallback = buildFallbackRecommendations(students)
+      logResponse('/api/generate-result', ctx, 200, { fallback: true })
+      return NextResponse.json(fallback, { headers: rateLimitHeaders(rl) })
     }
 
     const data = await res.json()
@@ -156,9 +197,21 @@ Generate personalised recommendations for ALL ${students.length} students. Retur
     const cleaned = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```\s*$/i, '').trim()
     const parsed  = JSON.parse(cleaned)
 
-    return NextResponse.json(parsed)
-  } catch {
+    // ── Cache the AI response ─────────────────────────────────────
+    resultRecsCache.set(key, parsed, CACHE_TTL.resultRecs)
+    logger.info('Recommendations generated + cached', { route: '/api/generate-result', key })
+    logResponse('/api/generate-result', ctx, 200, { cached: false })
+
+    return NextResponse.json(parsed, { headers: { 'X-Cache': 'MISS', ...rateLimitHeaders(rl) } })
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err))
+    logger.error('generate-result failed', {
+      route: '/api/generate-result',
+      error: { message: error.message, name: error.name },
+    })
     // Fall back gracefully — results still displayed, just no AI recommendations
-    return NextResponse.json(buildFallbackRecommendations(students))
+    const fallback = buildFallbackRecommendations(students)
+    logResponse('/api/generate-result', ctx, 200, { fallback: true, error: { message: error.message } })
+    return NextResponse.json(fallback, { headers: rateLimitHeaders(rl) })
   }
 }

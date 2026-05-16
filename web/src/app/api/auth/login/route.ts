@@ -1,7 +1,23 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
+import { rateLimit, getClientIp, rateLimitHeaders, LIMITS } from '@/lib/rate-limit'
+import { logger, logRequest, logResponse } from '@/lib/logger'
 
 export async function POST(request: Request) {
+  const ctx = logRequest('/api/auth/login', request)
+
+  // ── Brute-force rate limit: 5 attempts / minute per IP ─────────
+  const ip = getClientIp(request)
+  const rl  = rateLimit(ip, 'login', LIMITS.login.max, LIMITS.login.windowMs)
+  if (!rl.success) {
+    logger.warn('Login rate limit exceeded', { ip, route: '/api/auth/login' })
+    logResponse('/api/auth/login', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many login attempts. Please wait 60 seconds and try again.' },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    )
+  }
+
   try {
     const body     = await request.json()
     const email    = (body.email    as string)?.trim()
@@ -11,6 +27,7 @@ export async function POST(request: Request) {
     const url = process.env.NEXT_PUBLIC_SUPABASE_URL
     const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     if (!url || !key) {
+      logResponse('/api/auth/login', ctx, 500)
       return NextResponse.json(
         { error: 'Server not configured. Contact support.' },
         { status: 500 }
@@ -44,11 +61,16 @@ export async function POST(request: Request) {
       ) {
         friendly = 'Wrong email or password. Please try again.'
       }
+      logger.warn('Login failed', { ip, route: '/api/auth/login', error: { message: error.message } })
+      logResponse('/api/auth/login', ctx, 401)
       return NextResponse.json({ error: friendly }, { status: 401 })
     }
 
     const role        = data.user?.user_metadata?.role ?? 'youth'
     const destination = next !== '/dashboard' ? next : `/dashboard/${role}`
+
+    logger.info('Login successful', { ip, route: '/api/auth/login', userId: data.user?.id })
+    logResponse('/api/auth/login', ctx, 200)
 
     const response = NextResponse.json({ destination })
 
@@ -59,9 +81,15 @@ export async function POST(request: Request) {
     })
 
     return response
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err instanceof Error ? err : new Error(String(err))
+    logger.error('Login route error', {
+      route: '/api/auth/login',
+      error: { message: error.message, name: error.name },
+    })
+    logResponse('/api/auth/login', ctx, 500, { error: { message: error.message } })
     return NextResponse.json(
-      { error: err.message ?? 'Server error. Please try again.' },
+      { error: error.message ?? 'Server error. Please try again.' },
       { status: 500 }
     )
   }

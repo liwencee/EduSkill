@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, getClientIp, rateLimitHeaders, LIMITS } from '@/lib/rate-limit'
+import { logger, logRequest, logResponse } from '@/lib/logger'
+import { lessonPlanCache, CACHE_TTL, cacheKey } from '@/lib/cache'
 
 export const dynamic = 'force-dynamic'
 
@@ -32,22 +35,49 @@ CRITICAL — every plan MUST include "class_work" as an array of EXACTLY 5 quest
 Always respond with valid JSON matching the exact schema provided. Do not omit lesson_notes or class_work fields.`
 
 export async function POST(req: NextRequest) {
+  const ctx = logRequest('/api/lesson-plan', req)
+
+  // ── Rate limiting ────────────────────────────────────────────────
+  const ip = getClientIp(req)
+  const rl = rateLimit(ip, 'lesson-plan', LIMITS.lessonPlan.max, LIMITS.lessonPlan.windowMs)
+  if (!rl.success) {
+    logger.warn('Rate limit exceeded — lesson-plan', { ip, route: '/api/lesson-plan' })
+    logResponse('/api/lesson-plan', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait a moment before generating another lesson plan.' },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    )
+  }
+
   const { subject, topic, subTopic, grade, duration, objectives } = await req.json()
 
   if (!subject || !topic || !grade) {
+    logResponse('/api/lesson-plan', ctx, 400)
     return NextResponse.json(
       { error: 'subject, topic, and grade are required' },
       { status: 400 }
     )
   }
 
+  // ── Cache check ──────────────────────────────────────────────────
+  const key = cacheKey({ subject, topic, subTopic: subTopic ?? '', grade, duration: duration ?? '' })
+  const cached = lessonPlanCache.get(key)
+  if (cached) {
+    logger.info('Cache HIT — lesson plan', { route: '/api/lesson-plan', key })
+    logResponse('/api/lesson-plan', ctx, 200, { cached: true })
+    return NextResponse.json({ plan: cached }, { headers: { 'X-Cache': 'HIT', ...rateLimitHeaders(rl) } })
+  }
+
   const focus = subTopic?.trim() || topic
 
   const apiKey = process.env.OPENAI_API_KEY
   if (!apiKey) {
-    return NextResponse.json({
-      plan: buildFallback(subject, topic, subTopic, grade, duration, objectives),
-    })
+    logger.warn('No OPENAI_API_KEY — using fallback lesson plan', { route: '/api/lesson-plan' })
+    logResponse('/api/lesson-plan', ctx, 200, { fallback: true })
+    return NextResponse.json(
+      { plan: buildFallback(subject, topic, subTopic, grade, duration, objectives) },
+      { headers: rateLimitHeaders(rl) }
+    )
   }
 
   const userPrompt = `Create a full NERDC-aligned lesson plan for a Nigerian classroom:
@@ -178,12 +208,29 @@ Return ONLY valid JSON in this exact schema:
 
     const raw = completion.choices[0].message.content ?? '{}'
     const plan = JSON.parse(raw)
-    return NextResponse.json({ plan })
+
+    // ── Store in cache for future identical requests ──────────────
+    lessonPlanCache.set(key, plan, CACHE_TTL.lessonPlan)
+    logger.info('Lesson plan generated + cached', { route: '/api/lesson-plan', key })
+    logResponse('/api/lesson-plan', ctx, 200, { cached: false })
+
+    return NextResponse.json(
+      { plan },
+      { headers: { 'X-Cache': 'MISS', ...rateLimitHeaders(rl) } }
+    )
   } catch (err) {
-    console.error('Lesson plan generation error:', err)
-    return NextResponse.json({
-      plan: buildFallback(subject, topic, subTopic, grade, duration, objectives),
+    const error = err instanceof Error ? err : new Error(String(err))
+    logger.error('Lesson plan generation failed', {
+      route: '/api/lesson-plan',
+      error: { message: error.message, name: error.name, stack: error.stack },
     })
+    logResponse('/api/lesson-plan', ctx, 500, {
+      error: { message: error.message },
+    })
+    return NextResponse.json(
+      { plan: buildFallback(subject, topic, subTopic, grade, duration, objectives) },
+      { headers: rateLimitHeaders(rl) }
+    )
   }
 }
 

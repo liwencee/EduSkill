@@ -4,6 +4,8 @@ import {
   AlignmentType, BorderStyle, WidthType, ShadingType, LevelFormat,
   Header,
 } from 'docx'
+import { rateLimit, getClientIp, rateLimitHeaders, LIMITS } from '@/lib/rate-limit'
+import { logger, logRequest, logResponse } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
@@ -68,9 +70,24 @@ const spacer = () => new Paragraph({ children: [new TextRun('')], spacing: { aft
 
 // ── Main handler ─────────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
+  const ctx = logRequest('/api/lesson-plan/docx', req)
+
+  // ── Rate limiting: 15 DOCX exports / minute per IP ──────────────
+  const ip = getClientIp(req)
+  const rl  = rateLimit(ip, 'docxExport', LIMITS.docxExport.max, LIMITS.docxExport.windowMs)
+  if (!rl.success) {
+    logger.warn('DOCX export rate limit exceeded', { ip, route: '/api/lesson-plan/docx' })
+    logResponse('/api/lesson-plan/docx', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many export requests. Please wait before downloading again.' },
+      { status: 429, headers: rateLimitHeaders(rl) }
+    )
+  }
+
   const { plan, subject, topic, subTopic, grade, duration } = await req.json()
 
   if (!plan) {
+    logResponse('/api/lesson-plan/docx', ctx, 400)
     return NextResponse.json({ error: 'No plan data provided' }, { status: 400 })
   }
 
@@ -576,14 +593,21 @@ export async function POST(req: NextRequest) {
     // Wrap Node Buffer in Uint8Array — Buffer extends Uint8Array but the
     // NextResponse type signature only accepts BodyInit (Uint8Array, Blob,
     // ArrayBuffer, etc.) so we convert explicitly.
+    logResponse('/api/lesson-plan/docx', ctx, 200)
     return new NextResponse(new Uint8Array(buffer), {
       headers: {
         'Content-Type': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'Content-Disposition': `attachment; filename="${safeName}"`,
+        ...rateLimitHeaders(rl),
       },
     })
   } catch (err) {
-    console.error('DOCX generation error:', err)
+    const error = err instanceof Error ? err : new Error(String(err))
+    logger.error('DOCX generation failed', {
+      route: '/api/lesson-plan/docx',
+      error: { message: error.message, name: error.name },
+    })
+    logResponse('/api/lesson-plan/docx', ctx, 500, { error: { message: error.message } })
     return NextResponse.json({ error: 'Failed to generate DOCX' }, { status: 500 })
   }
 }
