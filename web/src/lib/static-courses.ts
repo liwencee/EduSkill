@@ -118,7 +118,7 @@ export const STATIC_COURSES: Course[] = [
     category: 'languages', target_role: 'youth', language: 'yo',
     available_langs: ['yo', 'en'], duration_weeks: 5, is_free: false,
     is_published: true, is_offline_ready: true, price_ngn: 10000,
-    total_lessons: 24, total_enrolled: 1850, avg_rating: 4.9, tags: ['yoruba', 'language', 'culture', 'teaching'],
+    total_lessons: 37, total_enrolled: 1850, avg_rating: 4.9, tags: ['yoruba', 'language', 'culture', 'teaching'],
   },
   {
     id: 'static-14', slug: 'igbo-language-teaching',
@@ -127,7 +127,7 @@ export const STATIC_COURSES: Course[] = [
     category: 'languages', target_role: 'youth', language: 'ig',
     available_langs: ['ig', 'en'], duration_weeks: 5, is_free: false,
     is_published: true, is_offline_ready: true, price_ngn: 10000,
-    total_lessons: 24, total_enrolled: 1620, avg_rating: 4.8, tags: ['igbo', 'language', 'culture', 'teaching'],
+    total_lessons: 37, total_enrolled: 1620, avg_rating: 4.8, tags: ['igbo', 'language', 'culture', 'teaching'],
   },
   {
     id: 'static-15', slug: 'hausa-language-teaching',
@@ -136,6 +136,6 @@ export const STATIC_COURSES: Course[] = [
     category: 'languages', target_role: 'youth', language: 'ha',
     available_langs: ['ha', 'en'], duration_weeks: 5, is_free: false,
     is_published: true, is_offline_ready: true, price_ngn: 10000,
-    total_lessons: 24, total_enrolled: 1430, avg_rating: 4.8, tags: ['hausa', 'language', 'culture', 'teaching'],
+    total_lessons: 37, total_enrolled: 1430, avg_rating: 4.8, tags: ['hausa', 'language', 'culture', 'teaching'],
   },
 ]
