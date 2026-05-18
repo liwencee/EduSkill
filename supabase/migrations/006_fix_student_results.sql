@@ -1,156 +1,140 @@
 -- Fix Migration 006: Recreate student_results with correct schema
--- Run this in the Supabase SQL editor if migration 004 failed with:
---   ERROR 42703: column "teacher_id" does not exist
---
--- Root cause: student_results table already existed with a different
--- schema, so CREATE TABLE IF NOT EXISTS was skipped, but the subsequent
--- indexes referenced columns that didn't exist in the old table.
---
--- This migration safely drops and recreates the table.
+-- Handles both cases: table never existed, or table exists with wrong columns.
 
 -- ─── STUDENT RESULTS ─────────────────────────────────────────────────────────
 
--- Drop everything tied to the old table first
-drop trigger  if exists student_results_updated_at  on student_results;
-drop index    if exists idx_student_results_teacher;
-drop index    if exists idx_student_results_created;
-drop policy   if exists "Teachers can manage own results" on student_results;
-drop table    if exists student_results cascade;
+-- Safely drop the old table (and all its indexes/triggers/policies) only if it exists.
+-- Plain DROP TRIGGER IF EXISTS fails when the *table* doesn't exist, so we use a
+-- DO block to guard the check first.
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_tables
+    WHERE schemaname = 'public' AND tablename = 'student_results'
+  ) THEN
+    DROP TABLE student_results CASCADE;  -- CASCADE removes indexes, triggers, policies
+  END IF;
+END $$;
 
--- Recreate with full correct schema
-create table student_results (
-  id            uuid        primary key default gen_random_uuid(),
-  teacher_id    uuid        not null references profiles(id) on delete cascade,
-  school_name   text        not null,
-  class_name    text        not null,
-  term          text        not null,        -- e.g. "1st", "2nd", "3rd"
-  session       text        not null,        -- e.g. "2024/2025"
-  passmark      integer     not null default 50,
-  subjects      jsonb       not null,        -- [{ name, maxScore }]
-  students      jsonb       not null,        -- [{ name, scores: { subjectName: score } }]
-  results       jsonb       not null,        -- full ranked StudentResult[] output
-  created_at    timestamptz not null default now(),
-  updated_at    timestamptz not null default now()
+-- Clean up any orphaned indexes (CASCADE may have already removed them, IF NOT EXISTS is safe)
+DROP INDEX IF EXISTS idx_student_results_teacher;
+DROP INDEX IF EXISTS idx_student_results_created;
+
+-- Fresh table with correct schema
+CREATE TABLE student_results (
+  id            uuid        PRIMARY KEY DEFAULT gen_random_uuid(),
+  teacher_id    uuid        NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  school_name   text        NOT NULL,
+  class_name    text        NOT NULL,
+  term          text        NOT NULL,        -- e.g. "1st", "2nd", "3rd"
+  session       text        NOT NULL,        -- e.g. "2024/2025"
+  passmark      integer     NOT NULL DEFAULT 50,
+  subjects      jsonb       NOT NULL,        -- [{ name, maxScore }]
+  students      jsonb       NOT NULL,        -- [{ name, scores: { subjectName: score } }]
+  results       jsonb       NOT NULL,        -- full ranked StudentResult[] output
+  created_at    timestamptz NOT NULL DEFAULT now(),
+  updated_at    timestamptz NOT NULL DEFAULT now()
 );
 
--- RLS: teachers see only their own sheets
-alter table student_results enable row level security;
+ALTER TABLE student_results ENABLE ROW LEVEL SECURITY;
 
-create policy "Teachers can manage own results"
-  on student_results
-  for all
-  using  (teacher_id = auth.uid())
-  with check (teacher_id = auth.uid());
+CREATE POLICY "Teachers can manage own results"
+  ON student_results FOR ALL
+  USING  (teacher_id = auth.uid())
+  WITH CHECK (teacher_id = auth.uid());
 
--- Indexes
-create index idx_student_results_teacher
-  on student_results(teacher_id, session, term);
+CREATE INDEX idx_student_results_teacher ON student_results(teacher_id, session, term);
+CREATE INDEX idx_student_results_created ON student_results(created_at DESC);
 
-create index idx_student_results_created
-  on student_results(created_at desc);
-
--- Auto-update updated_at (reuse function from migration 004 if it exists)
-create or replace function set_updated_at()
-returns trigger language plpgsql as $$
-begin
+CREATE OR REPLACE FUNCTION set_updated_at()
+RETURNS trigger LANGUAGE plpgsql AS $$
+BEGIN
   new.updated_at = now();
-  return new;
-end;
+  RETURN new;
+END;
 $$;
 
-create trigger student_results_updated_at
-  before update on student_results
-  for each row execute procedure set_updated_at();
+CREATE TRIGGER student_results_updated_at
+  BEFORE UPDATE ON student_results
+  FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
 
 
 -- ─── LESSON PLAN CACHE ───────────────────────────────────────────────────────
--- Only recreate if it doesn't already exist correctly.
 
-create table if not exists lesson_plan_cache (
-  cache_key     text        primary key,
-  subject       text        not null,
-  topic         text        not null,
-  sub_topic     text,
-  grade         text        not null,
-  duration      text,
-  plan          jsonb       not null,
-  hit_count     integer     not null default 0,
-  created_at    timestamptz not null default now(),
-  expires_at    timestamptz not null default (now() + interval '7 days')
+CREATE TABLE IF NOT EXISTS lesson_plan_cache (
+  cache_key  text        PRIMARY KEY,
+  subject    text        NOT NULL,
+  topic      text        NOT NULL,
+  sub_topic  text,
+  grade      text        NOT NULL,
+  duration   text,
+  plan       jsonb       NOT NULL,
+  hit_count  integer     NOT NULL DEFAULT 0,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  expires_at timestamptz NOT NULL DEFAULT (now() + interval '7 days')
 );
 
-alter table lesson_plan_cache enable row level security;
+ALTER TABLE lesson_plan_cache ENABLE ROW LEVEL SECURITY;
 
--- Drop and recreate policy in case it's missing
-drop policy if exists "Service role can manage cache" on lesson_plan_cache;
-create policy "Service role can manage cache"
-  on lesson_plan_cache
-  for all
-  using (true)
-  with check (true);
+DROP POLICY IF EXISTS "Service role can manage cache" ON lesson_plan_cache;
+CREATE POLICY "Service role can manage cache"
+  ON lesson_plan_cache FOR ALL
+  USING (true) WITH CHECK (true);
 
-create index if not exists idx_lesson_plan_cache_subject_grade
-  on lesson_plan_cache(subject, grade);
-
-create index if not exists idx_lesson_plan_cache_expires
-  on lesson_plan_cache(expires_at);
+CREATE INDEX IF NOT EXISTS idx_lesson_plan_cache_subject_grade ON lesson_plan_cache(subject, grade);
+CREATE INDEX IF NOT EXISTS idx_lesson_plan_cache_expires       ON lesson_plan_cache(expires_at);
 
 
 -- ─── RESULT RECOMMENDATIONS CACHE ────────────────────────────────────────────
 
-create table if not exists result_recs_cache (
-  cache_key        text        primary key,
-  class_name       text        not null,
-  term             text        not null,
-  session          text        not null,
-  recommendations  jsonb       not null,
-  created_at       timestamptz not null default now(),
-  expires_at       timestamptz not null default (now() + interval '2 hours')
+CREATE TABLE IF NOT EXISTS result_recs_cache (
+  cache_key       text        PRIMARY KEY,
+  class_name      text        NOT NULL,
+  term            text        NOT NULL,
+  session         text        NOT NULL,
+  recommendations jsonb       NOT NULL,
+  created_at      timestamptz NOT NULL DEFAULT now(),
+  expires_at      timestamptz NOT NULL DEFAULT (now() + interval '2 hours')
 );
 
-alter table result_recs_cache enable row level security;
+ALTER TABLE result_recs_cache ENABLE ROW LEVEL SECURITY;
 
-drop policy if exists "Service role can manage recs cache" on result_recs_cache;
-create policy "Service role can manage recs cache"
-  on result_recs_cache
-  for all
-  using (true)
-  with check (true);
+DROP POLICY IF EXISTS "Service role can manage recs cache" ON result_recs_cache;
+CREATE POLICY "Service role can manage recs cache"
+  ON result_recs_cache FOR ALL
+  USING (true) WITH CHECK (true);
 
-create index if not exists idx_result_recs_cache_expires
-  on result_recs_cache(expires_at);
+CREATE INDEX IF NOT EXISTS idx_result_recs_cache_expires ON result_recs_cache(expires_at);
 
 
 -- ─── AUDIT LOG ───────────────────────────────────────────────────────────────
 
-create table if not exists api_audit_log (
-  id          bigserial   primary key,
-  ts          timestamptz not null default now(),
-  route       text        not null,
-  method      text        not null default 'POST',
+CREATE TABLE IF NOT EXISTS api_audit_log (
+  id          bigserial   PRIMARY KEY,
+  ts          timestamptz NOT NULL DEFAULT now(),
+  route       text        NOT NULL,
+  method      text        NOT NULL DEFAULT 'POST',
   user_id     uuid,
   ip          text,
-  status_code integer     not null,
+  status_code integer     NOT NULL,
   duration_ms integer,
   meta        jsonb
 );
 
-alter table api_audit_log enable row level security;
+ALTER TABLE api_audit_log ENABLE ROW LEVEL SECURITY;
 
-drop policy if exists "Only service role can access audit log" on api_audit_log;
-create policy "Only service role can access audit log"
-  on api_audit_log
-  for all
-  using (false);
+DROP POLICY IF EXISTS "Only service role can access audit log" ON api_audit_log;
+CREATE POLICY "Only service role can access audit log"
+  ON api_audit_log FOR ALL
+  USING (false);
 
-create index if not exists idx_audit_log_ts    on api_audit_log(ts desc);
-create index if not exists idx_audit_log_route on api_audit_log(route, ts desc);
-create index if not exists idx_audit_log_user  on api_audit_log(user_id, ts desc);
+CREATE INDEX IF NOT EXISTS idx_audit_log_ts    ON api_audit_log(ts DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_route ON api_audit_log(route, ts DESC);
+CREATE INDEX IF NOT EXISTS idx_audit_log_user  ON api_audit_log(user_id, ts DESC);
 
 
 -- ─── JOB ENGAGEMENT FIELDS ───────────────────────────────────────────────────
--- Also included here in case migration 005 was not yet run.
 
-alter table job_listings
-  add column if not exists rate_type           text,
-  add column if not exists engagement_duration text;
+ALTER TABLE job_listings
+  ADD COLUMN IF NOT EXISTS rate_type           text,
+  ADD COLUMN IF NOT EXISTS engagement_duration text;
