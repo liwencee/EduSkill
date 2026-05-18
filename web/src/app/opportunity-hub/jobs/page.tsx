@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
-import { Briefcase, MapPin, Clock, Search, DollarSign, CalendarDays } from 'lucide-react'
+import { Briefcase, MapPin, Clock, Search, DollarSign, CalendarDays, Plus } from 'lucide-react'
 import Link from 'next/link'
 import type { JobListing } from '@/types'
 
@@ -58,9 +58,15 @@ export default async function JobsPage({ searchParams }: Props) {
       <div className="bg-brand-bg min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-brand-ink mb-2">OpportunityHub</h1>
-            <p className="text-brand-inkMid">Jobs, apprenticeships, and freelance gigs for SkillBridge graduates.</p>
+          <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-brand-ink mb-2">OpportunityHub</h1>
+              <p className="text-brand-inkMid">Jobs, apprenticeships, and freelance gigs for SkillBridge graduates.</p>
+            </div>
+            <Link href="/employer/post-job"
+              className="inline-flex items-center gap-2 bg-brand-blue text-white font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shrink-0">
+              <Plus className="w-4 h-4" /> Post a Job
+            </Link>
           </div>
 
           {/* Search + state filter */}
@@ -161,10 +167,18 @@ export default async function JobsPage({ searchParams }: Props) {
           ) : (
             <div className="text-center py-20 text-brand-inkLight">
               <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-30" />
-              <p className="font-medium">No jobs found</p>
-              <a href="/opportunity-hub/jobs" className="text-brand-blue text-sm hover:underline mt-1 inline-block">
-                Clear filters
-              </a>
+              <p className="font-medium text-brand-ink">No jobs found</p>
+              <p className="text-sm mt-1 mb-6">Be the first to post an opportunity for SkillBridge graduates.</p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="/opportunity-hub/jobs"
+                  className="inline-flex items-center justify-center gap-1 border border-brand-blue text-brand-blue text-sm font-medium px-4 py-2 rounded-xl hover:bg-blue-50 transition-colors">
+                  Clear filters
+                </a>
+                <Link href="/employer/post-job"
+                  className="inline-flex items-center justify-center gap-2 bg-brand-blue text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors">
+                  <Plus className="w-4 h-4" /> Post a Job
+                </Link>
+              </div>
             </div>
           )}
         </div>
