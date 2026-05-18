@@ -114,7 +114,6 @@ export default function YouthDashboard() {
                 {[
                   { href: '/skillup/courses',         icon: BookOpen,   label: 'Browse Courses',    bg: 'bg-indigo-50',  color: 'text-[#4F46E5]' },
                   { href: '/opportunity-hub/jobs',    icon: Briefcase,  label: 'Find Jobs',         bg: 'bg-orange-50',  color: 'text-[#F97316]' },
-                  { href: '/dashboard/certificates',  icon: Award,      label: 'My Certificates',   bg: 'bg-yellow-50',  color: 'text-yellow-600' },
                   { href: '/opportunity-hub',         icon: TrendingUp, label: 'Opportunity Hub',   bg: 'bg-green-50',   color: 'text-green-600'  },
                   { href: '/skillup',                 icon: Download,   label: 'Offline Content',   bg: 'bg-purple-50',  color: 'text-purple-600' },
                 ].map(l => (
