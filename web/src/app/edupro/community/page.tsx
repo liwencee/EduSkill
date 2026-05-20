@@ -1,8 +1,9 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import Navbar from '@/components/Navbar'
-import { MessageSquare, ThumbsUp, Pin, Search, PenLine } from 'lucide-react'
+import { MessageSquare, ThumbsUp, Pin, PenLine, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
+import toast from 'react-hot-toast'
 import type { CommunityPost } from '@/types'
 
 const CATEGORIES = ['All', 'Question', 'Resource', 'Discussion']
@@ -10,26 +11,60 @@ const CATEGORIES = ['All', 'Question', 'Resource', 'Discussion']
 export default function CommunityPage() {
   const [posts, setPosts]         = useState<CommunityPost[]>([])
   const [loading, setLoading]     = useState(true)
+  const [posting, setPosting]     = useState(false)
   const [category, setCategory]   = useState('All')
   const [showModal, setShowModal] = useState(false)
   const [newTitle, setNewTitle]   = useState('')
   const [newBody, setNewBody]     = useState('')
   const [newCat, setNewCat]       = useState('Discussion')
 
-  useEffect(() => {
+  const fetchPosts = useCallback(async () => {
+    setLoading(true)
     const supabase = createClient()
-    let q = supabase.from('community_posts').select('*, author:profiles(full_name)').order('is_pinned', { ascending: false }).order('created_at', { ascending: false }).limit(20)
+    let q = supabase
+      .from('community_posts')
+      .select('*, author:profiles(full_name)')
+      .order('is_pinned', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(20)
     if (category !== 'All') q = q.ilike('category', category) as any
-    q.then(({ data }) => { setPosts((data ?? []) as CommunityPost[]); setLoading(false) })
+    const { data } = await q
+    setPosts((data ?? []) as CommunityPost[])
+    setLoading(false)
   }, [category])
 
+  useEffect(() => { fetchPosts() }, [fetchPosts])
+
   async function submitPost() {
-    if (!newTitle.trim() || !newBody.trim()) return
+    if (!newTitle.trim() || !newBody.trim()) {
+      toast.error('Please fill in both the title and body.')
+      return
+    }
+    setPosting(true)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
-    await supabase.from('community_posts').insert({ author_id: user.id, title: newTitle, body: newBody, category: newCat.toLowerCase(), tags: [] })
-    setShowModal(false); setNewTitle(''); setNewBody('')
+    if (!user) {
+      toast.error('You must be logged in to post.')
+      setPosting(false)
+      return
+    }
+    const { error } = await supabase.from('community_posts').insert({
+      author_id: user.id,
+      title:     newTitle.trim(),
+      body:      newBody.trim(),
+      category:  newCat.toLowerCase(),
+      tags:      [],
+    })
+    setPosting(false)
+    if (error) {
+      toast.error(error.message || 'Failed to post. Please try again.')
+      return
+    }
+    toast.success('Post published!')
+    setShowModal(false)
+    setNewTitle('')
+    setNewBody('')
+    fetchPosts()   // refresh the list
   }
 
   return (
@@ -139,8 +174,10 @@ export default function CommunityPage() {
               </div>
             </div>
             <div className="flex gap-3 mt-5">
-              <button onClick={() => setShowModal(false)} className="btn-outline flex-1">Cancel</button>
-              <button onClick={submitPost} className="btn-primary flex-1">Post</button>
+              <button onClick={() => setShowModal(false)} disabled={posting} className="btn-outline flex-1">Cancel</button>
+              <button onClick={submitPost} disabled={posting} className="btn-primary flex-1 inline-flex items-center justify-center gap-2">
+                {posting ? <><Loader2 className="w-4 h-4 animate-spin" /> Posting…</> : 'Post'}
+              </button>
             </div>
           </div>
         </div>
