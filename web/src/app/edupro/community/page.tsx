@@ -48,6 +48,16 @@ export default function CommunityPage() {
       setPosting(false)
       return
     }
+
+    // Ensure a profile row exists — guards against users who signed up
+    // before migrations ran (foreign key violation if profile is missing)
+    await supabase.from('profiles').upsert({
+      id:        user.id,
+      full_name: user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? 'User',
+      email:     user.email ?? '',
+      role:      (user.user_metadata?.role ?? 'youth') as any,
+    }, { onConflict: 'id', ignoreDuplicates: true })
+
     const { error } = await supabase.from('community_posts').insert({
       author_id: user.id,
       title:     newTitle.trim(),

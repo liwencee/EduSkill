@@ -118,6 +118,17 @@ export default function PostJobPage() {
     setLoading(true)
     const supabase = createClient()
 
+    // Ensure profile row exists before inserting (guards against FK violation)
+    const { data: { user: currentUser } } = await supabase.auth.getUser()
+    if (currentUser) {
+      await supabase.from('profiles').upsert({
+        id:        currentUser.id,
+        full_name: currentUser.user_metadata?.full_name ?? currentUser.email?.split('@')[0] ?? 'User',
+        email:     currentUser.email ?? '',
+        role:      (currentUser.user_metadata?.role ?? 'employer') as any,
+      }, { onConflict: 'id', ignoreDuplicates: true })
+    }
+
     const { error } = await supabase.from('job_listings').insert({
       employer_id:         userId,
       title:               form.title,
