@@ -35,8 +35,8 @@ export default function OpportunityHubPage() {
             <Link href="/opportunity-hub/jobs" className="btn-primary inline-flex items-center gap-2 text-lg">
               Browse All Jobs <ArrowRight className="w-5 h-5" />
             </Link>
-            <Link href="/employer" className="border-2 border-white/60 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center gap-2 text-lg">
-              Post a Job
+            <Link href="/opportunity-hub/candidates" className="border-2 border-white/60 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/10 transition-colors inline-flex items-center gap-2 text-lg">
+              Browse Teachers
             </Link>
           </div>
         </div>
