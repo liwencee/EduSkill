@@ -665,7 +665,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
         'Questions (Ọ bụ, Ọlị), Negation (ọ bụghị, o nweghị) & Commands',
         20, 6),
       lesson('ibo-m3-l7',
-        'Prepositions (n', na, n'ime), Conjunctions & Discourse Connectors',
+        "Prepositions (n', na, n'ime), Conjunctions & Discourse Connectors",
         20, 7),
     ]),
 
