@@ -68,7 +68,7 @@ export default function JobApplyButton({
         <LogIn className="w-8 h-8 text-brand-blue mx-auto mb-2" />
         <p className="text-sm font-semibold text-brand-ink mb-1">Sign in to apply</p>
         <p className="text-xs text-brand-inkLight mb-4">You must be a registered teacher to apply for this job.</p>
-        <Link href="/auth/signin"
+        <Link href="/auth/login"
           className="btn-primary w-full text-sm text-center block">Sign In</Link>
       </div>
     )
