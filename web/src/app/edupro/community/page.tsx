@@ -1,29 +1,52 @@
 'use client'
 import { useEffect, useState, useCallback } from 'react'
 import Navbar from '@/components/Navbar'
-import { MessageSquare, ThumbsUp, Pin, PenLine, Loader2 } from 'lucide-react'
+import { MessageSquare, ThumbsUp, Pin, PenLine, Loader2, Lock, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
+import Link from 'next/link'
 import type { CommunityPost } from '@/types'
 
 const CATEGORIES = ['All', 'Question', 'Resource', 'Discussion']
+const PREMIUM_PLANS = ['teacher_premium', 'youth_premium', 'institutional']
 
 export default function CommunityPage() {
-  const [posts, setPosts]         = useState<CommunityPost[]>([])
-  const [loading, setLoading]     = useState(true)
-  const [posting, setPosting]     = useState(false)
-  const [category, setCategory]   = useState('All')
-  const [showModal, setShowModal] = useState(false)
-  const [newTitle, setNewTitle]   = useState('')
-  const [newBody, setNewBody]     = useState('')
-  const [newCat, setNewCat]       = useState('Discussion')
+  const [posts,       setPosts]       = useState<CommunityPost[]>([])
+  const [loading,     setLoading]     = useState(true)
+  const [posting,     setPosting]     = useState(false)
+  const [category,    setCategory]    = useState('All')
+  const [showModal,   setShowModal]   = useState(false)
+  const [newTitle,    setNewTitle]    = useState('')
+  const [newBody,     setNewBody]     = useState('')
+  const [newCat,      setNewCat]      = useState('Discussion')
 
+  // Subscription gate
+  const [subscription, setSubscription] = useState<string | null>(null)
+  const [authChecked,  setAuthChecked]  = useState(false)
+  const isPremium = PREMIUM_PLANS.includes(subscription ?? '')
+
+  // ── Load current user's subscription ──────────────────────────────────────
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) { setAuthChecked(true); return }
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('subscription')
+        .eq('id', user.id)
+        .single()
+      setSubscription(profile?.subscription ?? 'free')
+      setAuthChecked(true)
+    })
+  }, [])
+
+  // ── Fetch posts ────────────────────────────────────────────────────────────
   const fetchPosts = useCallback(async () => {
     setLoading(true)
     const supabase = createClient()
     let q = supabase
       .from('community_posts')
-      .select('*, author:profiles(full_name)')
+      .select('*, author:profiles(full_name, subscription)')
       .order('is_pinned', { ascending: false })
       .order('created_at', { ascending: false })
       .limit(20)
@@ -35,6 +58,7 @@ export default function CommunityPage() {
 
   useEffect(() => { fetchPosts() }, [fetchPosts])
 
+  // ── Submit post ────────────────────────────────────────────────────────────
   async function submitPost() {
     if (!newTitle.trim() || !newBody.trim()) {
       toast.error('Please fill in both the title and body.')
@@ -49,8 +73,7 @@ export default function CommunityPage() {
       return
     }
 
-    // Ensure a profile row exists — guards against users who signed up
-    // before migrations ran (foreign key violation if profile is missing)
+    // Ensure profile row exists (guards FK violation for pre-migration signups)
     await supabase.from('profiles').upsert({
       id:        user.id,
       full_name: user.user_metadata?.full_name ?? user.email?.split('@')[0] ?? 'User',
@@ -74,28 +97,74 @@ export default function CommunityPage() {
     setShowModal(false)
     setNewTitle('')
     setNewBody('')
-    fetchPosts()   // refresh the list
+    fetchPosts()
+  }
+
+  // ── Handle "New Post" click — gate for free members ───────────────────────
+  function handleNewPostClick() {
+    if (!authChecked) return
+    if (!isPremium) {
+      toast('Upgrade to a paid plan to post in the community.', { icon: '🔒' })
+      return
+    }
+    setShowModal(true)
   }
 
   return (
     <div className="bg-brand-bg min-h-screen">
       <Navbar />
 
-      {/* 30% blue header */}
+      {/* Header */}
       <div className="bg-brand-blue text-white py-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-3xl font-bold mb-1">Teacher Community</h1>
-            <p className="text-white/80 text-sm">Ask questions, share resources, and connect with educators across Nigeria.</p>
+            <p className="text-white/80 text-sm">
+              Ask questions, share resources, and connect with educators across Nigeria.
+            </p>
           </div>
-          {/* 10% amber CTA */}
-          <button onClick={() => setShowModal(true)} className="btn-primary inline-flex items-center gap-2 shrink-0">
-            <PenLine className="w-4 h-4" /> New Post
-          </button>
+
+          {/* CTA: premium → write post | free → upgrade prompt */}
+          {authChecked && (
+            isPremium ? (
+              <button
+                onClick={() => setShowModal(true)}
+                className="btn-primary inline-flex items-center gap-2 shrink-0">
+                <PenLine className="w-4 h-4" /> New Post
+              </button>
+            ) : (
+              <Link
+                href="/edupro/courses"
+                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shrink-0">
+                <Lock className="w-4 h-4" /> Upgrade to Post
+              </Link>
+            )
+          )}
         </div>
       </div>
 
+      {/* Free-member upgrade banner */}
+      {authChecked && !isPremium && (
+        <div className="bg-amber-50 border-b border-amber-200">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2 text-amber-800 text-sm">
+              <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+              <span>
+                <strong>Free plan:</strong> You can read all posts.
+                Upgrade to a paid plan to post and reply.
+              </span>
+            </div>
+            <Link
+              href="/edupro/courses"
+              className="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold px-4 py-1.5 rounded-lg transition-colors whitespace-nowrap">
+              Upgrade Now →
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
         {/* Category tabs */}
         <div className="flex gap-2 mb-6 flex-wrap">
           {CATEGORIES.map(cat => (
@@ -112,33 +181,55 @@ export default function CommunityPage() {
 
         {/* Posts */}
         {loading ? (
-          <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="h-24 bg-white rounded-2xl border border-[#E0DDD5] animate-pulse" />)}</div>
+          <div className="space-y-4">
+            {[1,2,3].map(i => (
+              <div key={i} className="h-24 bg-white rounded-2xl border border-[#E0DDD5] animate-pulse" />
+            ))}
+          </div>
         ) : posts.length === 0 ? (
           <div className="text-center py-20">
             <MessageSquare className="w-12 h-12 mx-auto text-brand-inkLight opacity-30 mb-3" />
             <p className="font-medium text-brand-inkMid">No posts yet in this category.</p>
-            <button onClick={() => setShowModal(true)} className="btn-primary mt-4 inline-block text-sm py-2 px-4">
-              Be the first to post
-            </button>
+            {isPremium ? (
+              <button
+                onClick={() => setShowModal(true)}
+                className="btn-primary mt-4 inline-flex items-center gap-2 text-sm py-2 px-4">
+                <PenLine className="w-4 h-4" /> Be the first to post
+              </button>
+            ) : (
+              <Link
+                href="/edupro/courses"
+                className="inline-flex items-center gap-2 mt-4 bg-brand-amber text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-amber-600 transition-colors">
+                <Sparkles className="w-4 h-4" /> Upgrade to post first
+              </Link>
+            )}
           </div>
         ) : (
           <div className="space-y-4">
             {posts.map(post => (
-              <div key={post.id} className={`bg-white rounded-2xl border p-5 hover:shadow-sm transition-shadow ${post.is_pinned ? 'border-brand-amber/50' : 'border-[#E0DDD5]'}`}>
+              <div
+                key={post.id}
+                className={`bg-white rounded-2xl border p-5 hover:shadow-sm transition-shadow ${
+                  post.is_pinned ? 'border-brand-amber/50' : 'border-[#E0DDD5]'
+                }`}>
                 {post.is_pinned && (
                   <div className="flex items-center gap-1 text-brand-amber text-xs font-semibold mb-2">
                     <Pin className="w-3 h-3" /> Pinned
                   </div>
                 )}
-                {/* Category badge — 10% amber for resource, 30% blue for others */}
                 <div className="flex items-center gap-2 mb-2">
                   <span className={`badge text-xs ${post.category === 'resource' ? 'badge-amber' : 'badge-blue'}`}>
                     {post.category ?? 'discussion'}
                   </span>
                   <span className="text-xs text-brand-inkLight">
-                    by <span className="font-medium text-brand-inkMid">{(post as any).author?.full_name}</span>
+                    by{' '}
+                    <span className="font-medium text-brand-inkMid">
+                      {(post as any).author?.full_name}
+                    </span>
                     {' · '}
-                    {new Date(post.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {new Date(post.created_at).toLocaleDateString('en-GB', {
+                      day: 'numeric', month: 'short', year: 'numeric',
+                    })}
                   </span>
                 </div>
                 <h3 className="font-bold text-brand-ink mb-1 hover:text-brand-blue cursor-pointer transition-colors">
@@ -149,11 +240,21 @@ export default function CommunityPage() {
                   <button className="flex items-center gap-1 hover:text-brand-blue transition-colors">
                     <ThumbsUp className="w-3 h-3" /> {post.likes}
                   </button>
-                  <button className="flex items-center gap-1 hover:text-brand-blue transition-colors">
-                    <MessageSquare className="w-3 h-3" /> {post.replies} replies
-                  </button>
+                  {/* Reply button — gated for free members */}
+                  {isPremium ? (
+                    <button className="flex items-center gap-1 hover:text-brand-blue transition-colors">
+                      <MessageSquare className="w-3 h-3" /> {post.replies} replies
+                    </button>
+                  ) : (
+                    <span className="flex items-center gap-1 text-brand-inkLight/60">
+                      <Lock className="w-3 h-3" /> {post.replies} replies
+                      <span className="ml-1 text-amber-500 font-medium">(upgrade to reply)</span>
+                    </span>
+                  )}
                   {post.tags?.map(tag => (
-                    <span key={tag} className="bg-brand-bg px-2 py-0.5 rounded text-brand-inkMid">{tag}</span>
+                    <span key={tag} className="bg-brand-bg px-2 py-0.5 rounded text-brand-inkMid">
+                      {tag}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -162,7 +263,7 @@ export default function CommunityPage() {
         )}
       </div>
 
-      {/* New Post modal */}
+      {/* New Post modal — only reachable by premium users */}
       {showModal && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl w-full max-w-lg p-6 shadow-xl">
@@ -171,22 +272,45 @@ export default function CommunityPage() {
               <div>
                 <label className="label">Category</label>
                 <select value={newCat} onChange={e => setNewCat(e.target.value)} className="input">
-                  {['Question','Resource','Discussion'].map(c => <option key={c}>{c}</option>)}
+                  {['Question', 'Resource', 'Discussion'].map(c => (
+                    <option key={c}>{c}</option>
+                  ))}
                 </select>
               </div>
               <div>
                 <label className="label">Title</label>
-                <input type="text" value={newTitle} onChange={e => setNewTitle(e.target.value)} className="input" placeholder="What would you like to ask or share?" />
+                <input
+                  type="text"
+                  value={newTitle}
+                  onChange={e => setNewTitle(e.target.value)}
+                  className="input"
+                  placeholder="What would you like to ask or share?"
+                />
               </div>
               <div>
                 <label className="label">Body</label>
-                <textarea value={newBody} onChange={e => setNewBody(e.target.value)} className="input h-28 resize-none" placeholder="Write your question, tip, or resource here…" />
+                <textarea
+                  value={newBody}
+                  onChange={e => setNewBody(e.target.value)}
+                  className="input h-28 resize-none"
+                  placeholder="Write your question, tip, or resource here…"
+                />
               </div>
             </div>
             <div className="flex gap-3 mt-5">
-              <button onClick={() => setShowModal(false)} disabled={posting} className="btn-outline flex-1">Cancel</button>
-              <button onClick={submitPost} disabled={posting} className="btn-primary flex-1 inline-flex items-center justify-center gap-2">
-                {posting ? <><Loader2 className="w-4 h-4 animate-spin" /> Posting…</> : 'Post'}
+              <button
+                onClick={() => setShowModal(false)}
+                disabled={posting}
+                className="btn-outline flex-1">
+                Cancel
+              </button>
+              <button
+                onClick={submitPost}
+                disabled={posting}
+                className="btn-primary flex-1 inline-flex items-center justify-center gap-2">
+                {posting
+                  ? <><Loader2 className="w-4 h-4 animate-spin" /> Posting…</>
+                  : 'Post'}
               </button>
             </div>
           </div>
