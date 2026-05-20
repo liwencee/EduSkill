@@ -3,7 +3,7 @@ import Link from 'next/link'
 import {
   BookOpen, Award, Users, ArrowRight, Zap, FileText,
   TrendingUp, MessageSquare, ChevronRight, Lightbulb, Star,
-  ClipboardList,
+  ClipboardList, ShieldCheck, Briefcase,
 } from 'lucide-react'
 import { CPD_COURSES } from '@/lib/static-cpd-courses'
 
@@ -142,10 +142,12 @@ export default function TeacherDashboard() {
               <h2 className="font-bold text-[#1E1B4B] mb-4">Quick Actions</h2>
               <div className="space-y-2">
                 {[
+                  { href: '/dashboard/teacher/profile',  icon: ShieldCheck,   label: 'My Profile & KYC',     bg: 'bg-indigo-50',  color: 'text-[#4F46E5]' },
+                  { href: '/opportunity-hub/jobs',      icon: Briefcase,     label: 'Browse & Apply Jobs',  bg: 'bg-blue-50',    color: 'text-blue-600'  },
                   { href: '/edupro/lesson-planner',   icon: Zap,           label: 'AI Lesson Planner',    bg: 'bg-orange-50',  color: 'text-[#F97316]' },
                   { href: '/edupro/result-generator', icon: ClipboardList, label: 'Generate Result Sheet', bg: 'bg-amber-50',   color: 'text-amber-500' },
-                  { href: '/edupro/courses',           icon: BookOpen,      label: 'Browse CPD Courses',   bg: 'bg-indigo-50',  color: 'text-[#4F46E5]' },
-                  { href: '/edupro/community',         icon: MessageSquare, label: 'Teacher Community',    bg: 'bg-purple-50',  color: 'text-purple-600' },
+                  { href: '/edupro/courses',           icon: BookOpen,      label: 'Browse CPD Courses',   bg: 'bg-purple-50',  color: 'text-purple-600' },
+                  { href: '/edupro/community',         icon: MessageSquare, label: 'Teacher Community',    bg: 'bg-pink-50',    color: 'text-pink-600'  },
                   { href: '/dashboard/certificates',   icon: Award,         label: 'My Certificates',      bg: 'bg-yellow-50',  color: 'text-yellow-600' },
                   { href: '/edupro',                   icon: TrendingUp,    label: 'Teaching Materials',   bg: 'bg-green-50',   color: 'text-green-600'  },
                 ].map(l => (

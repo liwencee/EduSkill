@@ -158,7 +158,7 @@ export default async function JobsPage({ searchParams }: Props) {
                     {/* 10% amber CTA */}
                     <Link href={`/opportunity-hub/jobs/${j.id}`}
                       className="btn-primary text-sm py-2 px-4 whitespace-nowrap shrink-0">
-                      Apply Now
+                      View & Apply
                     </Link>
                   </div>
                 )

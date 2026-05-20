@@ -130,6 +130,48 @@ export interface JobListing {
   employer?: Profile
 }
 
+export interface TeacherProfile {
+  id: string
+  school_name?: string
+  subject_areas?: string[]
+  years_experience: number
+  years_of_service: number
+  is_verified_educator: boolean
+  cpd_points: number
+  teacher_uid?: string
+  nin?: string
+  nin_verified: boolean
+  cert_type?: string
+  cert_url?: string
+  cert_verified: boolean
+  has_badge: boolean
+  badge_type?: string
+  kyc_status: 'incomplete' | 'pending' | 'approved' | 'rejected'
+  kyc_submitted_at?: string
+  display_to_employers: boolean
+  portfolio_url?: string
+  linkedin_url?: string
+  subject_specialization?: string
+  school_type?: string
+  total_courses_created: number
+  total_students: number
+}
+
+export interface JobApplication {
+  id: string
+  job_id: string
+  applicant_id: string
+  cover_note?: string
+  status: 'pending' | 'reviewed' | 'shortlisted' | 'rejected' | 'hired'
+  applied_at: string
+  teacher_uid_snapshot?: string
+  cert_type_snapshot?: string
+  years_service_snapshot?: number
+  badge_snapshot?: boolean
+  applicant?: Profile & { teacher_profile?: TeacherProfile }
+  job?: JobListing
+}
+
 export interface CommunityPost {
   id: string
   author_id: string

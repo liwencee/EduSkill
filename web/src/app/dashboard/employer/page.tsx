@@ -2,7 +2,7 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import {
   Briefcase, Users, ArrowRight, PlusCircle, TrendingUp,
-  CheckCircle, Clock, MapPin, ChevronRight, BarChart2, Star
+  CheckCircle, Clock, MapPin, ChevronRight, BarChart2, Star, FileText
 } from 'lucide-react'
 
 const SAMPLE_CANDIDATES = [
@@ -124,6 +124,7 @@ export default function EmployerDashboard() {
               <div className="space-y-2">
                 {[
                   { href: '/employer/post-job',    icon: PlusCircle, label: 'Post a Job',          bg: 'bg-orange-50', color: 'text-[#F97316]' },
+                  { href: '/employer/applicants',  icon: FileText,   label: 'View Applicants',     bg: 'bg-blue-50',   color: 'text-blue-600'  },
                   { href: '/opportunity-hub',      icon: Users,      label: 'Browse Candidates',   bg: 'bg-indigo-50', color: 'text-[#4F46E5]' },
                   { href: '/opportunity-hub/jobs', icon: Briefcase,  label: 'Manage Listings',     bg: 'bg-green-50',  color: 'text-green-600'  },
                   { href: '/opportunity-hub',      icon: BarChart2,  label: 'Hiring Analytics',    bg: 'bg-purple-50', color: 'text-purple-600' },
