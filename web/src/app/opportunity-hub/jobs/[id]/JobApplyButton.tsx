@@ -3,14 +3,13 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
-import { Send, Loader2, CheckCircle, Lock, LogIn } from 'lucide-react'
+import { Send, Loader2, CheckCircle, Lock, LogIn, RefreshCw } from 'lucide-react'
 
 interface Props {
   jobId: string
   jobTitle: string
   companyName: string
   deadline?: string | null
-  /** Role resolved server-side — may be null if cookie wasn't read */
   currentUserRole: string | null
   alreadyApplied: boolean
 }
@@ -19,23 +18,26 @@ export default function JobApplyButton({
   jobId, jobTitle, companyName, deadline,
   currentUserRole: serverRole, alreadyApplied,
 }: Props) {
-  // Client-side auth state — resolves on mount and overrides the
-  // server prop when the server failed to read the session cookie.
-  const [role,       setRole]       = useState<string | null>(serverRole)
-  const [authReady,  setAuthReady]  = useState(serverRole !== null) // skip loading if server already knew
-  const [open,       setOpen]       = useState(false)
-  const [coverNote,  setCoverNote]  = useState('')
-  const [submitting, setSubmitting] = useState(false)
-  const [applied,    setApplied]    = useState(alreadyApplied)
-  const [alreadyChecked, setAlreadyChecked] = useState(alreadyApplied)
+  const [role,        setRole]        = useState<string | null>(serverRole)
+  const [userId,      setUserId]      = useState<string | null>(null)
+  const [authReady,   setAuthReady]   = useState(false)
+  const [open,        setOpen]        = useState(false)
+  const [coverNote,   setCoverNote]   = useState('')
+  const [submitting,  setSubmitting]  = useState(false)
+  const [applied,     setApplied]     = useState(alreadyApplied)
+  const [switching,   setSwitching]   = useState(false)
 
-  // Always verify auth on the client side — this fixes the "Sign in"
-  // showing to already-logged-in teachers when server cookie reading fails.
+  const isExpired = deadline ? new Date(deadline) < new Date() : false
+
+  // ── Always verify auth on client — server cookie reading can fail ───────────
   useEffect(() => {
     async function checkAuth() {
       const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
+
       if (!user) { setRole(null); setAuthReady(true); return }
+
+      setUserId(user.id)
 
       const { data: prof } = await supabase
         .from('profiles')
@@ -43,10 +45,11 @@ export default function JobApplyButton({
         .eq('id', user.id)
         .single()
 
-      setRole(prof?.role ?? null)
+      const freshRole = prof?.role ?? null
+      setRole(freshRole)
 
-      // Also check if already applied (in case server missed it too)
-      if (!alreadyChecked && prof?.role === 'teacher') {
+      // Check existing application
+      if (freshRole === 'teacher') {
         const { data: app } = await supabase
           .from('job_applications')
           .select('id')
@@ -54,17 +57,42 @@ export default function JobApplyButton({
           .eq('applicant_id', user.id)
           .maybeSingle()
         if (app) setApplied(true)
-        setAlreadyChecked(true)
       }
 
       setAuthReady(true)
     }
-    // Only re-check if server didn't provide a role
-    if (serverRole === null) checkAuth()
-  }, [jobId, serverRole, alreadyChecked]) // eslint-disable-line react-hooks/exhaustive-deps
+    // Always run client-side — don't trust server-only role
+    checkAuth()
+  }, [jobId]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const isExpired = deadline ? new Date(deadline) < new Date() : false
+  // ── Switch existing account to teacher role ─────────────────────────────────
+  async function switchToTeacher() {
+    if (!userId) return
+    setSwitching(true)
+    const supabase = createClient()
 
+    const { error } = await supabase
+      .from('profiles')
+      .update({ role: 'teacher' })
+      .eq('id', userId)
+
+    if (error) {
+      toast.error('Could not update your role: ' + error.message)
+      setSwitching(false)
+      return
+    }
+
+    // Ensure teacher_profiles row exists
+    await supabase
+      .from('teacher_profiles')
+      .upsert({ id: userId }, { onConflict: 'id', ignoreDuplicates: true })
+
+    toast.success('Account switched to Teacher! You can now apply.')
+    setRole('teacher')
+    setSwitching(false)
+  }
+
+  // ── Apply handler ───────────────────────────────────────────────────────────
   async function handleApply() {
     if (!coverNote.trim()) { toast.error('Please write a short cover note'); return }
     setSubmitting(true)
@@ -72,7 +100,6 @@ export default function JobApplyButton({
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { toast.error('Please sign in first'); setSubmitting(false); return }
 
-    // Fetch teacher profile snapshot
     const { data: tp } = await supabase
       .from('teacher_profiles')
       .select('teacher_uid, cert_type, years_of_service, has_badge')
@@ -83,10 +110,10 @@ export default function JobApplyButton({
       job_id:                jobId,
       applicant_id:          user.id,
       cover_note:            coverNote.trim(),
-      teacher_uid_snapshot:  tp?.teacher_uid       ?? null,
-      cert_type_snapshot:    tp?.cert_type         ?? null,
-      years_service_snapshot: tp?.years_of_service ?? null,
-      badge_snapshot:        tp?.has_badge         ?? false,
+      teacher_uid_snapshot:  tp?.teacher_uid        ?? null,
+      cert_type_snapshot:    tp?.cert_type          ?? null,
+      years_service_snapshot: tp?.years_of_service  ?? null,
+      badge_snapshot:        tp?.has_badge          ?? false,
     })
 
     if (error) {
@@ -105,44 +132,62 @@ export default function JobApplyButton({
     setSubmitting(false)
   }
 
-  // ── Loading state while client resolves auth ────────────────────────────────
+  // ── Loading ─────────────────────────────────────────────────────────────────
   if (!authReady) {
     return (
       <div className="card p-5 flex items-center justify-center gap-2 text-brand-inkLight">
         <Loader2 className="w-4 h-4 animate-spin" />
-        <span className="text-sm">Loading…</span>
+        <span className="text-sm">Checking your account…</span>
       </div>
     )
   }
 
   // ── Not logged in ───────────────────────────────────────────────────────────
-  if (!role) {
+  if (!role || !userId) {
     return (
       <div className="card p-5 text-center">
         <LogIn className="w-8 h-8 text-brand-blue mx-auto mb-2" />
         <p className="text-sm font-semibold text-brand-ink mb-1">Sign in to apply</p>
         <p className="text-xs text-brand-inkLight mb-4">
-          You must be a registered teacher to apply for this job.
+          You must be signed in as a teacher to apply for this job.
         </p>
-        <Link href="/auth/login"
-          className="btn-primary w-full text-sm text-center block">
+        <Link href="/auth/login" className="btn-primary w-full text-sm text-center block">
           Sign In
         </Link>
+        <p className="text-xs text-brand-inkLight mt-3">
+          No account?{' '}
+          <Link href="/auth/signup?role=teacher" className="text-brand-blue underline font-medium">
+            Create a teacher account
+          </Link>
+        </p>
       </div>
     )
   }
 
-  // ── Not a teacher ───────────────────────────────────────────────────────────
+  // ── Logged in but not a teacher — offer role switch, not re-registration ────
   if (role !== 'teacher') {
     return (
       <div className="card p-5 text-center">
         <Lock className="w-8 h-8 text-brand-inkLight mx-auto mb-2" />
-        <p className="text-sm font-semibold text-brand-ink mb-1">Teachers Only</p>
-        <p className="text-xs text-brand-inkLight">
-          Job applications on EduSkill are exclusively for certified teachers.
-          {role === 'youth' && (
-            <> <Link href="/auth/signup" className="text-brand-blue underline">Register as a teacher</Link> to apply.</>
-          )}
+        <p className="text-sm font-semibold text-brand-ink mb-2">Teacher Account Required</p>
+        <p className="text-xs text-brand-inkLight mb-4">
+          Your account is currently set to <strong>{role}</strong>. Switch it to
+          a Teacher account — no new sign-up needed.
+        </p>
+        <button
+          onClick={switchToTeacher}
+          disabled={switching}
+          className="w-full inline-flex items-center justify-center gap-2 bg-brand-blue text-white text-sm font-bold px-4 py-2.5 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60">
+          {switching
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> Switching…</>
+            : <><RefreshCw className="w-4 h-4" /> Switch to Teacher Account</>}
+        </button>
+        <p className="text-xs text-brand-inkLight mt-3">
+          You can complete your teacher KYC from your{' '}
+          <Link href="/dashboard/teacher/profile" className="text-brand-blue underline">
+            profile page
+          </Link>{' '}
+          after switching.
         </p>
       </div>
     )
@@ -198,11 +243,14 @@ export default function JobApplyButton({
             <p className="text-xs text-brand-inkLight text-right mt-1">{coverNote.length}/800</p>
           </div>
           <div className="flex gap-2">
-            <button onClick={() => setOpen(false)}
+            <button
+              onClick={() => setOpen(false)}
               className="flex-1 px-4 py-2 text-sm border border-gray-200 rounded-xl hover:bg-gray-50 text-brand-inkMid transition-colors">
               Cancel
             </button>
-            <button onClick={handleApply} disabled={submitting}
+            <button
+              onClick={handleApply}
+              disabled={submitting}
               className="flex-1 btn-primary text-sm flex items-center justify-center gap-2">
               {submitting
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending…</>
