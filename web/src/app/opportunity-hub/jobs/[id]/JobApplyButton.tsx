@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
@@ -10,17 +10,58 @@ interface Props {
   jobTitle: string
   companyName: string
   deadline?: string | null
+  /** Role resolved server-side — may be null if cookie wasn't read */
   currentUserRole: string | null
   alreadyApplied: boolean
 }
 
 export default function JobApplyButton({
-  jobId, jobTitle, companyName, deadline, currentUserRole, alreadyApplied,
+  jobId, jobTitle, companyName, deadline,
+  currentUserRole: serverRole, alreadyApplied,
 }: Props) {
-  const [open,     setOpen]     = useState(false)
-  const [coverNote, setCoverNote] = useState('')
+  // Client-side auth state — resolves on mount and overrides the
+  // server prop when the server failed to read the session cookie.
+  const [role,       setRole]       = useState<string | null>(serverRole)
+  const [authReady,  setAuthReady]  = useState(serverRole !== null) // skip loading if server already knew
+  const [open,       setOpen]       = useState(false)
+  const [coverNote,  setCoverNote]  = useState('')
   const [submitting, setSubmitting] = useState(false)
-  const [applied,   setApplied]   = useState(alreadyApplied)
+  const [applied,    setApplied]    = useState(alreadyApplied)
+  const [alreadyChecked, setAlreadyChecked] = useState(alreadyApplied)
+
+  // Always verify auth on the client side — this fixes the "Sign in"
+  // showing to already-logged-in teachers when server cookie reading fails.
+  useEffect(() => {
+    async function checkAuth() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) { setRole(null); setAuthReady(true); return }
+
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+
+      setRole(prof?.role ?? null)
+
+      // Also check if already applied (in case server missed it too)
+      if (!alreadyChecked && prof?.role === 'teacher') {
+        const { data: app } = await supabase
+          .from('job_applications')
+          .select('id')
+          .eq('job_id', jobId)
+          .eq('applicant_id', user.id)
+          .maybeSingle()
+        if (app) setApplied(true)
+        setAlreadyChecked(true)
+      }
+
+      setAuthReady(true)
+    }
+    // Only re-check if server didn't provide a role
+    if (serverRole === null) checkAuth()
+  }, [jobId, serverRole, alreadyChecked]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const isExpired = deadline ? new Date(deadline) < new Date() : false
 
@@ -31,7 +72,7 @@ export default function JobApplyButton({
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { toast.error('Please sign in first'); setSubmitting(false); return }
 
-    // Ensure teacher_profiles row + snapshot data
+    // Fetch teacher profile snapshot
     const { data: tp } = await supabase
       .from('teacher_profiles')
       .select('teacher_uid, cert_type, years_of_service, has_badge')
@@ -39,20 +80,23 @@ export default function JobApplyButton({
       .single()
 
     const { error } = await supabase.from('job_applications').insert({
-      job_id:               jobId,
-      applicant_id:         user.id,
-      cover_note:           coverNote.trim(),
-      teacher_uid_snapshot: tp?.teacher_uid  ?? null,
-      cert_type_snapshot:   tp?.cert_type    ?? null,
+      job_id:                jobId,
+      applicant_id:          user.id,
+      cover_note:            coverNote.trim(),
+      teacher_uid_snapshot:  tp?.teacher_uid       ?? null,
+      cert_type_snapshot:    tp?.cert_type         ?? null,
       years_service_snapshot: tp?.years_of_service ?? null,
-      badge_snapshot:       tp?.has_badge    ?? false,
+      badge_snapshot:        tp?.has_badge         ?? false,
     })
 
     if (error) {
-      if (error.code === '23505') toast.error('You have already applied for this job.')
-      else toast.error(error.message ?? 'Application failed')
+      if (error.code === '23505') {
+        toast.error('You have already applied for this job.')
+        setApplied(true)
+      } else {
+        toast.error(error.message ?? 'Application failed')
+      }
     } else {
-      // Increment applications counter
       await supabase.rpc('increment_job_applications', { job_id: jobId })
       toast.success('Application submitted successfully!')
       setApplied(true)
@@ -61,34 +105,50 @@ export default function JobApplyButton({
     setSubmitting(false)
   }
 
-  // ── Not logged in ─────────────────────────────────────────────────────────
-  if (!currentUserRole) {
+  // ── Loading state while client resolves auth ────────────────────────────────
+  if (!authReady) {
     return (
-      <div className="card p-5 text-center">
-        <LogIn className="w-8 h-8 text-brand-blue mx-auto mb-2" />
-        <p className="text-sm font-semibold text-brand-ink mb-1">Sign in to apply</p>
-        <p className="text-xs text-brand-inkLight mb-4">You must be a registered teacher to apply for this job.</p>
-        <Link href="/auth/login"
-          className="btn-primary w-full text-sm text-center block">Sign In</Link>
+      <div className="card p-5 flex items-center justify-center gap-2 text-brand-inkLight">
+        <Loader2 className="w-4 h-4 animate-spin" />
+        <span className="text-sm">Loading…</span>
       </div>
     )
   }
 
-  // ── Not a teacher ─────────────────────────────────────────────────────────
-  if (currentUserRole !== 'teacher') {
+  // ── Not logged in ───────────────────────────────────────────────────────────
+  if (!role) {
+    return (
+      <div className="card p-5 text-center">
+        <LogIn className="w-8 h-8 text-brand-blue mx-auto mb-2" />
+        <p className="text-sm font-semibold text-brand-ink mb-1">Sign in to apply</p>
+        <p className="text-xs text-brand-inkLight mb-4">
+          You must be a registered teacher to apply for this job.
+        </p>
+        <Link href="/auth/login"
+          className="btn-primary w-full text-sm text-center block">
+          Sign In
+        </Link>
+      </div>
+    )
+  }
+
+  // ── Not a teacher ───────────────────────────────────────────────────────────
+  if (role !== 'teacher') {
     return (
       <div className="card p-5 text-center">
         <Lock className="w-8 h-8 text-brand-inkLight mx-auto mb-2" />
         <p className="text-sm font-semibold text-brand-ink mb-1">Teachers Only</p>
         <p className="text-xs text-brand-inkLight">
-          Job applications on EduSkill are exclusively for verified teachers.
-          {currentUserRole === 'youth' && ' Register as a teacher to apply.'}
+          Job applications on EduSkill are exclusively for certified teachers.
+          {role === 'youth' && (
+            <> <Link href="/auth/signup" className="text-brand-blue underline">Register as a teacher</Link> to apply.</>
+          )}
         </p>
       </div>
     )
   }
 
-  // ── Deadline passed ───────────────────────────────────────────────────────
+  // ── Deadline passed ─────────────────────────────────────────────────────────
   if (isExpired) {
     return (
       <div className="card p-5 text-center">
@@ -98,26 +158,27 @@ export default function JobApplyButton({
     )
   }
 
-  // ── Already applied ───────────────────────────────────────────────────────
+  // ── Already applied ─────────────────────────────────────────────────────────
   if (applied) {
     return (
       <div className="card p-5 text-center">
         <CheckCircle className="w-8 h-8 text-green-500 mx-auto mb-2" />
         <p className="text-sm font-semibold text-brand-ink mb-1">Application Submitted</p>
-        <p className="text-xs text-brand-inkLight">You have already applied for this position. The employer will be in touch.</p>
+        <p className="text-xs text-brand-inkLight">
+          You have already applied for this position. The employer will be in touch.
+        </p>
       </div>
     )
   }
 
-  // ── Apply form ────────────────────────────────────────────────────────────
+  // ── Apply form ──────────────────────────────────────────────────────────────
   return (
     <div className="card p-5">
       <h3 className="font-bold text-brand-ink mb-1 text-sm">Apply for this Job</h3>
       <p className="text-xs text-brand-inkLight mb-4">{jobTitle} · {companyName}</p>
 
       {!open ? (
-        <button onClick={() => setOpen(true)}
-          className="btn-primary w-full text-sm">
+        <button onClick={() => setOpen(true)} className="btn-primary w-full text-sm">
           Apply Now
         </button>
       ) : (
@@ -129,7 +190,7 @@ export default function JobApplyButton({
             <textarea
               rows={5}
               className="input resize-none text-sm"
-              placeholder={`Tell ${companyName} why you're the right teacher for this role. Mention your experience, certifications, and what you can bring to the role…`}
+              placeholder={`Tell ${companyName} why you're the right teacher for this role. Mention your experience, certifications, and what you can bring…`}
               value={coverNote}
               onChange={e => setCoverNote(e.target.value)}
               maxLength={800}
