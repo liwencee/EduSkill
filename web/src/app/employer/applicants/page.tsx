@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import ApplicantActions from './ApplicantActions'
+import OpenNegotiationButton from './OpenNegotiationButton'
 import TeacherBadge from '@/components/TeacherBadge'
 import {
   ArrowLeft, Users, MapPin, Award, Clock, BadgeCheck,
@@ -77,6 +78,7 @@ export default async function EmployerApplicantsPage({ searchParams }: Props) {
             id, cover_note, status, applied_at,
             teacher_uid_snapshot, cert_type_snapshot,
             years_service_snapshot, badge_snapshot,
+            negotiation:job_negotiations(id, status),
             applicant:profiles(
               id, full_name, email, avatar_url, state, bio, phone,
               teacher_profile:teacher_profiles(
@@ -361,11 +363,24 @@ export default async function EmployerApplicantsPage({ searchParams }: Props) {
                               </div>
                             </div>
 
-                            {/* Status dropdown */}
+                            {/* Negotiate + Status */}
+                            <div className="flex flex-col gap-2 shrink-0">
+                              <OpenNegotiationButton
+                                applicationId={app.id}
+                                jobId={activeJobId!}
+                                teacherId={applicant?.id ?? app.applicant_id}
+                                employerId={employerId!}
+                                existingNegotiationId={
+                                  Array.isArray(app.negotiation)
+                                    ? app.negotiation[0]?.id ?? null
+                                    : app.negotiation?.id ?? null
+                                }
+                              />
                             <ApplicantActions
                               applicationId={app.id}
                               currentStatus={app.status}
                             />
+                            </div>
                           </div>
                         </div>
                       )

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import TeacherBadge from '@/components/TeacherBadge'
+import { STATIC_TEACHERS } from '@/lib/static-teachers'
 import {
   Search, MapPin, Award, Clock, Users, BadgeCheck,
   BookOpen, Star, SlidersHorizontal, ChevronRight,
@@ -43,6 +44,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
         id, teacher_uid, cert_type, cert_verified, years_of_service,
         has_badge, badge_type, kyc_status, subject_areas, school_name,
         school_type, subject_specialization, portfolio_url, linkedin_url,
+        avg_rating, total_ratings, total_jobs_completed,
         profile:profiles!teacher_profiles_id_fkey(
           id, full_name, avatar_url, state, bio
         )
@@ -97,6 +99,27 @@ export default async function CandidatesPage({ searchParams }: Props) {
           (t.subject_areas ?? []).some((s: string) => s.toLowerCase().includes(q))
         )
       })
+    }
+
+    // If DB returned no results, fall back to static teachers (filtered on client)
+    if (teachers.length === 0) {
+      let fallback: any[] = STATIC_TEACHERS
+      if (searchParams.cert && searchParams.cert !== 'All')
+        fallback = fallback.filter(t => t.cert_type === searchParams.cert)
+      if (searchParams.verified === '1')
+        fallback = fallback.filter(t => t.kyc_status === 'approved')
+      if (searchParams.state && searchParams.state !== 'All States')
+        fallback = fallback.filter(t => t.profile.state.toLowerCase().includes(searchParams.state!.toLowerCase()))
+      if (searchParams.q) {
+        const q = searchParams.q.toLowerCase()
+        fallback = fallback.filter(t =>
+          t.profile.full_name.toLowerCase().includes(q) ||
+          t.subject_specialization.toLowerCase().includes(q) ||
+          t.school_name.toLowerCase().includes(q) ||
+          t.subject_areas.some((s: string) => s.toLowerCase().includes(q))
+        )
+      }
+      teachers = fallback
     }
 
     // Sort approved to top after filtering
@@ -354,6 +377,22 @@ export default async function CandidatesPage({ searchParams }: Props) {
                               </span>
                             )}
                           </div>
+
+                          {/* Rating */}
+                          {(t.avg_rating ?? 0) > 0 && (
+                            <div className="flex items-center gap-1.5 text-xs">
+                              <div className="flex">
+                                {[1,2,3,4,5].map(s => (
+                                  <span key={s} className={`text-sm ${s <= Math.round(t.avg_rating) ? 'text-amber-400' : 'text-gray-200'}`}>★</span>
+                                ))}
+                              </div>
+                              <span className="font-bold text-amber-700">{Number(t.avg_rating).toFixed(1)}</span>
+                              <span className="text-gray-400">({t.total_ratings})</span>
+                              {t.total_jobs_completed > 0 && (
+                                <span className="text-gray-400">· {t.total_jobs_completed} jobs done</span>
+                              )}
+                            </div>
+                          )}
 
                           {/* School */}
                           {t.school_name && (
