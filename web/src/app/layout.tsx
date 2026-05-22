@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
+import { AuthProvider } from '@/components/AuthProvider'
 
 export const metadata: Metadata = {
   title: 'SkillBridge Nigeria — Learn Skills. Earn Money. Build Nigeria.',
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
       <body className="font-sans bg-white text-edu-text antialiased">
+        <AuthProvider>
         {children}
         <Toaster
           position="top-right"
@@ -35,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             style: { background: '#1E1B4B', color: '#fff', borderRadius: '16px', fontFamily: 'var(--font-nunito)' },
           }}
         />
+        </AuthProvider>
       </body>
     </html>
   )
