@@ -14,20 +14,16 @@ const RATE_SUFFIX: Record<string, string> = {
 }
 
 const JOB_TYPES: Record<string, string> = {
-  full_time:      'Full-time',
-  part_time:      'Part-time',
-  apprenticeship: 'Apprenticeship',
-  freelance:      'Freelance',
-  internship:     'Internship',
+  full_time: 'Full-time',
+  part_time: 'Part-time',
+  freelance: 'Freelance',
 }
 
 // 60/30/10 badge mapping — blue for role types, amber for freelance/featured
 const JOB_COLORS: Record<string, string> = {
-  full_time:      'badge-blue',
-  apprenticeship: 'badge-blue',
-  freelance:      'badge-amber',
-  part_time:      'badge-cream',
-  internship:     'badge-cream',
+  full_time: 'badge-blue',
+  freelance: 'badge-amber',
+  part_time: 'badge-cream',
 }
 
 const STATES = ['All States','Lagos','Abuja','Kano','Rivers','Ogun','Oyo','Enugu','Anambra','Delta','Kaduna']

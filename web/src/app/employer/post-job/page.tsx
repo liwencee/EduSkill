@@ -25,13 +25,11 @@ const STATES = [
 ]
 
 // Job type values must match the job_type enum in Supabase:
-// full_time | part_time | apprenticeship | freelance | internship
+// full_time | part_time | freelance
 const JOB_TYPES = [
-  { value: 'full_time',      label: 'Full-Time' },
-  { value: 'part_time',      label: 'Part-Time' },
-  { value: 'freelance',      label: 'Contract / Freelance' },
-  { value: 'apprenticeship', label: 'Apprenticeship' },
-  { value: 'internship',     label: 'Internship' },
+  { value: 'full_time', label: 'Full-Time' },
+  { value: 'part_time', label: 'Part-Time' },
+  { value: 'freelance', label: 'Contract / Freelance' },
 ]
 
 // How the pay is structured — used to label the rate amount fields
