@@ -58,10 +58,12 @@ const DURATIONS = [
 ]
 
 export default function PostJobPage() {
-  const [loading,   setLoading]   = useState(false)
-  const [submitted, setSubmitted] = useState(false)
-  const [userId,    setUserId]    = useState<string | null>(null)
-  const [authError, setAuthError] = useState('')
+  const [loading,      setLoading]      = useState(false)
+  const [submitted,    setSubmitted]    = useState(false)
+  const [authChecking, setAuthChecking] = useState(true)
+  const [userId,       setUserId]       = useState<string | null>(null)
+  const [userRole,     setUserRole]     = useState<string | null>(null)
+  const [switching,    setSwitching]    = useState(false)
 
   const [form, setForm] = useState({
     title:               '',
@@ -82,50 +84,70 @@ export default function PostJobPage() {
   const set = (field: string, value: string | boolean) =>
     setForm(prev => ({ ...prev, [field]: value }))
 
-  // ── Load current user + pre-fill company_name from employer profile ──
+  // ── Load current user, role, and pre-fill company name ───────────────
   useEffect(() => {
-    const supabase = createClient()
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
+    async function checkAuth() {
+      const supabase = createClient()
+
+      // getUser() verifies the JWT with Supabase servers
+      const { data: { user } } = await supabase.auth.getUser()
+
       if (!user) {
-        setAuthError('You must be logged in as an employer to post a job.')
+        setAuthChecking(false)
         return
       }
+
       setUserId(user.id)
 
-      // Try to pre-fill company name from employer_profiles
-      const { data: ep } = await supabase
-        .from('employer_profiles')
-        .select('company_name')
+      // Fetch role from profiles table (source of truth)
+      const { data: prof } = await supabase
+        .from('profiles')
+        .select('role')
         .eq('id', user.id)
         .single()
 
-      if (ep?.company_name) {
-        setForm(prev => ({ ...prev, company_name: ep.company_name }))
+      const role = prof?.role ?? (user.user_metadata?.role as string) ?? null
+      setUserRole(role)
+
+      // Pre-fill company name if employer_profiles row exists
+      if (role === 'employer') {
+        const { data: ep } = await supabase
+          .from('employer_profiles')
+          .select('company_name')
+          .eq('id', user.id)
+          .maybeSingle()
+        if (ep?.company_name)
+          setForm(prev => ({ ...prev, company_name: ep.company_name }))
       }
-    })
+
+      setAuthChecking(false)
+    }
+    checkAuth()
   }, [])
+
+  // ── Switch current account to employer role ──────────────────────────
+  async function switchToEmployer() {
+    if (!userId) return
+    setSwitching(true)
+    const supabase = createClient()
+    const { error } = await supabase
+      .from('profiles')
+      .update({ role: 'employer' })
+      .eq('id', userId)
+    if (error) {
+      toast.error('Could not switch role: ' + error.message)
+    } else {
+      toast.success('Account switched to Employer!')
+      setUserRole('employer')
+    }
+    setSwitching(false)
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-
-    if (!userId) {
-      toast.error('You must be logged in to post a job.')
-      return
-    }
-
+    if (!userId) { toast.error('Please sign in first.'); return }
     setLoading(true)
     const supabase = createClient()
-
-    // Ensure profile row exists before inserting (guards against FK violation)
-    const { data: { user: currentUser } } = await supabase.auth.getUser()
-    if (currentUser) {
-      await supabase.from('profiles').upsert({
-        id:        currentUser.id,
-        full_name: currentUser.user_metadata?.full_name ?? currentUser.email?.split('@')[0] ?? 'User',
-        email:     currentUser.email ?? '',
-        role:      (currentUser.user_metadata?.role ?? 'employer') as any,
-      }, { onConflict: 'id', ignoreDuplicates: true })
-    }
 
     const { error } = await supabase.from('job_listings').insert({
       employer_id:         userId,
@@ -156,8 +178,18 @@ export default function PostJobPage() {
     setLoading(false)
   }
 
-  // ── Auth guard ────────────────────────────────────────────────────────────
-  if (authError) {
+  // ── Checking auth — show spinner ─────────────────────────────────────────
+  if (authChecking) {
+    return (
+      <div className="min-h-screen bg-[#EEF2FF] flex items-center justify-center">
+        <Navbar />
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    )
+  }
+
+  // ── Not signed in ─────────────────────────────────────────────────────────
+  if (!userId) {
     return (
       <div className="min-h-screen bg-[#EEF2FF]">
         <Navbar />
@@ -166,11 +198,38 @@ export default function PostJobPage() {
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
           <h1 className="text-xl font-bold text-[#1E1B4B] mb-2">Login Required</h1>
-          <p className="text-gray-500 text-sm mb-6">{authError}</p>
+          <p className="text-gray-500 text-sm mb-6">Sign in to post a job listing.</p>
           <Link href="/auth/login?next=/employer/post-job"
             className="inline-flex items-center gap-2 bg-[#4F46E5] text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors">
             Log In to Continue
           </Link>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Signed in but not an employer — offer role switch ─────────────────────
+  if (userRole && userRole !== 'employer') {
+    return (
+      <div className="min-h-screen bg-[#EEF2FF]">
+        <Navbar />
+        <div className="max-w-lg mx-auto px-4 py-20 text-center">
+          <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <AlertCircle className="w-8 h-8 text-amber-500" />
+          </div>
+          <h1 className="text-xl font-bold text-[#1E1B4B] mb-2">Employer Account Needed</h1>
+          <p className="text-gray-500 text-sm mb-6">
+            Your account is currently set to <strong>{userRole}</strong>.
+            Switch to an Employer account — no new sign-up needed.
+          </p>
+          <button
+            onClick={switchToEmployer}
+            disabled={switching}
+            className="inline-flex items-center gap-2 bg-[#4F46E5] text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-60">
+            {switching
+              ? <><Loader2 className="w-4 h-4 animate-spin" /> Switching…</>
+              : 'Switch to Employer Account'}
+          </button>
         </div>
       </div>
     )
