@@ -110,6 +110,53 @@ export const STATIC_COURSES: Course[] = [
     total_lessons: 18, total_enrolled: 820, avg_rating: 4.5, tags: ['logistics', 'supply chain', 'operations'],
   },
 
+  // ── Agriculture Specialisations (NERDC Agric Science Aligned) ───────────
+  {
+    id: 'static-16', slug: 'poultry-fish-farming',
+    title: 'Poultry & Fish Farming',
+    description: 'Master profitable layers, broilers and fish (catfish & tilapia) production. Covers housing, feeding, health management, biosecurity and marketing. NERDC Agricultural Science aligned.',
+    category: 'agribusiness', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'ha', 'ig', 'yo'], duration_weeks: 6, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 15000,
+    total_lessons: 36, total_enrolled: 1250, avg_rating: 4.8, tags: ['poultry', 'fish farming', 'agriculture', 'livestock'],
+  },
+  {
+    id: 'static-17', slug: 'agribusiness-management',
+    title: 'Agribusiness Management',
+    description: 'Business and financial management for farmers and agro-entrepreneurs. Covers farm planning, agri-finance, cooperative societies, agricultural marketing and policy. NERDC aligned.',
+    category: 'agribusiness', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'ha', 'ig', 'yo'], duration_weeks: 5, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 18000,
+    total_lessons: 30, total_enrolled: 980, avg_rating: 4.7, tags: ['agribusiness', 'farm management', 'agricultural finance', 'cooperative'],
+  },
+  {
+    id: 'static-18', slug: 'food-processing-value-addition',
+    title: 'Food Processing & Value Addition',
+    description: 'Transform raw farm produce into profitable products. Covers post-harvest management, processing technologies, food safety, NAFDAC registration and brand building. NERDC aligned.',
+    category: 'agribusiness', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'ig', 'yo', 'pcm'], duration_weeks: 5, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 12000,
+    total_lessons: 30, total_enrolled: 1450, avg_rating: 4.8, tags: ['food processing', 'value addition', 'NAFDAC', 'packaging', 'post-harvest'],
+  },
+  {
+    id: 'static-19', slug: 'horticulture-urban-markets',
+    title: 'Horticulture: Vegetables for Urban Markets',
+    description: 'Grow high-value vegetables and fruits (ugwu, tomatoes, onion, pepper, carrot) for urban consumers. Covers soil prep, crop management, pest control and market access. NERDC aligned.',
+    category: 'agribusiness', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'yo', 'ig'], duration_weeks: 5, is_free: true,
+    is_published: true, is_offline_ready: true, price_ngn: 0,
+    total_lessons: 30, total_enrolled: 2100, avg_rating: 4.9, tags: ['horticulture', 'vegetable farming', 'urban agriculture', 'market gardening'],
+  },
+  {
+    id: 'static-20', slug: 'irrigation-farming-dry-season',
+    title: 'Irrigation Farming: Dry Season Crops',
+    description: 'Farm profitably year-round using irrigation. Learn water sourcing, drip and sprinkler irrigation setup, dry season crop calendars, water management and business planning. NERDC aligned.',
+    category: 'agribusiness', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'ha', 'ig'], duration_weeks: 5, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 12000,
+    total_lessons: 30, total_enrolled: 760, avg_rating: 4.7, tags: ['irrigation', 'dry season farming', 'water management', 'fadama'],
+  },
+
   // ── Nigerian Languages ────────────────────────────────────────────────────
   {
     id: 'static-13', slug: 'yoruba-language-teaching',
