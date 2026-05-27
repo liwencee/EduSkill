@@ -25,52 +25,57 @@ function LoginForm() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setLoading(true)
     setError('')
+    setLoading(true)
 
-    const supabase = createClient()
-
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email:    email.trim().toLowerCase(),
-      password,
-    })
-
-    if (authError) {
-      const msg = authError.message.toLowerCase()
-      if (msg.includes('email not confirmed')) {
-        setError('Please verify your email first — check your inbox.')
-      } else if (
-        msg.includes('invalid login') ||
-        msg.includes('invalid credentials') ||
-        msg.includes('invalid email or password')
-      ) {
-        setError('Wrong email or password. Please try again.')
-      } else {
-        setError(authError.message)
-      }
-      setLoading(false)
-      return
-    }
-
-    // Session is now in localStorage + cookie — AuthProvider will pick it up.
-    // Read role from profiles table for accurate routing.
-    let role = data.user?.user_metadata?.role ?? 'youth'
     try {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', data.user!.id)
-        .single()
-      if (profile?.role) role = profile.role
-    } catch { /* fallback to metadata role */ }
+      const supabase = createClient()
 
-    // Go to the page they were trying to reach, or their role home
-    const destination = (next && next !== '/dashboard')
-      ? next
-      : (ROLE_HOME[role] ?? '/dashboard/youth')
+      const { data, error: authError } =
+        await supabase.auth.signInWithPassword({
+          email:    email.trim().toLowerCase(),
+          password,
+        })
 
-    router.push(destination)
-    router.refresh()   // flushes Next.js cache so server layouts see the new cookie
+      if (authError) {
+        const msg = authError.message.toLowerCase()
+        if (msg.includes('email not confirmed')) {
+          setError('Please verify your email first — check your inbox.')
+        } else if (
+          msg.includes('invalid login') ||
+          msg.includes('invalid credentials') ||
+          msg.includes('invalid email or password')
+        ) {
+          setError('Wrong email or password. Please try again.')
+        } else {
+          setError(authError.message || 'Login failed. Please try again.')
+        }
+        setLoading(false)
+        return
+      }
+
+      if (!data.user || !data.session) {
+        setError('Login failed — no session returned. Please try again.')
+        setLoading(false)
+        return
+      }
+
+      // Use metadata role (set at signup, no extra DB call needed here).
+      // Server layouts will verify the real role from profiles.
+      const role = (data.user.user_metadata?.role as string) ?? 'youth'
+      const destination = (next && next !== '/dashboard')
+        ? next
+        : (ROLE_HOME[role] ?? '/dashboard/youth')
+
+      // Keep spinner during navigation — page will unmount
+      router.push(destination)
+      router.refresh()
+
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'An unexpected error occurred.'
+      setError(msg)
+      setLoading(false)
+    }
   }
 
   return (
@@ -87,7 +92,9 @@ function LoginForm() {
 
         <div className="bg-white rounded-2xl border border-[#E0DDD5] shadow-sm p-8">
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Welcome back</h1>
-          <p className="text-brand-inkMid mb-6 text-sm">Log in to continue your learning journey</p>
+          <p className="text-brand-inkMid mb-6 text-sm">
+            Log in to continue your learning journey
+          </p>
 
           {error && (
             <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5">
@@ -100,7 +107,7 @@ function LoginForm() {
             <div>
               <label className="label" htmlFor="email">Email address</label>
               <input
-                id="email" name="email" type="email" required
+                id="email" type="email" required
                 className="input"
                 placeholder="you@example.com"
                 autoComplete="email"
@@ -114,7 +121,7 @@ function LoginForm() {
               <label className="label" htmlFor="password">Password</label>
               <div className="relative">
                 <input
-                  id="password" name="password"
+                  id="password"
                   type={showPwd ? 'text' : 'password'} required
                   className="input pr-10"
                   placeholder="••••••••"
@@ -125,7 +132,7 @@ function LoginForm() {
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPwd(!showPwd)}
+                  onClick={() => setShowPwd(v => !v)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-brand-inkLight hover:text-brand-inkMid"
                 >
                   {showPwd ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -134,7 +141,8 @@ function LoginForm() {
             </div>
 
             <div className="flex justify-end">
-              <Link href="/auth/forgot-password" className="text-sm text-brand-blue hover:underline">
+              <Link href="/auth/forgot-password"
+                className="text-sm text-brand-blue hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -142,7 +150,7 @@ function LoginForm() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60"
+              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-70"
             >
               {loading
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> Logging in…</>
@@ -161,7 +169,8 @@ function LoginForm() {
 
           <p className="text-center text-sm text-brand-inkMid">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-brand-blue font-semibold hover:underline">
+            <Link href="/auth/signup"
+              className="text-brand-blue font-semibold hover:underline">
               Sign up free
             </Link>
           </p>
