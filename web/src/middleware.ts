@@ -47,12 +47,18 @@ export async function middleware(request: NextRequest) {
     }
   )
 
+  // Use getSession() here — it reads the JWT from the cookie without a
+  // network round-trip to Supabase Auth. getUser() (which does a live
+  // server call) is too slow/unreliable at the edge and causes the login
+  // redirect loop: loginAction sets the cookie → middleware calls getUser()
+  // before the cookie propagates → returns null → redirect back to /auth/login.
+  // Security-sensitive server components call getUser() independently.
   let user = null
   try {
-    const { data } = await supabase.auth.getUser()
-    user = data.user
+    const { data } = await supabase.auth.getSession()
+    user = data.session?.user ?? null
   } catch {
-    // Auth error (e.g. invalid/missing key) — treat as unauthenticated
+    // Cookie parse error — treat as unauthenticated
   }
 
   const { pathname } = request.nextUrl
