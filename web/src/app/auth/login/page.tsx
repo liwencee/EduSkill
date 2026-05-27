@@ -1,16 +1,77 @@
 'use client'
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
-import { BookOpen, Eye, EyeOff, AlertCircle } from 'lucide-react'
-import { loginAction } from './actions'
+import { useSearchParams, useRouter } from 'next/navigation'
+import { BookOpen, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
+
+const ROLE_HOME: Record<string, string> = {
+  teacher:  '/dashboard/teacher',
+  employer: '/dashboard/employer',
+  youth:    '/dashboard/youth',
+  admin:    '/admin',
+}
 
 function LoginForm() {
-  const params   = useSearchParams()
-  const next     = params.get('next')  ?? '/dashboard'
-  const errorMsg = params.get('error') ?? ''
+  const params  = useSearchParams()
+  const next    = params.get('next') ?? ''
+  const router  = useRouter()
 
-  const [showPwd, setShowPwd] = useState(false)
+  const [email,    setEmail]    = useState('')
+  const [password, setPassword] = useState('')
+  const [showPwd,  setShowPwd]  = useState(false)
+  const [loading,  setLoading]  = useState(false)
+  const [error,    setError]    = useState('')
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+
+    const supabase = createClient()
+
+    const { data, error: authError } = await supabase.auth.signInWithPassword({
+      email:    email.trim().toLowerCase(),
+      password,
+    })
+
+    if (authError) {
+      const msg = authError.message.toLowerCase()
+      if (msg.includes('email not confirmed')) {
+        setError('Please verify your email first — check your inbox.')
+      } else if (
+        msg.includes('invalid login') ||
+        msg.includes('invalid credentials') ||
+        msg.includes('invalid email or password')
+      ) {
+        setError('Wrong email or password. Please try again.')
+      } else {
+        setError(authError.message)
+      }
+      setLoading(false)
+      return
+    }
+
+    // Session is now in localStorage + cookie — AuthProvider will pick it up.
+    // Read role from profiles table for accurate routing.
+    let role = data.user?.user_metadata?.role ?? 'youth'
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user!.id)
+        .single()
+      if (profile?.role) role = profile.role
+    } catch { /* fallback to metadata role */ }
+
+    // Go to the page they were trying to reach, or their role home
+    const destination = (next && next !== '/dashboard')
+      ? next
+      : (ROLE_HOME[role] ?? '/dashboard/youth')
+
+    router.push(destination)
+    router.refresh()   // flushes Next.js cache so server layouts see the new cookie
+  }
 
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
@@ -28,31 +89,24 @@ function LoginForm() {
           <h1 className="text-2xl font-bold text-brand-ink mb-1">Welcome back</h1>
           <p className="text-brand-inkMid mb-6 text-sm">Log in to continue your learning journey</p>
 
-          {/* Inline error (from server action redirect) */}
-          {errorMsg && (
+          {error && (
             <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-5">
               <AlertCircle className="w-4 h-4 text-red-500 shrink-0" />
-              <p className="text-sm text-red-700">{errorMsg}</p>
+              <p className="text-sm text-red-700">{error}</p>
             </div>
           )}
 
-          {/*
-            Plain <form action={serverAction}> — this is the official Supabase
-            recommended pattern. The Server Action sets cookies via
-            cookies().set() which works correctly in this context, then
-            redirect() sends the browser to the dashboard with the session
-            already committed. No client-side cookie sync needed.
-          */}
-          <form action={loginAction} className="space-y-4">
-            {/* Pass the intended destination through the form */}
-            <input type="hidden" name="next" value={next} />
-
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="label" htmlFor="email">Email address</label>
               <input
                 id="email" name="email" type="email" required
-                className="input" placeholder="you@example.com"
+                className="input"
+                placeholder="you@example.com"
                 autoComplete="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                disabled={loading}
               />
             </div>
 
@@ -62,8 +116,12 @@ function LoginForm() {
                 <input
                   id="password" name="password"
                   type={showPwd ? 'text' : 'password'} required
-                  className="input pr-10" placeholder="••••••••"
+                  className="input pr-10"
+                  placeholder="••••••••"
                   autoComplete="current-password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  disabled={loading}
                 />
                 <button
                   type="button"
@@ -81,8 +139,14 @@ function LoginForm() {
               </Link>
             </div>
 
-            <button type="submit" className="btn-primary w-full">
-              Log In
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full flex items-center justify-center gap-2 disabled:opacity-60"
+            >
+              {loading
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Logging in…</>
+                : 'Log In'}
             </button>
           </form>
 
