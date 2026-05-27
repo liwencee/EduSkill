@@ -93,6 +93,7 @@ export default function TeacherProfilePage() {
   const [subjects,   setSubjects]   = useState<string[]>([])
   const [nin,        setNin]        = useState('')
   const [showNin,    setShowNin]    = useState(false)
+  const [ninError,   setNinError]   = useState('')
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
 
   const avatarRef = useRef<HTMLInputElement>(null)
@@ -191,16 +192,19 @@ export default function TeacherProfilePage() {
 
   // ── Save all changes ──────────────────────────────────────────────────────
   async function handleSave() {
+    // ── NIN is compulsory before saving ──────────────────────────
+    if (!nin || nin.length !== 11) {
+      setNinError('NIN is required — enter your 11-digit National Identification Number to save your profile and receive your Teacher ID.')
+      toast.error('NIN is required to save your profile')
+      // Scroll to NIN field
+      document.getElementById('nin-field')?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+    setNinError('')
+
     setSaving(true)
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { setSaving(false); return }
-
-    // Validate NIN
-    if (nin && !/^\d{11}$/.test(nin)) {
-      toast.error('NIN must be exactly 11 digits')
-      setSaving(false)
-      return
-    }
 
     // Determine new KYC status
     const hasNin     = nin.length === 11
@@ -447,34 +451,56 @@ export default function TeacherProfilePage() {
               </span>
             </div>
 
+            {/* NIN required callout */}
+            <div className="mb-4 flex items-start gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+              <BadgeCheck className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-bold text-amber-800">NIN required to save your profile &amp; get your Teacher ID</p>
+                <p className="text-xs text-amber-700 mt-0.5">
+                  Your National Identification Number (NIN) is compulsory. You will not be able to save your profile
+                  or receive your unique EduSkill Teacher ID (e.g. <span className="font-mono font-semibold">EDU-T-2025-01042</span>) without it.
+                </p>
+              </div>
+            </div>
+
             <div className="grid sm:grid-cols-2 gap-4">
               {/* NIN */}
-              <div className="sm:col-span-2">
+              <div id="nin-field" className="sm:col-span-2">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  NIN — National Identification Number *
+                  NIN — National Identification Number <span className="text-red-600 font-bold">* Required</span>
                 </label>
                 <div className="relative">
                   <input
                     type={showNin ? 'text' : 'password'}
                     inputMode="numeric"
                     maxLength={11}
-                    className="input pr-10"
+                    className={`input pr-10 ${ninError ? 'border-red-400 ring-1 ring-red-400 focus:ring-red-500' : nin.length === 11 ? 'border-green-400 ring-1 ring-green-300' : ''}`}
                     placeholder="Enter your 11-digit NIN"
                     value={nin}
-                    onChange={e => setNin(e.target.value.replace(/\D/g, '').slice(0, 11))}
+                    onChange={e => {
+                      const v = e.target.value.replace(/\D/g, '').slice(0, 11)
+                      setNin(v)
+                      if (v.length === 11) setNinError('')
+                    }}
                   />
                   <button type="button" onClick={() => setShowNin(v => !v)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
                     {showNin ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-                <p className="text-xs text-gray-400 mt-1">
-                  Your NIN is encrypted and only used for identity verification.
-                  {nin.length > 0 && nin.length < 11 && (
-                    <span className="text-amber-600 ml-1">{11 - nin.length} more digit{11 - nin.length !== 1 ? 's' : ''} needed</span>
-                  )}
-                  {nin.length === 11 && <span className="text-green-600 ml-1">✓ Valid length</span>}
-                </p>
+                {ninError ? (
+                  <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3 shrink-0" /> {ninError}
+                  </p>
+                ) : (
+                  <p className="text-xs text-gray-400 mt-1">
+                    Your NIN is encrypted and only used for identity verification.
+                    {nin.length > 0 && nin.length < 11 && (
+                      <span className="text-amber-600 ml-1">{11 - nin.length} more digit{11 - nin.length !== 1 ? 's' : ''} needed</span>
+                    )}
+                    {nin.length === 11 && <span className="text-green-600 ml-1 font-medium">✓ Valid — profile can be saved</span>}
+                  </p>
+                )}
               </div>
 
               {/* Certificate Type */}
@@ -574,12 +600,24 @@ export default function TeacherProfilePage() {
           </div>
 
           {/* Save Button */}
-          <div className="flex justify-end pb-8">
+          <div className="flex flex-col items-end gap-2 pb-8">
+            {nin.length !== 11 && (
+              <p className="text-xs text-red-500 flex items-center gap-1">
+                <AlertCircle className="w-3 h-3" /> Enter your 11-digit NIN above to unlock saving
+              </p>
+            )}
             <button onClick={handleSave} disabled={saving}
-              className="inline-flex items-center gap-2 bg-indigo-600 text-white font-bold px-8 py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-60 text-sm">
+              className={`inline-flex items-center gap-2 font-bold px-8 py-3 rounded-xl transition-colors text-sm
+                ${nin.length === 11
+                  ? 'bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-60'
+                  : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                }`}>
               {saving
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</>
-                : <><Save className="w-4 h-4" /> Save Profile</>}
+                : nin.length === 11
+                  ? <><Save className="w-4 h-4" /> Save Profile &amp; Get Teacher ID</>
+                  : <><Shield className="w-4 h-4" /> NIN Required to Save</>
+              }
             </button>
           </div>
         </div>
