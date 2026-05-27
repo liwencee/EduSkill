@@ -2,20 +2,29 @@
 /**
  * AuthProvider — single source of truth for auth state across the whole app.
  *
- * Wraps the root layout so every page can call useAuth() and get the
- * current user + their DB role instantly, without making a fresh DB
- * round-trip on every page navigation.
+ * Key design decision: loadUser() uses getSession() NOT getUser().
+ *
+ * getUser()    → live network call to Supabase Auth server to verify JWT.
+ *               Unreliable immediately after a server-action login because the
+ *               session cookie may not yet be visible to the Auth server edge
+ *               cache. Returns null → RoleGuard fires redirect back to login.
+ *
+ * getSession() → reads the JWT from the in-memory/cookie store locally.
+ *               No network call. Always sees the cookie the server just set.
+ *               Perfect for "is someone logged in?" checks in the client.
+ *
+ * Security-sensitive server components (admin routes, DB writes) call
+ * createClient().auth.getUser() independently to verify the JWT server-side.
  */
 import {
   createContext, useContext, useEffect, useState, useCallback,
 } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import type { User } from '@supabase/supabase-js'
 
 export interface AuthUser {
   id:        string
   email:     string
-  role:      string          // from profiles table — always up to date
+  role:      string
   fullName:  string
   avatarUrl: string | null
 }
@@ -27,7 +36,7 @@ interface AuthContextType {
   isTeacher:  boolean
   isAdmin:    boolean
   isYouth:    boolean
-  refresh:    () => Promise<void>  // call after a role switch
+  refresh:    () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -46,15 +55,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loadUser = useCallback(async () => {
     const supabase = createClient()
-    const { data: { user: authUser } } = await supabase.auth.getUser()
 
-    if (!authUser) {
+    // ── Step 1: read session from cookie (no network call) ───────────────────
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (!session) {
       setUser(null)
       setLoading(false)
       return
     }
 
-    // Read role from profiles table — this is the canonical source
+    const authUser = session.user
+
+    // ── Step 2: fetch the DB role (profiles table is the canonical source) ───
     const { data: profile } = await supabase
       .from('profiles')
       .select('role, full_name, avatar_url')
