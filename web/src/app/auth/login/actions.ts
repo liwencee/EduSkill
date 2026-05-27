@@ -36,27 +36,15 @@ export async function loginAction(formData: FormData) {
     )
   }
 
-  // Session cookies are written by createClient's setAll → cookies().set()
-  // which works correctly inside a Server Action.
+  // Use role from user_metadata (set at signup, fast, no extra DB call).
+  // The dashboard server layouts will read from profiles for role verification.
+  const role = (data!.user?.user_metadata?.role as string) ?? 'youth'
 
-  // Read role from profiles table — this is the canonical source.
-  // user_metadata.role is stale if the user has ever switched roles.
-  let role = 'youth'
-  try {
-    const { data: profile } = await supabase!
-      .from('profiles')
-      .select('role')
-      .eq('id', data!.user!.id)
-      .single()
-    role = profile?.role ?? data!.user?.user_metadata?.role ?? 'youth'
-  } catch {
-    role = data!.user?.user_metadata?.role ?? 'youth'
-  }
-
-  // If the user tried to reach a specific page, send them there.
-  // Otherwise send them to their role-specific dashboard.
+  // If the user was trying to reach a specific page, return them there.
+  // Otherwise route to their role-specific dashboard.
   const destination = (next && next !== '/dashboard')
     ? next
     : `/dashboard/${role}`
+
   redirect(destination)
 }

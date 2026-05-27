@@ -54,38 +54,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true)
 
   const loadUser = useCallback(async () => {
-    const supabase = createClient()
+    try {
+      const supabase = createClient()
 
-    // ── Step 1: read session from cookie (no network call) ───────────────────
-    const { data: { session } } = await supabase.auth.getSession()
+      // ── Step 1: read session from cookie (no network call) ─────────────────
+      const { data: { session } } = await supabase.auth.getSession()
 
-    if (!session) {
+      if (!session) {
+        setUser(null)
+        setLoading(false)
+        return
+      }
+
+      const authUser = session.user
+
+      // ── Step 2: fetch the DB role (profiles is the canonical source) ───────
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role, full_name, avatar_url')
+        .eq('id', authUser.id)
+        .single()
+
+      setUser({
+        id:        authUser.id,
+        email:     authUser.email ?? '',
+        role:      profile?.role
+                     ?? (authUser.user_metadata?.role as string)
+                     ?? 'youth',
+        fullName:  profile?.full_name
+                     ?? (authUser.user_metadata?.full_name as string)
+                     ?? '',
+        avatarUrl: profile?.avatar_url ?? null,
+      })
+    } catch {
+      // Any error → treat as logged out so the app never hangs on loading
       setUser(null)
-      setLoading(false)
-      return
+    } finally {
+      setLoading(false)   // always flip loading off
     }
-
-    const authUser = session.user
-
-    // ── Step 2: fetch the DB role (profiles table is the canonical source) ───
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role, full_name, avatar_url')
-      .eq('id', authUser.id)
-      .single()
-
-    setUser({
-      id:        authUser.id,
-      email:     authUser.email ?? '',
-      role:      profile?.role
-                   ?? (authUser.user_metadata?.role as string)
-                   ?? 'youth',
-      fullName:  profile?.full_name
-                   ?? (authUser.user_metadata?.full_name as string)
-                   ?? '',
-      avatarUrl: profile?.avatar_url ?? null,
-    })
-    setLoading(false)
   }, [])
 
   useEffect(() => {
