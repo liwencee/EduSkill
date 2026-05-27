@@ -1,15 +1,5 @@
 'use client'
-/**
- * RoleGuard — role-based route protection for Next.js App Router.
- *
- * States:
- *  loading=true          → spinner (never redirect while auth is resolving)
- *  user=null             → redirect /auth/login?next=<path>
- *  user.role not allowed → redirect to user's own dashboard (no re-login)
- *  user.role allowed     → render children
- */
 import { useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
 import { useAuth } from '@/components/AuthProvider'
 import { Loader2 } from 'lucide-react'
 
@@ -22,31 +12,28 @@ const ROLE_HOME: Record<string, string> = {
   admin:    '/admin',
 }
 
-interface Props {
+export default function RoleGuard({
+  children,
+  allowedRoles,
+}: {
   children:     React.ReactNode
   allowedRoles: UserRole[]
-}
-
-export default function RoleGuard({ children, allowedRoles }: Props) {
+}) {
   const { user, loading } = useAuth()
-  const router   = useRouter()
-  const pathname = usePathname()
 
   useEffect(() => {
-    if (loading) return   // still reading session — never redirect yet
+    if (loading) return
 
     if (!user) {
-      router.replace(`/auth/login?next=${encodeURIComponent(pathname)}`)
+      window.location.href = `/auth/login?next=${encodeURIComponent(window.location.pathname)}`
       return
     }
 
     if (!allowedRoles.includes(user.role as UserRole)) {
-      // Logged in but wrong role → own dashboard, no re-login
-      router.replace(ROLE_HOME[user.role] ?? '/dashboard')
+      window.location.href = ROLE_HOME[user.role] ?? '/dashboard/youth'
     }
-  }, [loading, user, allowedRoles, pathname, router])
+  }, [loading, user]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // ── Still loading → spinner (prevents any flash of login/wrong content) ──
   if (loading) {
     return (
       <div className="min-h-screen bg-[#EEF2FF] flex items-center justify-center">
@@ -55,7 +42,6 @@ export default function RoleGuard({ children, allowedRoles }: Props) {
     )
   }
 
-  // ── Not authed or wrong role → blank while redirect fires ────────────────
   if (!user || !allowedRoles.includes(user.role as UserRole)) {
     return (
       <div className="min-h-screen bg-[#EEF2FF] flex items-center justify-center">

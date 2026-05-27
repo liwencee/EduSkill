@@ -1,29 +1,6 @@
-import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+'use client'
+import RoleGuard from '@/components/RoleGuard'
 
-export default async function YouthDashboardLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  const supabase = createClient()
-
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) {
-    redirect('/auth/login?next=/dashboard/youth')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', user.id)
-    .single()
-
-  const role = profile?.role ?? user.user_metadata?.role ?? 'youth'
-
-  if (role !== 'youth') {
-    redirect(`/dashboard/${role}`)
-  }
-
-  return <>{children}</>
+export default function YouthDashboardLayout({ children }: { children: React.ReactNode }) {
+  return <RoleGuard allowedRoles={['youth']}>{children}</RoleGuard>
 }
