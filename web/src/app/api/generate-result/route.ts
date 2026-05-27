@@ -5,6 +5,56 @@ import { resultRecsCache, CACHE_TTL, cacheKey } from '@/lib/cache'
 
 export const dynamic = 'force-dynamic'
 
+const FREE_LIMIT = 3
+
+// ── Quota helpers ────────────────────────────────────────────────────────────
+async function checkAndIncrementQuota(userId: string): Promise<
+  | { allowed: true;  count: number }
+  | { allowed: false; count: number; limit: number; period: string }
+> {
+  try {
+    // anon client — read session + profile
+    const { createClient } = await import('@/lib/supabase/server')
+    const supabase = createClient()
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription, subscription_expires_at, result_gen_count, result_gen_period, result_gen_unlocked')
+      .eq('id', userId)
+      .single()
+
+    const currentPeriod = new Date().toISOString().slice(0, 7)
+    const isNewPeriod   = !profile || profile.result_gen_period !== currentPeriod
+    const count         = isNewPeriod ? 0 : (profile?.result_gen_count ?? 0)
+    const unlocked      = !isNewPeriod && (profile?.result_gen_unlocked ?? false)
+
+    const isActivePremium =
+      (profile?.subscription === 'teacher_premium' || profile?.subscription === 'institutional') &&
+      !!profile?.subscription_expires_at &&
+      new Date(profile.subscription_expires_at) > new Date()
+
+    if (!isActivePremium && !unlocked && count >= FREE_LIMIT) {
+      return { allowed: false, count, limit: FREE_LIMIT, period: currentPeriod }
+    }
+
+    // Increment using service role (bypasses RLS)
+    const { createClient: svcClient } = await import('@supabase/supabase-js')
+    const svc = svcClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    await svc.from('profiles').update({
+      result_gen_count:  count + 1,
+      result_gen_period: currentPeriod,
+    }).eq('id', userId)
+
+    return { allowed: true, count: count + 1 }
+  } catch {
+    // DB unavailable — allow through (fail open for resilience)
+    return { allowed: true, count: 0 }
+  }
+}
+
 interface SubjectResult {
   subjectName: string
   score: number
@@ -111,6 +161,31 @@ export async function POST(req: NextRequest) {
       { error: 'Too many requests. Please wait before generating again.' },
       { status: 429, headers: rateLimitHeaders(rl) }
     )
+  }
+
+  // ── Monthly quota check (3 free uses per teacher per month) ──────
+  try {
+    const { createClient } = await import('@/lib/supabase/server')
+    const supabase = createClient()
+    const { data: { session } } = await supabase.auth.getSession()
+
+    if (session?.user) {
+      const quota = await checkAndIncrementQuota(session.user.id)
+      if (!quota.allowed) {
+        logger.warn('Result generator quota exceeded', {
+          route: '/api/generate-result',
+          userId: session.user.id,
+          count: quota.count,
+        })
+        logResponse('/api/generate-result', ctx, 402)
+        return NextResponse.json(
+          { error: 'QUOTA_EXCEEDED', count: quota.count, limit: quota.limit, period: quota.period },
+          { status: 402 }
+        )
+      }
+    }
+  } catch {
+    // Quota check failed (env vars missing etc.) — allow through
   }
 
   const body: { classInfo: ClassInfo; students: StudentInput[] } = await req.json()

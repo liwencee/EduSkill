@@ -1,12 +1,14 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { useAuth } from '@/components/AuthProvider'
 import {
   PlusCircle, Trash2, ArrowRight, ArrowLeft,
   ClipboardList, FileSpreadsheet, RotateCcw, Loader2,
   Trophy, TrendingUp, Star, ChevronDown, ChevronUp,
+  Lock, CreditCard, Zap, X,
 } from 'lucide-react'
 
 // ─── Types ────────────────────────────────────────────────────────
@@ -90,6 +92,87 @@ function positionColor(pos: number) {
   return 'text-brand-inkMid bg-white border-brand-bg'
 }
 
+// ─── Quota types ─────────────────────────────────────────────────
+interface UsageInfo {
+  count:     number
+  limit:     number
+  remaining: number | null  // null = unlimited (premium / unlocked)
+  unlocked:  boolean
+  isPremium: boolean
+  period:    string
+}
+
+// ─── Upgrade Modal ────────────────────────────────────────────────
+function UpgradeModal({
+  usageInfo,
+  userEmail,
+  userId,
+  onClose,
+}: {
+  usageInfo: UsageInfo
+  userEmail: string
+  userId:   string
+  onClose:  () => void
+}) {
+  const period      = usageInfo.period || new Date().toISOString().slice(0, 7)
+  const ref         = `result-${userId}-${period}`
+  const metaEncoded = encodeURIComponent(JSON.stringify({ plan_key: 'result_gen_monthly', user_id: userId }))
+  const paystackUrl =
+    `https://paystack.com/pay/eduskill` +
+    `?amount=500000` +
+    `&email=${encodeURIComponent(userEmail)}` +
+    `&ref=${ref}` +
+    `&metadata=${metaEncoded}`
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      onClick={onClose}>
+      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
+        onClick={e => e.stopPropagation()}>
+
+        <button onClick={onClose}
+          className="absolute top-4 right-4 text-brand-inkLight hover:text-brand-ink transition-colors">
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Icon */}
+        <div className="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center mx-auto mb-5">
+          <Lock className="w-8 h-8 text-amber-600" />
+        </div>
+
+        <h2 className="text-2xl font-bold text-brand-ink text-center mb-2">Monthly Limit Reached</h2>
+        <p className="text-brand-inkMid text-center text-sm mb-6">
+          You&apos;ve used all <strong>{usageInfo.limit} free generations</strong> for{' '}
+          {new Date(period + '-01').toLocaleString('en-NG', { month: 'long', year: 'numeric' })}.
+          Unlock unlimited result generation for the rest of this month.
+        </p>
+
+        {/* Price card */}
+        <div className="bg-brand-blue/5 border border-brand-blue/20 rounded-xl p-5 mb-6 text-center">
+          <p className="text-brand-inkMid text-sm mb-1">Monthly Add-On</p>
+          <p className="text-4xl font-bold text-brand-blue">₦5,000</p>
+          <p className="text-brand-inkMid text-sm mt-1">Unlimited result generation this month</p>
+          <ul className="mt-4 space-y-2 text-sm text-left text-brand-inkMid">
+            <li className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-blue flex-shrink-0" /> Unlimited classes & student results</li>
+            <li className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-blue flex-shrink-0" /> AI-powered recommendations included</li>
+            <li className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-blue flex-shrink-0" /> Excel export with AI career guidance</li>
+            <li className="flex items-center gap-2"><Zap className="w-4 h-4 text-brand-blue flex-shrink-0" /> Auto-resets next month (pay again to renew)</li>
+          </ul>
+        </div>
+
+        <a href={paystackUrl} target="_blank" rel="noopener noreferrer"
+          className="btn-primary w-full flex items-center justify-center gap-2 text-base py-3 mb-3">
+          <CreditCard className="w-5 h-5" /> Pay ₦5,000 with Paystack
+        </a>
+
+        <p className="text-xs text-center text-brand-inkLight">
+          Secure payment via Paystack · Your quota resets automatically after payment
+        </p>
+      </div>
+    </div>
+  )
+}
+
 // ─── Component ────────────────────────────────────────────────────
 export default function ResultGeneratorPage() {
   // ── Step ──
@@ -123,6 +206,18 @@ export default function ResultGeneratorPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
+
+  // ── Quota / upgrade state ──
+  const { user } = useAuth()
+  const [usageInfo, setUsageInfo]         = useState<UsageInfo | null>(null)
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/result-usage')
+      .then(r => r.ok ? r.json() : null)
+      .then(data => { if (data) setUsageInfo(data) })
+      .catch(() => {})
+  }, [])
 
   // ─── Derived score helpers ───────────────────────────────────────
   const getScore = (studentId: string, subjectId: string) =>
@@ -201,7 +296,7 @@ export default function ResultGeneratorPage() {
       r.positionLabel = ordinal(i + 1)
     })
 
-    // 3. Call AI for recommendations
+    // 3. Call AI for recommendations (quota-checked on server)
     try {
       const res = await fetch('/api/generate-result', {
         method: 'POST',
@@ -218,6 +313,19 @@ export default function ResultGeneratorPage() {
           })),
         }),
       })
+
+      // ── Quota exceeded → show upgrade modal ──────────────────────
+      if (res.status === 402) {
+        const data = await res.json()
+        setUsageInfo(prev => prev
+          ? { ...prev, count: data.count ?? prev.count, remaining: 0 }
+          : null
+        )
+        setShowUpgradeModal(true)
+        setLoading(false)
+        return   // do NOT advance to step 3
+      }
+
       if (res.ok) {
         const data: { recommendations: { name: string; recommendation: string; strengths: string[]; careerSuggestions: string[] }[] } = await res.json()
         data.recommendations.forEach(aiRec => {
@@ -228,6 +336,11 @@ export default function ResultGeneratorPage() {
             match.careerSuggestions = aiRec.careerSuggestions
           }
         })
+        // Refresh quota count after a successful generation
+        fetch('/api/result-usage')
+          .then(r => r.ok ? r.json() : null)
+          .then(d => { if (d) setUsageInfo(d) })
+          .catch(() => {})
       }
     } catch {
       // AI failed — results still shown without recommendations
@@ -374,6 +487,16 @@ export default function ResultGeneratorPage() {
     <>
       <Navbar />
 
+      {/* ── Upgrade modal ───────────────────────────────────────── */}
+      {showUpgradeModal && usageInfo && user && (
+        <UpgradeModal
+          usageInfo={usageInfo}
+          userEmail={user.email}
+          userId={user.id}
+          onClose={() => setShowUpgradeModal(false)}
+        />
+      )}
+
       {/* Hero */}
       <section className="bg-brand-blue text-white py-14 no-print">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -405,6 +528,63 @@ export default function ResultGeneratorPage() {
           ))}
         </div>
       </div>
+
+      {/* ── Monthly quota banner ────────────────────────────────── */}
+      {usageInfo && !usageInfo.isPremium && (
+        <div className={`no-print border-b ${
+          usageInfo.remaining === 0
+            ? 'bg-red-50 border-red-200'
+            : usageInfo.remaining === 1
+              ? 'bg-amber-50 border-amber-200'
+              : 'bg-emerald-50 border-emerald-200'
+        }`}>
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4 flex-wrap">
+            <div className="flex items-center gap-3">
+              {usageInfo.remaining === 0
+                ? <Lock className="w-4 h-4 text-red-500 flex-shrink-0" />
+                : <Zap className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+              }
+              <p className={`text-sm font-medium ${
+                usageInfo.remaining === 0 ? 'text-red-700' : usageInfo.remaining === 1 ? 'text-amber-700' : 'text-emerald-700'
+              }`}>
+                {usageInfo.unlocked
+                  ? 'Unlimited access unlocked this month 🎉'
+                  : usageInfo.remaining === 0
+                    ? 'Monthly limit reached — upgrade to continue generating results'
+                    : `${usageInfo.remaining} of ${usageInfo.limit} free generation${usageInfo.remaining === 1 ? '' : 's'} remaining this month`
+                }
+              </p>
+            </div>
+            {!usageInfo.unlocked && usageInfo.remaining === 0 && (
+              <button onClick={() => setShowUpgradeModal(true)}
+                className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors flex-shrink-0">
+                <CreditCard className="w-4 h-4" /> Upgrade — ₦5,000/month
+              </button>
+            )}
+            {!usageInfo.unlocked && usageInfo.remaining !== null && usageInfo.remaining > 0 && (
+              <button onClick={() => setShowUpgradeModal(true)}
+                className="text-sm text-brand-inkLight hover:text-brand-blue underline transition-colors flex-shrink-0">
+                Upgrade for unlimited access
+              </button>
+            )}
+          </div>
+          {/* Usage dots */}
+          {!usageInfo.unlocked && (
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-2 flex items-center gap-1.5">
+              {Array.from({ length: usageInfo.limit }).map((_, i) => (
+                <div key={i} className={`h-1.5 w-8 rounded-full transition-colors ${
+                  i < usageInfo.count
+                    ? usageInfo.remaining === 0 ? 'bg-red-400' : 'bg-amber-400'
+                    : 'bg-gray-200'
+                }`} />
+              ))}
+              <span className="text-xs text-brand-inkLight ml-1">
+                {usageInfo.count}/{usageInfo.limit} used
+              </span>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="min-h-screen bg-brand-bg py-10">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -618,14 +798,21 @@ export default function ResultGeneratorPage() {
                   className="inline-flex items-center gap-2 text-brand-inkMid font-semibold hover:text-brand-ink transition-colors">
                   <ArrowLeft className="w-4 h-4" /> Back to Setup
                 </button>
-                <button onClick={generateResults} disabled={loading}
-                  className="btn-secondary inline-flex items-center gap-2 disabled:opacity-50">
-                  {loading ? (
-                    <><Loader2 className="w-4 h-4 animate-spin" /> Generating Results…</>
-                  ) : (
-                    <>Generate Results <ArrowRight className="w-4 h-4" /></>
-                  )}
-                </button>
+                {usageInfo?.remaining === 0 && !usageInfo?.unlocked && !usageInfo?.isPremium ? (
+                  <button onClick={() => setShowUpgradeModal(true)}
+                    className="btn-primary inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-600">
+                    <Lock className="w-4 h-4" /> Upgrade to Generate
+                  </button>
+                ) : (
+                  <button onClick={generateResults} disabled={loading}
+                    className="btn-secondary inline-flex items-center gap-2 disabled:opacity-50">
+                    {loading ? (
+                      <><Loader2 className="w-4 h-4 animate-spin" /> Generating Results…</>
+                    ) : (
+                      <>Generate Results <ArrowRight className="w-4 h-4" /></>
+                    )}
+                  </button>
+                )}
               </div>
             </div>
           )}
