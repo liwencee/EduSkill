@@ -1,7 +1,7 @@
 'use client'
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { BookOpen, Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
@@ -15,7 +15,6 @@ const ROLE_HOME: Record<string, string> = {
 function LoginForm() {
   const params  = useSearchParams()
   const next    = params.get('next') ?? ''
-  const router  = useRouter()
 
   const [email,    setEmail]    = useState('')
   const [password, setPassword] = useState('')
@@ -67,9 +66,10 @@ function LoginForm() {
         ? next
         : (ROLE_HOME[role] ?? '/dashboard/youth')
 
-      // Keep spinner during navigation — page will unmount
-      router.push(destination)
-      router.refresh()
+      // Hard navigation so the browser flushes the Supabase cookie BEFORE
+      // the next request hits the server. router.push() (soft nav) races
+      // against the async cookie write and the server sees no session.
+      window.location.href = destination
 
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : 'An unexpected error occurred.'
