@@ -1,7 +1,8 @@
 -- ============================================================
 -- Migration 013: Populate all SkillUp courses
 -- Inserts all 20 courses (matching STATIC_COURSES in web/src/lib/static-courses.ts)
--- Safe to re-run — uses ON CONFLICT (slug) DO NOTHING
+-- Pricing: all courses ₦8,000 | Nigerian Language courses ₦13,000
+-- Safe to re-run — uses ON CONFLICT (slug) DO UPDATE
 -- ============================================================
 
 -- 1. Extend the course_category enum to include Nigerian languages
@@ -22,7 +23,7 @@ INSERT INTO courses (
   'digital_marketing', 'youth', 'en',
   ARRAY['en','yo','pcm']::language_code[],
   4, false, true, true,
-  15000, 24, 2400, 4.8,
+  8000, 24, 2400, 4.8,
   ARRAY['marketing','social media']
 ),
 (
@@ -31,8 +32,8 @@ INSERT INTO courses (
   'Build and manage brand presence on Instagram, TikTok, Facebook and Twitter for clients.',
   'digital_marketing', 'youth', 'en',
   ARRAY['en','pcm']::language_code[],
-  3, true, true, true,
-  0, 18, 3100, 4.7,
+  3, false, true, true,
+  8000, 18, 3100, 4.7,
   ARRAY['social media','content']
 ),
 (
@@ -42,7 +43,7 @@ INSERT INTO courses (
   'digital_marketing', 'youth', 'en',
   ARRAY['en','yo']::language_code[],
   4, false, true, false,
-  12000, 26, 1700, 4.8,
+  8000, 26, 1700, 4.8,
   ARRAY['design','canva','creative']
 ),
 
@@ -54,7 +55,7 @@ INSERT INTO courses (
   'coding', 'youth', 'en',
   ARRAY['en','yo','ig']::language_code[],
   6, false, true, true,
-  20000, 36, 1800, 4.9,
+  8000, 36, 1800, 4.9,
   ARRAY['coding','web','javascript']
 ),
 (
@@ -64,7 +65,7 @@ INSERT INTO courses (
   'coding', 'youth', 'en',
   ARRAY['en']::language_code[],
   8, false, true, false,
-  25000, 40, 950, 4.8,
+  8000, 40, 950, 4.8,
   ARRAY['python','data','tech']
 ),
 
@@ -76,7 +77,7 @@ INSERT INTO courses (
   'fashion_design', 'youth', 'en',
   ARRAY['en','ig','yo']::language_code[],
   6, false, true, true,
-  12000, 30, 2200, 4.9,
+  8000, 30, 2200, 4.9,
   ARRAY['fashion','sewing','business']
 ),
 
@@ -88,23 +89,21 @@ INSERT INTO courses (
   'solar_tech', 'youth', 'en',
   ARRAY['en','ha','yo']::language_code[],
   5, false, true, true,
-  18000, 28, 1600, 4.7,
+  8000, 28, 1600, 4.7,
   ARRAY['solar','electrical','trade']
 ),
 
--- ── Agribusiness (existing) ───────────────────────────────────────────────
+-- ── Agribusiness ─────────────────────────────────────────────────────────
 (
   'agribusiness-fundamentals',
   'Agribusiness Fundamentals',
   'Turn farming into a profitable business. Covers crop production, poultry, fish farming and marketing.',
   'agribusiness', 'youth', 'en',
   ARRAY['en','ha','ig','yo']::language_code[],
-  4, true, true, true,
-  0, 20, 4100, 4.8,
+  4, false, true, true,
+  8000, 20, 4100, 4.8,
   ARRAY['farming','agriculture','business']
 ),
-
--- ── Agribusiness (new — NERDC aligned) ────────────────────────────────────
 (
   'poultry-fish-farming',
   'Poultry & Fish Farming',
@@ -112,7 +111,7 @@ INSERT INTO courses (
   'agribusiness', 'youth', 'en',
   ARRAY['en','ha','ig','yo']::language_code[],
   6, false, true, true,
-  15000, 36, 1250, 4.8,
+  8000, 36, 1250, 4.8,
   ARRAY['poultry','fish farming','agriculture','livestock']
 ),
 (
@@ -122,7 +121,7 @@ INSERT INTO courses (
   'agribusiness', 'youth', 'en',
   ARRAY['en','ha','ig','yo']::language_code[],
   5, false, true, true,
-  18000, 30, 980, 4.7,
+  8000, 30, 980, 4.7,
   ARRAY['agribusiness','farm management','agricultural finance','cooperative']
 ),
 (
@@ -132,7 +131,7 @@ INSERT INTO courses (
   'agribusiness', 'youth', 'en',
   ARRAY['en','ig','yo','pcm']::language_code[],
   5, false, true, true,
-  12000, 30, 1450, 4.8,
+  8000, 30, 1450, 4.8,
   ARRAY['food processing','value addition','NAFDAC','packaging','post-harvest']
 ),
 (
@@ -141,8 +140,8 @@ INSERT INTO courses (
   'Grow high-value vegetables and fruits (ugwu, tomatoes, onion, pepper, carrot) for urban consumers. Covers soil prep, crop management, pest control and market access. NERDC aligned.',
   'agribusiness', 'youth', 'en',
   ARRAY['en','yo','ig']::language_code[],
-  5, true, true, true,
-  0, 30, 2100, 4.9,
+  5, false, true, true,
+  8000, 30, 2100, 4.9,
   ARRAY['horticulture','vegetable farming','urban agriculture','market gardening']
 ),
 (
@@ -152,7 +151,7 @@ INSERT INTO courses (
   'agribusiness', 'youth', 'en',
   ARRAY['en','ha','ig']::language_code[],
   5, false, true, true,
-  12000, 30, 760, 4.7,
+  8000, 30, 760, 4.7,
   ARRAY['irrigation','dry season farming','water management','fadama']
 ),
 
@@ -163,8 +162,8 @@ INSERT INTO courses (
   'Budgeting, saving, investing and avoiding debt. Essential money skills for every Nigerian.',
   'financial_literacy', 'youth', 'en',
   ARRAY['en','pcm','yo']::language_code[],
-  3, true, true, true,
-  0, 15, 5200, 4.9,
+  3, false, true, true,
+  8000, 15, 5200, 4.9,
   ARRAY['finance','savings','investing']
 ),
 
@@ -176,7 +175,7 @@ INSERT INTO courses (
   'entrepreneurship', 'youth', 'en',
   ARRAY['en','pcm']::language_code[],
   4, false, true, true,
-  10000, 22, 3300, 4.7,
+  8000, 22, 3300, 4.7,
   ARRAY['business','startup','SME']
 ),
 (
@@ -196,11 +195,11 @@ INSERT INTO courses (
   'entrepreneurship', 'youth', 'en',
   ARRAY['en']::language_code[],
   3, false, true, false,
-  10000, 18, 820, 4.5,
+  8000, 18, 820, 4.5,
   ARRAY['logistics','supply chain','operations']
 ),
 
--- ── Nigerian Languages ────────────────────────────────────────────────────
+-- ── Nigerian Languages — ₦13,000 ─────────────────────────────────────────
 (
   'yoruba-language-teaching',
   'Yoruba Language: Speak, Read & Teach',
@@ -208,7 +207,7 @@ INSERT INTO courses (
   'languages', 'youth', 'yo',
   ARRAY['yo','en']::language_code[],
   5, false, true, true,
-  10000, 37, 1850, 4.9,
+  13000, 37, 1850, 4.9,
   ARRAY['yoruba','language','culture','teaching']
 ),
 (
@@ -218,7 +217,7 @@ INSERT INTO courses (
   'languages', 'youth', 'ig',
   ARRAY['ig','en']::language_code[],
   5, false, true, true,
-  10000, 37, 1620, 4.8,
+  13000, 37, 1620, 4.8,
   ARRAY['igbo','language','culture','teaching']
 ),
 (
@@ -228,19 +227,19 @@ INSERT INTO courses (
   'languages', 'youth', 'ha',
   ARRAY['ha','en']::language_code[],
   5, false, true, true,
-  10000, 37, 1430, 4.8,
+  13000, 37, 1430, 4.8,
   ARRAY['hausa','language','culture','teaching']
 )
 
 ON CONFLICT (slug) DO UPDATE SET
   title          = EXCLUDED.title,
   description    = EXCLUDED.description,
+  is_free        = EXCLUDED.is_free,
   is_published   = EXCLUDED.is_published,
+  price_ngn      = EXCLUDED.price_ngn,
   total_lessons  = EXCLUDED.total_lessons,
   total_enrolled = EXCLUDED.total_enrolled,
   avg_rating     = EXCLUDED.avg_rating,
   tags           = EXCLUDED.tags,
-  price_ngn      = EXCLUDED.price_ngn,
-  is_free        = EXCLUDED.is_free,
   available_langs= EXCLUDED.available_langs,
   updated_at     = now();

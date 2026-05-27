@@ -7,7 +7,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Master social media ads, SEO, email marketing, and content strategy to grow any business online.',
     category: 'digital_marketing', target_role: 'youth', language: 'en',
     available_langs: ['en', 'yo', 'pcm'], duration_weeks: 4, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 15000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 24, total_enrolled: 2400, avg_rating: 4.8, tags: ['marketing', 'social media'],
   },
   {
@@ -15,8 +15,8 @@ export const STATIC_COURSES: Course[] = [
     title: 'Social Media Management',
     description: 'Build and manage brand presence on Instagram, TikTok, Facebook and Twitter for clients.',
     category: 'digital_marketing', target_role: 'youth', language: 'en',
-    available_langs: ['en', 'pcm'], duration_weeks: 3, is_free: true,
-    is_published: true, is_offline_ready: true, price_ngn: 0,
+    available_langs: ['en', 'pcm'], duration_weeks: 3, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 18, total_enrolled: 3100, avg_rating: 4.7, tags: ['social media', 'content'],
   },
   {
@@ -25,7 +25,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Learn HTML, CSS and JavaScript from scratch. Build real websites and earn as a freelance developer.',
     category: 'coding', target_role: 'youth', language: 'en',
     available_langs: ['en', 'yo', 'ig'], duration_weeks: 6, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 20000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 36, total_enrolled: 1800, avg_rating: 4.9, tags: ['coding', 'web', 'javascript'],
   },
   {
@@ -34,7 +34,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Learn Python programming and basic data analysis. In-demand skills for tech and finance sectors.',
     category: 'coding', target_role: 'youth', language: 'en',
     available_langs: ['en'], duration_weeks: 8, is_free: false,
-    is_published: true, is_offline_ready: false, price_ngn: 25000,
+    is_published: true, is_offline_ready: false, price_ngn: 8000,
     total_lessons: 40, total_enrolled: 950, avg_rating: 4.8, tags: ['python', 'data', 'tech'],
   },
   {
@@ -43,7 +43,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'From pattern drafting to garment construction. Launch your own fashion brand in Nigeria.',
     category: 'fashion_design', target_role: 'youth', language: 'en',
     available_langs: ['en', 'ig', 'yo'], duration_weeks: 6, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 12000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 30, total_enrolled: 2200, avg_rating: 4.9, tags: ['fashion', 'sewing', 'business'],
   },
   {
@@ -52,7 +52,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Install, wire and maintain solar power systems. High-demand trade across Nigeria.',
     category: 'solar_tech', target_role: 'youth', language: 'en',
     available_langs: ['en', 'ha', 'yo'], duration_weeks: 5, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 18000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 28, total_enrolled: 1600, avg_rating: 4.7, tags: ['solar', 'electrical', 'trade'],
   },
   {
@@ -60,8 +60,8 @@ export const STATIC_COURSES: Course[] = [
     title: 'Agribusiness Fundamentals',
     description: 'Turn farming into a profitable business. Covers crop production, poultry, fish farming and marketing.',
     category: 'agribusiness', target_role: 'youth', language: 'en',
-    available_langs: ['en', 'ha', 'ig', 'yo'], duration_weeks: 4, is_free: true,
-    is_published: true, is_offline_ready: true, price_ngn: 0,
+    available_langs: ['en', 'ha', 'ig', 'yo'], duration_weeks: 4, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 20, total_enrolled: 4100, avg_rating: 4.8, tags: ['farming', 'agriculture', 'business'],
   },
   {
@@ -69,8 +69,8 @@ export const STATIC_COURSES: Course[] = [
     title: 'Financial Literacy & Money Management',
     description: 'Budgeting, saving, investing and avoiding debt. Essential money skills for every Nigerian.',
     category: 'financial_literacy', target_role: 'youth', language: 'en',
-    available_langs: ['en', 'pcm', 'yo'], duration_weeks: 3, is_free: true,
-    is_published: true, is_offline_ready: true, price_ngn: 0,
+    available_langs: ['en', 'pcm', 'yo'], duration_weeks: 3, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 15, total_enrolled: 5200, avg_rating: 4.9, tags: ['finance', 'savings', 'investing'],
   },
   {
@@ -79,7 +79,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Validate your idea, register your business, get funding and scale in the Nigerian market.',
     category: 'entrepreneurship', target_role: 'youth', language: 'en',
     available_langs: ['en', 'pcm'], duration_weeks: 4, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 22, total_enrolled: 3300, avg_rating: 4.7, tags: ['business', 'startup', 'SME'],
   },
   {
@@ -88,7 +88,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Create logos, flyers, social media posts and brand kits. Earn from freelance design jobs.',
     category: 'digital_marketing', target_role: 'youth', language: 'en',
     available_langs: ['en', 'yo'], duration_weeks: 4, is_free: false,
-    is_published: true, is_offline_ready: false, price_ngn: 12000,
+    is_published: true, is_offline_ready: false, price_ngn: 8000,
     total_lessons: 26, total_enrolled: 1700, avg_rating: 4.8, tags: ['design', 'canva', 'creative'],
   },
   {
@@ -106,7 +106,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Understand how goods move from producer to consumer. Work with top logistics companies in Nigeria.',
     category: 'entrepreneurship', target_role: 'youth', language: 'en',
     available_langs: ['en'], duration_weeks: 3, is_free: false,
-    is_published: true, is_offline_ready: false, price_ngn: 10000,
+    is_published: true, is_offline_ready: false, price_ngn: 8000,
     total_lessons: 18, total_enrolled: 820, avg_rating: 4.5, tags: ['logistics', 'supply chain', 'operations'],
   },
 
@@ -117,7 +117,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Master profitable layers, broilers and fish (catfish & tilapia) production. Covers housing, feeding, health management, biosecurity and marketing. NERDC Agricultural Science aligned.',
     category: 'agribusiness', target_role: 'youth', language: 'en',
     available_langs: ['en', 'ha', 'ig', 'yo'], duration_weeks: 6, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 15000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 36, total_enrolled: 1250, avg_rating: 4.8, tags: ['poultry', 'fish farming', 'agriculture', 'livestock'],
   },
   {
@@ -126,7 +126,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Business and financial management for farmers and agro-entrepreneurs. Covers farm planning, agri-finance, cooperative societies, agricultural marketing and policy. NERDC aligned.',
     category: 'agribusiness', target_role: 'youth', language: 'en',
     available_langs: ['en', 'ha', 'ig', 'yo'], duration_weeks: 5, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 18000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 30, total_enrolled: 980, avg_rating: 4.7, tags: ['agribusiness', 'farm management', 'agricultural finance', 'cooperative'],
   },
   {
@@ -135,7 +135,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Transform raw farm produce into profitable products. Covers post-harvest management, processing technologies, food safety, NAFDAC registration and brand building. NERDC aligned.',
     category: 'agribusiness', target_role: 'youth', language: 'en',
     available_langs: ['en', 'ig', 'yo', 'pcm'], duration_weeks: 5, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 12000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 30, total_enrolled: 1450, avg_rating: 4.8, tags: ['food processing', 'value addition', 'NAFDAC', 'packaging', 'post-harvest'],
   },
   {
@@ -143,8 +143,8 @@ export const STATIC_COURSES: Course[] = [
     title: 'Horticulture: Vegetables for Urban Markets',
     description: 'Grow high-value vegetables and fruits (ugwu, tomatoes, onion, pepper, carrot) for urban consumers. Covers soil prep, crop management, pest control and market access. NERDC aligned.',
     category: 'agribusiness', target_role: 'youth', language: 'en',
-    available_langs: ['en', 'yo', 'ig'], duration_weeks: 5, is_free: true,
-    is_published: true, is_offline_ready: true, price_ngn: 0,
+    available_langs: ['en', 'yo', 'ig'], duration_weeks: 5, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 30, total_enrolled: 2100, avg_rating: 4.9, tags: ['horticulture', 'vegetable farming', 'urban agriculture', 'market gardening'],
   },
   {
@@ -153,18 +153,18 @@ export const STATIC_COURSES: Course[] = [
     description: 'Farm profitably year-round using irrigation. Learn water sourcing, drip and sprinkler irrigation setup, dry season crop calendars, water management and business planning. NERDC aligned.',
     category: 'agribusiness', target_role: 'youth', language: 'en',
     available_langs: ['en', 'ha', 'ig'], duration_weeks: 5, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 12000,
+    is_published: true, is_offline_ready: true, price_ngn: 8000,
     total_lessons: 30, total_enrolled: 760, avg_rating: 4.7, tags: ['irrigation', 'dry season farming', 'water management', 'fadama'],
   },
 
-  // ── Nigerian Languages ────────────────────────────────────────────────────
+  // ── Nigerian Languages — ₦13,000 ──────────────────────────────────────────
   {
     id: 'static-13', slug: 'yoruba-language-teaching',
     title: 'Yoruba Language: Speak, Read & Teach',
     description: 'Master Yoruba tones, grammar, proverbs and literature. Ideal for teachers, heritage speakers and anyone who wants to connect with Yoruba culture.',
     category: 'languages', target_role: 'youth', language: 'yo',
     available_langs: ['yo', 'en'], duration_weeks: 5, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    is_published: true, is_offline_ready: true, price_ngn: 13000,
     total_lessons: 37, total_enrolled: 1850, avg_rating: 4.9, tags: ['yoruba', 'language', 'culture', 'teaching'],
   },
   {
@@ -173,7 +173,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Learn Igbo alphabet, tones, grammar, proverbs and oral traditions. Perfect for teachers, the diaspora and learners reconnecting with Igbo identity.',
     category: 'languages', target_role: 'youth', language: 'ig',
     available_langs: ['ig', 'en'], duration_weeks: 5, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    is_published: true, is_offline_ready: true, price_ngn: 13000,
     total_lessons: 37, total_enrolled: 1620, avg_rating: 4.8, tags: ['igbo', 'language', 'culture', 'teaching'],
   },
   {
@@ -182,7 +182,7 @@ export const STATIC_COURSES: Course[] = [
     description: 'Learn Hausa pronunciation, grammar, literature and proverbs. A vital language of trade and education across northern Nigeria and West Africa.',
     category: 'languages', target_role: 'youth', language: 'ha',
     available_langs: ['ha', 'en'], duration_weeks: 5, is_free: false,
-    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    is_published: true, is_offline_ready: true, price_ngn: 13000,
     total_lessons: 37, total_enrolled: 1430, avg_rating: 4.8, tags: ['hausa', 'language', 'culture', 'teaching'],
   },
 ]
