@@ -69,7 +69,7 @@ export const COURSE_CURRICULUM: Record<string, CurriculumModule[]> = {
   /* ─────────────────────────────────────────────────── */
   'social-media-management': [
     mod('smm-m1', 'Platform Mastery', 1, [
-      lesson('smm-m1-l1', 'Understanding Social Media Algorithms', 15, 1, true, 'https://www.youtube.com/watch?v=F6GaYMkGzzg'),
+      lesson('smm-m1-l1', 'Understanding Social Media Algorithms', 15, 1, true, 'https://www.youtube.com/watch?v=XRr4c-mZuNk'),
       lesson('smm-m1-l2', 'Instagram Growth Strategy', 20, 2),
       lesson('smm-m1-l3', 'Facebook Page Management', 20, 3),
       lesson('smm-m1-l4', 'Twitter / X for Brands', 15, 4),

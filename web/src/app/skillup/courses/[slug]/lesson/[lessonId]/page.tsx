@@ -45,9 +45,13 @@ export default function LessonPage() {
 
   // ── Access control state ──────────────────────────────────────────────────
   type AccessState = 'checking' | 'allowed' | 'locked'
-  const [accessState, setAccessState] = useState<AccessState>('checking')
-  const [paywallUrl,  setPaywallUrl]  = useState('')
+  const [accessState,  setAccessState]  = useState<AccessState>('checking')
+  const [paywallUrl,   setPaywallUrl]   = useState('')
   const [paywallPrice, setPaywallPrice] = useState(8000)
+
+  // ── Video availability check ──────────────────────────────────────────────
+  // null = not yet checked, true = video ok, false = broken/unavailable
+  const [videoOk, setVideoOk] = useState<boolean | null>(null)
 
   // Find static course & lesson info
   const course   = STATIC_COURSES.find(c => c.slug === slug)
@@ -101,7 +105,26 @@ export default function LessonPage() {
       .catch(() => setAccessState('allowed')) // fail open on network error
   }, [lessonId, slug])
 
-  // ── Step 2: fetch lesson content (only when access is confirmed) ─────────
+  // ── Step 2: verify YouTube video is still available ──────────────────────
+  // YouTube returns a tiny 120×90 placeholder for deleted/unavailable videos.
+  // We detect this by loading the thumbnail image and checking its width.
+  useEffect(() => {
+    if (!found?.lesson.youtube_url) { setVideoOk(false); return }
+    const vid = getYouTubeId(found.lesson.youtube_url)
+    if (!vid) { setVideoOk(false); return }
+
+    setVideoOk(null) // reset while checking
+
+    const img = new Image()
+    img.onload = () => {
+      // mqdefault.jpg is 320×180 for real videos; 120×90 means the video is unavailable
+      setVideoOk(img.naturalWidth > 120)
+    }
+    img.onerror = () => setVideoOk(false)
+    img.src = `https://img.youtube.com/vi/${vid}/mqdefault.jpg`
+  }, [lessonId])
+
+  // ── Step 3: fetch lesson content (only when access is confirmed) ─────────
   useEffect(() => {
     if (!found || !course || accessState !== 'allowed') return
     setContent(null)
@@ -261,6 +284,37 @@ export default function LessonPage() {
             {lesson.youtube_url && (() => {
               const vid = getYouTubeId(lesson.youtube_url)
               if (!vid) return null
+
+              // videoOk === null means still checking thumbnail — show nothing yet
+              if (videoOk === null) return null
+
+              // Video is unavailable — show a clean fallback instead of the broken icon
+              if (videoOk === false) {
+                return (
+                  <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+                    <div className="relative w-full bg-gray-50 flex flex-col items-center justify-center py-10 gap-3"
+                      style={{ minHeight: '200px' }}>
+                      <span className="text-4xl">🎬</span>
+                      <p className="text-sm font-semibold text-[#1E1B4B]">Video temporarily unavailable</p>
+                      <p className="text-xs text-gray-400 text-center max-w-xs">
+                        Continue with the AI lesson notes below — all key concepts are covered there.
+                      </p>
+                      <a
+                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(lesson.title + ' tutorial')}`}
+                        target="_blank" rel="noopener noreferrer"
+                        className="text-xs text-[#4F46E5] hover:underline mt-1">
+                        Search related videos on YouTube →
+                      </a>
+                    </div>
+                    <div className="px-4 py-2 bg-indigo-50 flex items-center gap-2">
+                      <span className="text-xs text-[#4F46E5] font-semibold">🎬 Video Lesson</span>
+                      <span className="text-xs text-gray-400">· Continue with the AI lesson notes below</span>
+                    </div>
+                  </div>
+                )
+              }
+
+              // Video is available — render the embed
               return (
                 <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
