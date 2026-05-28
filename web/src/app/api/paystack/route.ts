@@ -5,10 +5,11 @@ import { logger, logRequest, logResponse } from '@/lib/logger'
 export const dynamic = 'force-dynamic'
 
 const PLAN_MAP: Record<string, { plan: string; days: number }> = {
-  youth_monthly:      { plan: 'youth_premium',   days: 30 },
-  teacher_monthly:    { plan: 'teacher_premium',  days: 30 },
-  institutional_term: { plan: 'institutional',    days: 90 },
-  result_gen_monthly: { plan: 'result_gen',       days: 30 }, // ₦5,000 result-generator add-on
+  youth_monthly:      { plan: 'youth_premium',   days: 30    },
+  teacher_monthly:    { plan: 'teacher_premium',  days: 30    },
+  institutional_term: { plan: 'institutional',    days: 90    },
+  result_gen_monthly: { plan: 'result_gen',       days: 30    }, // ₦5,000 result-generator add-on
+  course_purchase:    { plan: 'course',           days: 36500 }, // ₦8,000 lifetime course access
 }
 
 export async function POST(req: NextRequest) {
@@ -43,8 +44,9 @@ export async function POST(req: NextRequest) {
   }
 
   const { reference, amount, metadata } = event.data
-  const userId = metadata?.user_id
-  const planKey = metadata?.plan_key ?? 'youth_monthly'
+  const userId   = metadata?.user_id
+  const planKey  = metadata?.plan_key ?? 'youth_monthly'
+  const courseId = metadata?.course_id ?? null
 
   if (!userId) {
     logger.warn('Paystack charge.success — missing user_id in metadata', {
@@ -55,37 +57,99 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'No user_id in metadata' }, { status: 400 })
   }
 
-  const planInfo = PLAN_MAP[planKey] ?? PLAN_MAP.youth_monthly
-  const expiresAt = new Date(Date.now() + planInfo.days * 24 * 60 * 60 * 1000).toISOString()
+  const planInfo      = PLAN_MAP[planKey] ?? PLAN_MAP.youth_monthly
+  const expiresAt     = new Date(Date.now() + planInfo.days * 24 * 60 * 60 * 1000).toISOString()
   const currentPeriod = new Date().toISOString().slice(0, 7) // YYYY-MM
 
-  // Build the profile update — result_gen add-on is handled separately
   const isResultGenAddon = planKey === 'result_gen_monthly'
-  const profileUpdate = isResultGenAddon
-    ? { result_gen_unlocked: true, result_gen_period: currentPeriod, result_gen_count: 0 }
-    : { subscription: planInfo.plan, subscription_expires_at: expiresAt }
+  const isCoursePurchase = planKey === 'course_purchase'
 
   try {
-    await Promise.all([
-      supabase.from('payments').insert({
-        user_id: userId,
-        amount_ngn: amount / 100,
-        plan: planInfo.plan,
-        paystack_ref: reference,
-        status: 'success',
-        paid_at: new Date().toISOString(),
-      }),
-      supabase.from('profiles').update(profileUpdate).eq('id', userId),
-    ])
+    // Always log the payment
+    const paymentRow = {
+      user_id:      userId,
+      amount_ngn:   amount / 100,
+      plan:         planInfo.plan,
+      paystack_ref: reference,
+      status:       'success',
+      paid_at:      new Date().toISOString(),
+    }
 
-    logger.info('Paystack charge.success — subscription activated', {
-      route: '/api/paystack',
-      userId,
-      plan: planInfo.plan,
-      amountNgn: amount / 100,
-      reference,
-      expiresAt,
-    })
+    if (isCoursePurchase) {
+      // ── Course purchase: upsert enrollment ──────────────────────
+      if (!courseId) {
+        logger.warn('Paystack course_purchase — missing course_id in metadata', {
+          route: '/api/paystack', reference, userId,
+        })
+        // Still acknowledge to prevent Paystack retries, but log for manual fix
+        logResponse('/api/paystack', ctx, 200)
+        return NextResponse.json({ ok: true })
+      }
+
+      await Promise.all([
+        supabase.from('payments').insert(paymentRow),
+        supabase.from('enrollments').upsert(
+          {
+            user_id:     userId,
+            course_id:   courseId,
+            is_paid:     true,
+            payment_ref: reference,
+          },
+          { onConflict: 'user_id,course_id' },
+        ),
+      ])
+
+      logger.info('Paystack charge.success — course enrollment activated', {
+        route: '/api/paystack',
+        userId,
+        courseId,
+        amountNgn: amount / 100,
+        reference,
+      })
+
+    } else if (isResultGenAddon) {
+      // ── Result-generator monthly add-on ─────────────────────────
+      const profileUpdate = {
+        result_gen_unlocked: true,
+        result_gen_period:   currentPeriod,
+        result_gen_count:    0,
+      }
+
+      await Promise.all([
+        supabase.from('payments').insert(paymentRow),
+        supabase.from('profiles').update(profileUpdate).eq('id', userId),
+      ])
+
+      logger.info('Paystack charge.success — result-gen add-on activated', {
+        route: '/api/paystack',
+        userId,
+        amountNgn: amount / 100,
+        reference,
+        period: currentPeriod,
+      })
+
+    } else {
+      // ── Subscription plan ────────────────────────────────────────
+      const profileUpdate = {
+        subscription:            planInfo.plan,
+        subscription_expires_at: expiresAt,
+      }
+
+      await Promise.all([
+        supabase.from('payments').insert(paymentRow),
+        supabase.from('profiles').update(profileUpdate).eq('id', userId),
+      ])
+
+      logger.info('Paystack charge.success — subscription activated', {
+        route: '/api/paystack',
+        userId,
+        plan: planInfo.plan,
+        amountNgn: amount / 100,
+        reference,
+        expiresAt,
+      })
+    }
+
     logResponse('/api/paystack', ctx, 200)
     return NextResponse.json({ ok: true })
   } catch (err) {
@@ -94,6 +158,8 @@ export async function POST(req: NextRequest) {
       route: '/api/paystack',
       userId,
       reference,
+      planKey,
+      courseId,
       error: { message: error.message, name: error.name },
     })
     logResponse('/api/paystack', ctx, 500, { error: { message: error.message } })

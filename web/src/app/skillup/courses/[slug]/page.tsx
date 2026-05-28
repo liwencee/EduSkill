@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 import Navbar from '@/components/Navbar'
-import { Clock, Users, Download, Globe, CheckCircle, Star, PlayCircle, Lock } from 'lucide-react'
+import { Clock, Users, Download, Globe, Star, PlayCircle, Lock } from 'lucide-react'
 import Link from 'next/link'
 import type { Course } from '@/types'
 import { STATIC_COURSES } from '@/lib/static-courses'
 import { COURSE_CURRICULUM } from '@/lib/course-content'
+import CourseEnrollCard from './_components/CourseEnrollCard'
 
 interface Props { params: { slug: string } }
 
@@ -48,18 +48,6 @@ export default async function CourseDetailPage({ params }: Props) {
   // Use static curriculum when DB has no modules
   const staticCurriculum = COURSE_CURRICULUM[params.slug] ?? []
 
-  async function handleEnroll() {
-    'use server'
-    try {
-      const sb = createClient()
-      const { data: { user } } = await sb.auth.getUser()
-      if (user) {
-        await sb.from('enrollments').upsert({ user_id: user.id, course_id: course!.id })
-      }
-    } catch {}
-    redirect('/skillup/courses/' + params.slug + '?enrolled=1')
-  }
-
   const c = course as Course & { instructor?: { full_name: string; bio?: string } }
 
   // First lesson in curriculum for the "Start Learning" CTA
@@ -94,36 +82,17 @@ export default async function CourseDetailPage({ params }: Props) {
               )}
             </div>
 
-            {/* Enrol card */}
-            <div className="card bg-white text-brand-ink p-6">
-              <div className="aspect-video bg-brand-blueLight rounded-xl mb-4 flex items-center justify-center">
-                <PlayCircle className="w-16 h-16 text-brand-blue" />
-              </div>
-              <div className="text-2xl font-bold text-brand-ink mb-1">
-                {c.is_free ? 'Free' : `₦${(c.price_ngn ?? 0).toLocaleString()}/month`}
-              </div>
-              {firstLesson ? (
-                <Link
-                  href={`/skillup/courses/${params.slug}/lesson/${firstLesson.id}`}
-                  className="btn-primary w-full mt-3 text-base text-center block">
-                  {c.is_free ? 'Start Learning Free' : 'Start Learning'}
-                </Link>
-              ) : (
-                <form action={handleEnroll}>
-                  <button type="submit" className="btn-primary w-full mt-3 text-base">
-                    {c.is_free ? 'Enrol Free' : 'Enrol Now'}
-                  </button>
-                </form>
-              )}
-              <ul className="mt-4 space-y-2 text-sm text-brand-inkMid">
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {c.total_lessons ?? staticCurriculum.reduce((acc, m) => acc + m.lessons.length, 0)} lessons</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> AI-powered personalised lessons</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Verifiable certificate on completion</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Works offline — download on WiFi</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> {(c.available_langs ?? []).map((l: string) => LANG_LABELS[l] ?? l).join(', ')} subtitles</li>
-                <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4 text-brand-blue shrink-0" /> Profile on OpportunityHub after cert</li>
-              </ul>
-            </div>
+            {/* Enrol / Buy card — client component handles payment state */}
+            <CourseEnrollCard
+              courseId={c.id}
+              slug={params.slug}
+              price={c.price_ngn ?? 8000}
+              isFree={!!c.is_free}
+              firstLessonId={firstLesson?.id ?? null}
+              totalLessons={c.total_lessons ?? staticCurriculum.reduce((acc, m) => acc + m.lessons.length, 0)}
+              availableLangs={(c.available_langs ?? []) as string[]}
+              isOfflineReady={!!c.is_offline_ready}
+            />
           </div>
         </div>
       </div>

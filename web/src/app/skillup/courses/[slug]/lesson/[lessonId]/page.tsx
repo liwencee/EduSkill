@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import {
   Sparkles, Loader2, ChevronLeft, ChevronRight, CheckCircle,
-  XCircle, BookOpen, Lightbulb, Clock, ArrowLeft, Trophy
+  XCircle, BookOpen, Lightbulb, Clock, ArrowLeft, Trophy, Lock,
 } from 'lucide-react'
 import { COURSE_CURRICULUM, findLesson, allLessons } from '@/lib/course-content'
 import { STATIC_COURSES } from '@/lib/static-courses'
@@ -43,6 +43,12 @@ export default function LessonPage() {
   const [submitted,   setSubmitted]   = useState(false)
   const [score,       setScore]       = useState(0)
 
+  // ── Access control state ──────────────────────────────────────────────────
+  type AccessState = 'checking' | 'allowed' | 'locked'
+  const [accessState, setAccessState] = useState<AccessState>('checking')
+  const [paywallUrl,  setPaywallUrl]  = useState('')
+  const [paywallPrice, setPaywallPrice] = useState(8000)
+
   // Find static course & lesson info
   const course   = STATIC_COURSES.find(c => c.slug === slug)
   const found    = findLesson(slug, lessonId)
@@ -51,8 +57,53 @@ export default function LessonPage() {
   const prevLesson = lessons[lessonIdx - 1] ?? null
   const nextLesson = lessons[lessonIdx + 1] ?? null
 
+  // ── Step 1: check course access ─────────────────────────────────────────
   useEffect(() => {
     if (!found || !course) return
+
+    // Free course or free-preview lesson → always allowed
+    if (course.is_free || found.lesson.is_free_preview) {
+      setAccessState('allowed')
+      return
+    }
+
+    // Paid course, locked lesson → verify enrollment
+    setAccessState('checking')
+
+    fetch(`/api/enrollment-check?slug=${slug}`)
+      .then(r => r.json())
+      .then((data: {
+        enrolled: boolean; is_paid: boolean; is_free: boolean
+        course_id: string | null; price_ngn: number
+        user_id: string | null; email: string | null
+      }) => {
+        if (data.enrolled && data.is_paid) {
+          setAccessState('allowed')
+        } else {
+          // Build Paystack payment URL for the paywall CTA
+          const ref  = `course-${data.course_id ?? slug}-${data.user_id ?? 'guest'}-${Date.now()}`
+          const meta = JSON.stringify({
+            plan_key:  'course_purchase',
+            course_id: data.course_id,
+            user_id:   data.user_id,
+          })
+          setPaywallPrice(data.price_ngn ?? 8000)
+          setPaywallUrl(
+            `https://paystack.com/pay/eduskill` +
+            `?amount=${(data.price_ngn ?? 8000) * 100}` +
+            `&email=${encodeURIComponent(data.email ?? '')}` +
+            `&ref=${encodeURIComponent(ref)}` +
+            `&metadata=${encodeURIComponent(meta)}`,
+          )
+          setAccessState('locked')
+        }
+      })
+      .catch(() => setAccessState('allowed')) // fail open on network error
+  }, [lessonId, slug])
+
+  // ── Step 2: fetch lesson content (only when access is confirmed) ─────────
+  useEffect(() => {
+    if (!found || !course || accessState !== 'allowed') return
     setContent(null)
     setLoading(true)
     setSelected([])
@@ -70,7 +121,7 @@ export default function LessonPage() {
       .then(r => r.json())
       .then(data => { setContent(data.content); setLoading(false) })
       .catch(() => setLoading(false))
-  }, [lessonId, slug])
+  }, [lessonId, slug, accessState])
 
   function submitQuiz() {
     if (!content) return
@@ -139,6 +190,59 @@ export default function LessonPage() {
           {/* ── Main Content ── */}
           <main className="lg:col-span-3 space-y-5">
 
+            {/* ── Access: checking ── */}
+            {accessState === 'checking' && (
+              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-12 text-center">
+                <Loader2 className="w-8 h-8 text-[#4F46E5] animate-spin mx-auto mb-3" />
+                <p className="text-sm text-gray-400">Verifying course access…</p>
+              </div>
+            )}
+
+            {/* ── Access: locked (paywall) ── */}
+            {accessState === 'locked' && (
+              <div className="bg-white rounded-2xl border-2 border-indigo-200 shadow-sm p-10 text-center">
+                <div className="w-16 h-16 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Lock className="w-8 h-8 text-[#4F46E5]" />
+                </div>
+                <h2 className="text-xl font-bold text-[#1E1B4B] mb-2">This Lesson is Locked</h2>
+                <p className="text-sm text-gray-500 mb-6 max-w-sm mx-auto">
+                  Purchase <strong>{course?.title}</strong> to unlock all lessons and get lifetime access.
+                </p>
+
+                {/* Paystack Buy Button */}
+                <a
+                  href={paywallUrl || `/skillup/courses/${slug}`}
+                  className="inline-flex items-center gap-2 bg-[#4F46E5] hover:bg-indigo-700 text-white font-bold px-8 py-3 rounded-xl transition-colors text-base">
+                  Buy Course — ₦{paywallPrice.toLocaleString()}
+                </a>
+
+                {/* Preview free lesson link */}
+                {(() => {
+                  const freeLesson = allLessons(slug).find(l => l.is_free_preview)
+                  return freeLesson ? (
+                    <div className="mt-4">
+                      <Link
+                        href={`/skillup/courses/${slug}/lesson/${freeLesson.id}`}
+                        className="text-sm text-[#4F46E5] hover:underline">
+                        Preview the first lesson free →
+                      </Link>
+                    </div>
+                  ) : null
+                })()}
+
+                <div className="mt-6">
+                  <Link
+                    href={`/skillup/courses/${slug}`}
+                    className="text-sm text-gray-400 hover:text-gray-600 hover:underline">
+                    ← Back to course details
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* ── Lesson content (only when access allowed) ── */}
+            {accessState === 'allowed' && (
+            <>
             {/* Lesson Header */}
             <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
               <div className="flex items-center gap-2 text-xs text-[#4F46E5] font-semibold mb-2">
@@ -341,6 +445,8 @@ export default function LessonPage() {
                 </Link>
               )}
             </div>
+            </> /* end accessState === 'allowed' */
+            )}
           </main>
         </div>
       </div>
