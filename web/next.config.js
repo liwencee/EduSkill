@@ -35,7 +35,9 @@ const nextConfig = {
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
           "img-src 'self' data: blob: https:",
-          "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com",
+          // Allow YouTube embeds + Paystack iframes
+          "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://paystack.com",
+          "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com https://paystack.com",
           "frame-ancestors 'none'",
         ].join('; '),
       },
