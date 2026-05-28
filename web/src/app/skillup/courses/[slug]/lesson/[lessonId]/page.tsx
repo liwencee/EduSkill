@@ -288,42 +288,39 @@ export default function LessonPage() {
               // videoOk === null means still checking thumbnail — show nothing yet
               if (videoOk === null) return null
 
-              // Video is unavailable — show a clean fallback instead of the broken icon
+              // Video is unavailable — show a clean on-platform fallback
               if (videoOk === false) {
                 return (
                   <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
-                    <div className="relative w-full bg-gray-50 flex flex-col items-center justify-center py-10 gap-3"
-                      style={{ minHeight: '200px' }}>
-                      <span className="text-4xl">🎬</span>
-                      <p className="text-sm font-semibold text-[#1E1B4B]">Video temporarily unavailable</p>
-                      <p className="text-xs text-gray-400 text-center max-w-xs">
-                        Continue with the AI lesson notes below — all key concepts are covered there.
+                    <div className="relative w-full bg-indigo-50 flex flex-col items-center justify-center py-12 gap-3"
+                      style={{ minHeight: '220px' }}>
+                      <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm">
+                        <Sparkles className="w-7 h-7 text-[#4F46E5]" />
+                      </div>
+                      <p className="text-sm font-bold text-[#1E1B4B]">Video coming soon</p>
+                      <p className="text-xs text-gray-500 text-center max-w-xs leading-relaxed">
+                        This video lesson is being updated. All lesson content and the AI tutor notes are available below — scroll down to continue learning.
                       </p>
-                      <a
-                        href={`https://www.youtube.com/results?search_query=${encodeURIComponent(lesson.title + ' tutorial')}`}
-                        target="_blank" rel="noopener noreferrer"
-                        className="text-xs text-[#4F46E5] hover:underline mt-1">
-                        Search related videos on YouTube →
-                      </a>
                     </div>
-                    <div className="px-4 py-2 bg-indigo-50 flex items-center gap-2">
+                    <div className="px-4 py-2 bg-indigo-50 border-t border-indigo-100 flex items-center gap-2">
                       <span className="text-xs text-[#4F46E5] font-semibold">🎬 Video Lesson</span>
-                      <span className="text-xs text-gray-400">· Continue with the AI lesson notes below</span>
+                      <span className="text-xs text-gray-400">· AI lesson notes are ready below</span>
                     </div>
                   </div>
                 )
               }
 
-              // Video is available — render the embed
+              // Video is available — render the embed (plays fully on-platform)
               return (
                 <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                     <iframe
-                      src={`https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1`}
+                      src={`https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1&disablekb=0&fs=1`}
                       title={lesson.title}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                       allowFullScreen
                       className="absolute inset-0 w-full h-full"
+                      style={{ border: 0 }}
                     />
                   </div>
                   <div className="px-4 py-2 bg-indigo-50 flex items-center gap-2">
