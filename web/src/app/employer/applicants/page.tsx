@@ -4,6 +4,7 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import ApplicantActions from './ApplicantActions'
 import OpenNegotiationButton from './OpenNegotiationButton'
+import ChatButton from './ChatButton'
 import TeacherBadge from '@/components/TeacherBadge'
 import {
   ArrowLeft, Users, MapPin, Award, Clock, BadgeCheck,
@@ -363,8 +364,14 @@ export default async function EmployerApplicantsPage({ searchParams }: Props) {
                               </div>
                             </div>
 
-                            {/* Negotiate + Status */}
+                            {/* Chat + Negotiate + Status */}
                             <div className="flex flex-col gap-2 shrink-0">
+                              <ChatButton
+                                applicationId={app.id}
+                                applicantName={applicant?.full_name ?? 'Applicant'}
+                                jobTitle={activeJob?.title ?? ''}
+                                currentUserId={employerId!}
+                              />
                               <OpenNegotiationButton
                                 applicationId={app.id}
                                 jobId={activeJobId!}
@@ -376,10 +383,10 @@ export default async function EmployerApplicantsPage({ searchParams }: Props) {
                                     : app.negotiation?.id ?? null
                                 }
                               />
-                            <ApplicantActions
-                              applicationId={app.id}
-                              currentStatus={app.status}
-                            />
+                              <ApplicantActions
+                                applicationId={app.id}
+                                currentStatus={app.status}
+                              />
                             </div>
                           </div>
                         </div>
