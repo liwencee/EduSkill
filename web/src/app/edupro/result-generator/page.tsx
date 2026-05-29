@@ -111,7 +111,7 @@ function UpgradeModal({
   onClose:  () => void
 }) {
   const period      = usageInfo.period || new Date().toISOString().slice(0, 7)
-  const paystackUrl = 'https://paystack.shop/pay/2b2b77ixz-'
+  const paystackUrl = 'https://paystack.shop/pay/g2wgifbf3r'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"

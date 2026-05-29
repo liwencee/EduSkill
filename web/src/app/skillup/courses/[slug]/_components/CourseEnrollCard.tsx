@@ -70,7 +70,7 @@ export default function CourseEnrollCard({
   }, [courseId, isFree, price])
 
   function buildPayUrl() {
-    setPayUrl('https://paystack.shop/pay/2b2b77ixz-')
+    setPayUrl('https://paystack.shop/pay/g2wgifbf3r')
   }
 
   return (

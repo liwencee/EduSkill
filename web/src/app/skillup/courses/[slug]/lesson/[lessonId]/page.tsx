@@ -85,7 +85,7 @@ export default function LessonPage() {
           setAccessState('allowed')
         } else {
           setPaywallPrice(data.price_ngn ?? 8000)
-          setPaywallUrl('https://paystack.shop/pay/2b2b77ixz-')
+          setPaywallUrl('https://paystack.shop/pay/g2wgifbf3r')
           setAccessState('locked')
         }
       })

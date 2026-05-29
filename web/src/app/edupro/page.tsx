@@ -73,7 +73,7 @@ export default function EduProPage() {
           <p className="section-subtitle mx-auto mb-10">Less than the cost of one textbook per month.</p>
           <div className="grid md:grid-cols-2 gap-6">
             {[
-              { plan: 'Individual Teacher',   price: '₦2,000–4,000', period: '/month', features: ['All CPD courses','AI Lesson Planner','Teacher community','Digital CPD certificates','Cancel anytime'], highlight: false },
+              { plan: 'Individual Teacher',   price: '₦5,000', period: '/month', features: ['All CPD courses','AI Lesson Planner','Teacher community','Digital CPD certificates','Cancel anytime'], highlight: false },
               { plan: 'Institutional License', price: '₦50K–500K',   period: '/term',  features: ['Bulk teacher seats','Admin dashboard','Impact reporting for donors','Custom onboarding','Priority support'], highlight: true },
             ].map(p => (
               <div key={p.plan} className={`card p-8 text-left ${p.highlight ? 'border-brand-amber ring-2 ring-brand-amber/20' : ''}`}>
@@ -90,10 +90,10 @@ export default function EduProPage() {
                     </li>
                   ))}
                 </ul>
-                <Link href="/auth/signup?role=teacher"
+                <a href="https://paystack.shop/pay/g2wgifbf3r"
                   className={p.highlight ? 'btn-primary block text-center' : 'btn-outline block text-center'}>
                   Get Started
-                </Link>
+                </a>
               </div>
             ))}
           </div>
