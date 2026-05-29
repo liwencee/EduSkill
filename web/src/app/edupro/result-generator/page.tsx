@@ -114,15 +114,7 @@ function UpgradeModal({
   userId:   string
   onClose:  () => void
 }) {
-  const period      = usageInfo.period || new Date().toISOString().slice(0, 7)
-  const ref         = `result-${userId}-${period}`
-  const metaEncoded = encodeURIComponent(JSON.stringify({ plan_key: 'result_gen_monthly', user_id: userId }))
-  const paystackUrl =
-    `https://paystack.com/pay/eduskill` +
-    `?amount=500000` +
-    `&email=${encodeURIComponent(userEmail)}` +
-    `&ref=${ref}` +
-    `&metadata=${metaEncoded}`
+  const paystackUrl = 'https://paystack.shop/pay/2b2b77ixz-'
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"

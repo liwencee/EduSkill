@@ -84,21 +84,8 @@ export default function LessonPage() {
         if (data.enrolled && data.is_paid) {
           setAccessState('allowed')
         } else {
-          // Build Paystack payment URL for the paywall CTA
-          const ref  = `course-${data.course_id ?? slug}-${data.user_id ?? 'guest'}-${Date.now()}`
-          const meta = JSON.stringify({
-            plan_key:  'course_purchase',
-            course_id: data.course_id,
-            user_id:   data.user_id,
-          })
           setPaywallPrice(data.price_ngn ?? 8000)
-          setPaywallUrl(
-            `https://paystack.com/pay/eduskill` +
-            `?amount=${(data.price_ngn ?? 8000) * 100}` +
-            `&email=${encodeURIComponent(data.email ?? '')}` +
-            `&ref=${encodeURIComponent(ref)}` +
-            `&metadata=${encodeURIComponent(meta)}`,
-          )
+          setPaywallUrl('https://paystack.shop/pay/2b2b77ixz-')
           setAccessState('locked')
         }
       })

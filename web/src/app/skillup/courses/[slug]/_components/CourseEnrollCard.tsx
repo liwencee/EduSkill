@@ -70,15 +70,7 @@ export default function CourseEnrollCard({
   }, [courseId, isFree, price])
 
   function buildPayUrl(email: string, userId: string, cId: string, amt: number) {
-    const ref  = `course-${cId}-${userId}-${Date.now()}`
-    const meta = JSON.stringify({ plan_key: 'course_purchase', course_id: cId, user_id: userId })
-    setPayUrl(
-      `https://paystack.com/pay/eduskill` +
-      `?amount=${amt * 100}` +
-      `&email=${encodeURIComponent(email)}` +
-      `&ref=${encodeURIComponent(ref)}` +
-      `&metadata=${encodeURIComponent(meta)}`,
-    )
+    setPayUrl('https://paystack.shop/pay/2b2b77ixz-')
   }
 
   return (
