@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export const dynamic = 'force-dynamic'
 
-export const FREE_LIMIT = 3
+const FREE_LIMIT = 3
 
 export async function GET(_req: NextRequest) {
   try {
