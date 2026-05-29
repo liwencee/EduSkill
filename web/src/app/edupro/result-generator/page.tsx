@@ -105,15 +105,12 @@ interface UsageInfo {
 // ─── Upgrade Modal ────────────────────────────────────────────────
 function UpgradeModal({
   usageInfo,
-  userEmail,
-  userId,
   onClose,
 }: {
   usageInfo: UsageInfo
-  userEmail: string
-  userId:   string
   onClose:  () => void
 }) {
+  const period      = usageInfo.period || new Date().toISOString().slice(0, 7)
   const paystackUrl = 'https://paystack.shop/pay/2b2b77ixz-'
 
   return (
@@ -480,11 +477,9 @@ export default function ResultGeneratorPage() {
       <Navbar />
 
       {/* ── Upgrade modal ───────────────────────────────────────── */}
-      {showUpgradeModal && usageInfo && user && (
+      {showUpgradeModal && usageInfo && (
         <UpgradeModal
           usageInfo={usageInfo}
-          userEmail={user.email}
-          userId={user.id}
           onClose={() => setShowUpgradeModal(false)}
         />
       )}

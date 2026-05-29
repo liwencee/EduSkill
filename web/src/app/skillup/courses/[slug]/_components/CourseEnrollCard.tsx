@@ -43,7 +43,7 @@ export default function CourseEnrollCard({
 
         if (!user) {
           setStatus('unenrolled')
-          buildPayUrl('', '', courseId, price)
+          buildPayUrl()
           return
         }
 
@@ -59,7 +59,7 @@ export default function CourseEnrollCard({
           setStatus('enrolled')
         } else {
           setStatus('unenrolled')
-          buildPayUrl(user.email ?? '', user.id, courseId, price)
+          buildPayUrl()
         }
       } catch {
         setStatus('unenrolled')
@@ -69,7 +69,7 @@ export default function CourseEnrollCard({
     check()
   }, [courseId, isFree, price])
 
-  function buildPayUrl(email: string, userId: string, cId: string, amt: number) {
+  function buildPayUrl() {
     setPayUrl('https://paystack.shop/pay/2b2b77ixz-')
   }
 
