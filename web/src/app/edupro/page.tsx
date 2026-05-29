@@ -90,7 +90,7 @@ export default function EduProPage() {
                     </li>
                   ))}
                 </ul>
-                <a href="https://paystack.shop/pay/g2wgifbf3r"
+                <a href="https://paystack.shop/pay/2b2b77ixz-"
                   className={p.highlight ? 'btn-primary block text-center' : 'btn-outline block text-center'}>
                   Get Started
                 </a>
