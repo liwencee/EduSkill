@@ -313,11 +313,11 @@ export default async function EmployerApplicantsPage({ searchParams }: Props) {
 
                               {/* Cover note */}
                               {app.cover_note && (
-                                <div className="bg-gray-50 rounded-xl p-3 mb-3">
-                                  <p className="text-xs font-bold text-gray-500 mb-1 flex items-center gap-1">
-                                    <FileText className="w-3 h-3" /> Cover Note
+                                <div className="bg-indigo-50 border border-indigo-100 rounded-xl p-4 mb-3">
+                                  <p className="text-xs font-bold text-indigo-500 mb-2 flex items-center gap-1">
+                                    <FileText className="w-3.5 h-3.5" /> Message from Applicant
                                   </p>
-                                  <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
+                                  <p className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap">
                                     {app.cover_note}
                                   </p>
                                 </div>
