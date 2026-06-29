@@ -3,12 +3,12 @@ import Footer from '@/components/Footer'
 import { TrendingUp, Users, Award, Briefcase, MapPin, BookOpen } from 'lucide-react'
 
 const STATS = [
-  { n: '48,000+', l: 'Active Learners', Icon: Users, c: 'text-[#4F46E5]', bg: 'bg-indigo-50' },
-  { n: '3,200+', l: 'Teachers Trained', Icon: BookOpen, c: 'text-purple-600', bg: 'bg-purple-50' },
-  { n: '12,000+', l: 'Jobs Filled', Icon: Briefcase, c: 'text-green-600', bg: 'bg-green-50' },
-  { n: '94%', l: 'Completion Rate', Icon: Award, c: 'text-[#F97316]', bg: 'bg-orange-50' },
-  { n: '36', l: 'States Reached', Icon: MapPin, c: 'text-blue-600', bg: 'bg-blue-50' },
-  { n: '₦2.4B+', l: 'Income Generated', Icon: TrendingUp, c: 'text-teal-600', bg: 'bg-teal-50' },
+  { n: '150,000+', l: 'Target Learners', Icon: Users, c: 'text-[#4F46E5]', bg: 'bg-indigo-50' },
+  { n: '10,000+', l: 'Teachers to Train', Icon: BookOpen, c: 'text-purple-600', bg: 'bg-purple-50' },
+  { n: '50,000+', l: 'Jobs to Fill', Icon: Briefcase, c: 'text-green-600', bg: 'bg-green-50' },
+  { n: '95%', l: 'Target Completion Rate', Icon: Award, c: 'text-[#F97316]', bg: 'bg-orange-50' },
+  { n: '36', l: 'States to Reach', Icon: MapPin, c: 'text-blue-600', bg: 'bg-blue-50' },
+  { n: '₦10B+', l: 'Projected Income Impact', Icon: TrendingUp, c: 'text-teal-600', bg: 'bg-teal-50' },
 ]
 
 const STORIES = [
@@ -48,7 +48,7 @@ export default function ImpactPage() {
             Real Numbers. <span className="text-[#F97316]">Real Lives.</span>
           </h1>
           <p className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
-            Since 2023, Skillora has been quietly changing lives — one skill, one certificate, one job at a time.
+            Since 2026, Skillora has been quietly changing lives — one skill, one certificate, one job at a time.
           </p>
         </div>
       </section>

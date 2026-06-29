@@ -32,7 +32,7 @@ export default function AboutPage() {
             We Believe in a <span className="text-[#F97316]">Skilled Nigeria</span>
           </h1>
           <p className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
-            Skillora was founded in 2023 with a single mission: close the skills gap between Nigeria&apos;s 20 million unemployed youth and the opportunities that await them.
+            Skillora was founded in 2026 with a single mission: close the skills gap between Nigeria&apos;s 20 million unemployed youth and the opportunities that await them.
           </p>
         </div>
       </section>
