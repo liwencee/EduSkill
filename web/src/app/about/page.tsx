@@ -3,8 +3,8 @@ import Footer from '@/components/Footer'
 import { Users, Target, Heart, BookOpen, Award, Globe } from 'lucide-react'
 
 const TEAM = [
-  { name: 'Olalekan Adeyemi', role: 'CEO & Co-founder', avatar: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=100&h=100&fit=crop&crop=face' },
-  { name: 'Adaeze Nwosu', role: 'CTO & Co-founder', avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face' },
+  { name: 'Akindiya Olalekan', role: 'CEO & Co-founder', avatar: 'https://images.unsplash.com/photo-1506277886164-e25aa3f4ef7f?w=100&h=100&fit=crop&crop=face' },
+  { name: 'Ibidokun Oyindamola', role: 'CTO & Co-founder', avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face' },
   { name: 'Fatima Yusuf', role: 'Head of Curriculum', avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&h=100&fit=crop&crop=face' },
   { name: 'Emeka Obi', role: 'Head of Partnerships', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face' },
 ]
