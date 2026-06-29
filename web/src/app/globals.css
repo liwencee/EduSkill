@@ -32,7 +32,7 @@
 
   /* ── Buttons ─────────────────────────────────────────────────────── */
   .btn-primary {
-    @apply bg-brand-amber text-brand-ink px-6 py-3 rounded-xl font-semibold
+    @apply bg-brand-amber text-white px-6 py-3 rounded-xl font-semibold
            hover:bg-brand-amberDark hover:text-white transition-colors
            focus:outline-none focus:ring-2 focus:ring-brand-amber focus:ring-offset-2
            disabled:opacity-50 disabled:cursor-not-allowed;

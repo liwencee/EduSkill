@@ -14,7 +14,7 @@ const COURSE_TRACKS = [
 
 const BADGE_STYLE: Record<string, string> = {
   Popular: 'bg-brand-blue text-white',
-  New:     'bg-brand-amber text-brand-ink',
+  New:     'bg-brand-amber text-white',
   Offline: 'bg-[#E8E5DC] text-brand-ink',
   Free:    'bg-green-100 text-green-800',
 }
@@ -137,7 +137,7 @@ export default function SkillUpPage() {
             ].map(step => (
               <div key={step.n} className="text-center">
                 {/* 10% amber step circle */}
-                <div className="w-12 h-12 bg-brand-amber text-brand-ink rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">
+                <div className="w-12 h-12 bg-brand-amber text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-3">
                   {step.n}
                 </div>
                 <h4 className="font-bold mb-1">{step.title}</h4>

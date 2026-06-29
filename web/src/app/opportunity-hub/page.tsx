@@ -101,7 +101,7 @@ export default function OpportunityHubPage() {
             ].map(s => (
               <div key={s.step}>
                 {/* 10% amber step number */}
-                <div className="w-14 h-14 bg-brand-amber text-brand-ink rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">{s.step}</div>
+                <div className="w-14 h-14 bg-brand-amber text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-4">{s.step}</div>
                 <h3 className="font-bold text-lg mb-2">{s.title}</h3>
                 <p className="text-white/70 text-sm">{s.desc}</p>
               </div>
