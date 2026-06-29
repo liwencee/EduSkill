@@ -17,16 +17,61 @@ const SUGGESTIONS = [
   "I'm a teacher — what's in it for me?",
 ]
 
+const LS_KEY = 'skillora_chat_history'
+
 export default function ChatWidget() {
   const [open,     setOpen]     = useState(false)
   const [messages, setMessages] = useState<Msg[]>([GREETING])
   const [input,    setInput]    = useState('')
   const [sending,  setSending]  = useState(false)
+  const [loaded,   setLoaded]   = useState(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+
+  // ── Load saved history the first time the panel is opened ──────────────────
+  useEffect(() => {
+    if (!open || loaded) return
+    setLoaded(true)
+
+    ;(async () => {
+      // 1) Try server history (signed-in users)
+      try {
+        const res = await fetch('/api/chat', { method: 'GET' })
+        if (res.ok) {
+          const data = await res.json()
+          const server: Msg[] = (data.messages ?? [])
+            .map((m: any) => ({ role: m.role, content: m.content }))
+            .filter((m: Msg) => m.role === 'user' || m.role === 'assistant')
+          if (server.length > 0) {
+            setMessages([GREETING, ...server])
+            return
+          }
+        }
+      } catch { /* fall through to local */ }
+
+      // 2) Guests — restore from localStorage
+      try {
+        const raw = localStorage.getItem(LS_KEY)
+        if (raw) {
+          const local = JSON.parse(raw) as Msg[]
+          if (Array.isArray(local) && local.length > 0) {
+            setMessages([GREETING, ...local])
+          }
+        }
+      } catch { /* ignore */ }
+    })()
+  }, [open, loaded])
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, open])
+
+  // Persist non-greeting messages locally (covers guests; harmless for users)
+  function saveLocal(msgs: Msg[]) {
+    try {
+      const body = msgs.filter(m => m !== GREETING).slice(-50)
+      localStorage.setItem(LS_KEY, JSON.stringify(body))
+    } catch { /* ignore */ }
+  }
 
   async function send(text?: string) {
     const content = (text ?? input).trim()
@@ -34,6 +79,7 @@ export default function ChatWidget() {
 
     const next = [...messages, { role: 'user' as const, content }]
     setMessages(next)
+    saveLocal(next)
     setInput('')
     setSending(true)
 
@@ -41,16 +87,20 @@ export default function ChatWidget() {
       const res = await fetch('/api/chat', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ messages: next }),
+        body:    JSON.stringify({ messages: next.filter(m => m !== GREETING) }),
       })
       const data = await res.json()
       const reply = data.reply ?? data.error ?? 'Sorry, something went wrong. Please try again.'
-      setMessages(prev => [...prev, { role: 'assistant', content: reply }])
+      const updated = [...next, { role: 'assistant' as const, content: reply }]
+      setMessages(updated)
+      saveLocal(updated)
     } catch {
-      setMessages(prev => [...prev, {
+      const updated: Msg[] = [...next, {
         role: 'assistant',
         content: "I couldn't reach the server. Please check your connection and try again.",
-      }])
+      }]
+      setMessages(updated)
+      saveLocal(updated)
     } finally {
       setSending(false)
     }
