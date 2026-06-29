@@ -28,7 +28,7 @@ export default function SkillUpPage() {
       <section className="bg-brand-blue text-white py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="inline-flex items-center gap-2 bg-white/15 border border-white/25 px-4 py-2 rounded-full text-sm font-medium mb-6">
-            🎓 For Youth Learners aged 18–35
+            🎓 For Youth Learners aged 18+
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">SkillUp</h1>
           <p className="text-xl text-white/80 mb-6 leading-relaxed max-w-2xl">

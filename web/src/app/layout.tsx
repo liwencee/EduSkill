@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from '@/components/AuthProvider'
+import ChatWidget from '@/components/ChatWidget'
 
 export const metadata: Metadata = {
   title: 'Skillora — Learn Skills. Earn Money. Build Nigeria.',
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans bg-white text-edu-text antialiased">
         <AuthProvider>
         {children}
+        <ChatWidget />
         <Toaster
           position="top-right"
           toastOptions={{

@@ -94,6 +94,8 @@ export const LIMITS = {
   lessonContent:  { max: 20,  windowMs: 60_000 },
   /** Result Generator — 20 per minute per IP */
   generateResult: { max: 20,  windowMs: 60_000 },
+  /** AI Assistant chat — 30 messages per minute per IP */
+  chat:           { max: 30,  windowMs: 60_000 },
   /** Login — 5 attempts per minute per IP (brute-force guard) */
   login:          { max: 5,   windowMs: 60_000 },
   /** Signup — 3 per minute per IP */
