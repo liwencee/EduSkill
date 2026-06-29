@@ -505,9 +505,9 @@ export default function PostJobPage() {
                 className="mt-0.5 w-4 h-4 rounded accent-[#4F46E5]"
               />
               <div>
-                <p className="text-sm font-semibold text-[#1E1B4B]">Require SkillBridge Certification</p>
+                <p className="text-sm font-semibold text-[#1E1B4B]">Require Skillora Certification</p>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  Only show your listing to candidates who hold a verified SkillBridge certificate in the relevant skill.
+                  Only show your listing to candidates who hold a verified Skillora certificate in the relevant skill.
                 </p>
               </div>
             </label>

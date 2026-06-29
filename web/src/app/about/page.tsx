@@ -32,7 +32,7 @@ export default function AboutPage() {
             We Believe in a <span className="text-[#F97316]">Skilled Nigeria</span>
           </h1>
           <p className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
-            SkillBridge Nigeria was founded in 2023 with a single mission: close the skills gap between Nigeria&apos;s 20 million unemployed youth and the opportunities that await them.
+            Skillora was founded in 2023 with a single mission: close the skills gap between Nigeria&apos;s 20 million unemployed youth and the opportunities that await them.
           </p>
         </div>
       </section>
@@ -45,7 +45,7 @@ export default function AboutPage() {
               <span className="inline-block bg-white border-[2px] border-indigo-200 text-[#4F46E5] font-bold text-sm px-5 py-2 rounded-full mb-5">Our Mission</span>
               <h2 className="font-heading text-4xl font-bold text-[#1E1B4B] mb-6">Upskill Teachers. Empower Youth. Connect Both to Opportunity.</h2>
               <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                Nigeria has the largest youth population in Africa. Yet millions lack the practical skills needed to find work or start a business. We built SkillBridge to change that — one course, one certificate, one job at a time.
+                Nigeria has the largest youth population in Africa. Yet millions lack the practical skills needed to find work or start a business. We built Skillora to change that — one course, one certificate, one job at a time.
               </p>
               <p className="text-gray-600 text-lg leading-relaxed">
                 We partner with state governments, NGOs, and forward-thinking employers to ensure our platform reflects the real needs of the Nigerian economy — not a copy-pasted Western curriculum.
@@ -73,7 +73,7 @@ export default function AboutPage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="font-heading text-4xl font-bold text-[#1E1B4B] mb-4">What We Stand For</h2>
-            <p className="text-gray-500 text-lg max-w-xl mx-auto">The values that drive every decision we make at SkillBridge Nigeria.</p>
+            <p className="text-gray-500 text-lg max-w-xl mx-auto">The values that drive every decision we make at Skillora.</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {VALUES.map(({ Icon, title, desc, color, bg }) => (

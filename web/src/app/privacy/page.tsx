@@ -29,7 +29,7 @@ const SECTIONS = [
   },
   {
     title: '7. Children\'s Privacy',
-    content: `SkillBridge Nigeria is designed for users aged 15 and above. Users under 18 should have parental or guardian consent before registering. We do not knowingly collect personal information from children under 13.`,
+    content: `Skillora is designed for users aged 15 and above. Users under 18 should have parental or guardian consent before registering. We do not knowingly collect personal information from children under 13.`,
   },
   {
     title: '8. Changes to This Policy',
@@ -62,7 +62,7 @@ export default function PrivacyPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white border-[3px] border-indigo-100 rounded-3xl p-8 md:p-12 shadow-[0_6px_0_rgba(79,70,229,0.08)] space-y-8">
             <p className="text-gray-600 leading-relaxed text-base border-l-4 border-[#4F46E5] pl-5 bg-indigo-50 py-3 pr-3 rounded-r-xl">
-              At SkillBridge Nigeria, your privacy is a fundamental right — not an afterthought. This policy explains what data we collect, how we use it, and the controls you have over it.
+              At Skillora, your privacy is a fundamental right — not an afterthought. This policy explains what data we collect, how we use it, and the controls you have over it.
             </p>
             {SECTIONS.map(s => (
               <div key={s.title}>

@@ -4,11 +4,11 @@ import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from '@/components/AuthProvider'
 
 export const metadata: Metadata = {
-  title: 'SkillBridge Nigeria — Learn Skills. Earn Money. Build Nigeria.',
+  title: 'Skillora — Learn Skills. Earn Money. Build Nigeria.',
   description: 'Nigeria\'s #1 education platform. Teachers get CPD training & AI lesson planning. Youth learn practical digital, business & technical skills. Both connect to jobs.',
-  keywords: 'Nigeria education, vocational training, teacher upskilling, youth employment, digital skills Nigeria',
+  keywords: 'Nigeria education, vocational training, teacher upskilling, youth employment, digital skills Nigeria, Skillora',
   openGraph: {
-    title: 'SkillBridge Nigeria',
+    title: 'Skillora',
     description: 'Learn Skills. Earn Money. Build Nigeria.',
     type: 'website',
   },

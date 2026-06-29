@@ -4,7 +4,7 @@ import { logger, logRequest, logResponse } from '@/lib/logger'
 
 export const dynamic = 'force-dynamic'
 
-const SYSTEM_PROMPT = `You are SkillBridge AI, a friendly and expert vocational skills tutor for Nigerian youth and professionals.
+const SYSTEM_PROMPT = `You are Skillora AI, a friendly and expert vocational skills tutor for Nigerian youth and professionals.
 Your lessons are:
 - Practical and immediately applicable in the Nigerian context
 - Written in clear, simple English (B1 level) with occasional Pidgin phrases for warmth
@@ -29,6 +29,38 @@ export async function POST(req: NextRequest) {
     )
   }
 
+  // ── Require an authenticated session ─────────────────────────────
+  // No anonymous calls: gpt-4o is expensive and the IP limiter above is
+  // per-serverless-instance, so an unauthenticated endpoint is a
+  // denial-of-wallet risk. Block first, then apply a real per-user budget.
+  let user: { id: string } | null = null
+  try {
+    const { createClient } = await import('@/lib/supabase/server')
+    const supabase = createClient()
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    user = null
+  }
+  if (!user) {
+    logResponse('/api/lesson-content', ctx, 401)
+    return NextResponse.json(
+      { error: 'Please sign in to load lessons.' },
+      { status: 401, headers: rateLimitHeaders(rl) }
+    )
+  }
+
+  // Per-user budget (the real control — survives IP rotation)
+  const userRl = rateLimit(user.id, 'lessonContent:user', LIMITS.lessonContent.max, LIMITS.lessonContent.windowMs)
+  if (!userRl.success) {
+    logger.warn('Per-user rate limit exceeded — lesson-content', { userId: user.id, route: '/api/lesson-content' })
+    logResponse('/api/lesson-content', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait before loading the next lesson.' },
+      { status: 429, headers: rateLimitHeaders(userRl) }
+    )
+  }
+
   const { courseTitle, lessonTitle, moduleTitle } = await req.json()
   if (!courseTitle || !lessonTitle) {
     logResponse('/api/lesson-content', ctx, 400)
@@ -50,7 +82,7 @@ export async function POST(req: NextRequest) {
     const openai = new OpenAI({ apiKey })
 
     const prompt = `
-Create a complete, engaging lesson for the SkillBridge Nigeria platform.
+Create a complete, engaging lesson for the Skillora platform.
 
 Course: "${courseTitle}"
 Module: "${moduleTitle ?? ''}"
@@ -152,7 +184,7 @@ function buildFallback(courseTitle: string, lessonTitle: string, moduleTitle?: s
           'Because it is compulsory',
         ],
         answer: 1,
-        explanation: `Building practical, applicable skills is the core purpose of SkillBridge. Every lesson is designed to help you earn more, work better, or start a business in the Nigerian context.`,
+        explanation: `Building practical, applicable skills is the core purpose of Skillora. Every lesson is designed to help you earn more, work better, or start a business in the Nigerian context.`,
       },
       {
         question: 'What is the best way to master a new skill?',
@@ -166,7 +198,7 @@ function buildFallback(courseTitle: string, lessonTitle: string, moduleTitle?: s
         explanation: `Consistent practice and real-world application is how skills become second nature. Every professional you admire got there through deliberate, repeated practice — not just theory.`,
       },
       {
-        question: 'How can skills learned on SkillBridge be monetised in Nigeria?',
+        question: 'How can skills learned on Skillora be monetised in Nigeria?',
         options: [
           'They cannot — only degrees matter',
           'Only in Lagos and Abuja',
@@ -174,7 +206,7 @@ function buildFallback(courseTitle: string, lessonTitle: string, moduleTitle?: s
           'Only after 10 years of experience',
         ],
         answer: 2,
-        explanation: `SkillBridge skills are designed to be immediately monetisable. Learners are finding freelance clients, getting hired, and launching businesses across all 36 states of Nigeria.`,
+        explanation: `Skillora skills are designed to be immediately monetisable. Learners are finding freelance clients, getting hired, and launching businesses across all 36 states of Nigeria.`,
       },
     ],
     summary: `You have completed "${lessonTitle}" and gained a solid understanding of how this topic applies in the Nigerian context. Apply what you have learned today and move confidently to the next lesson.`,

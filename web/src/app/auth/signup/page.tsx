@@ -2,7 +2,8 @@
 import { useState, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { BookOpen, Eye, EyeOff, AlertCircle, GraduationCap, Users, Briefcase } from 'lucide-react'
+import Image from 'next/image'
+import { Eye, EyeOff, AlertCircle, GraduationCap, Users, Briefcase } from 'lucide-react'
 import { signupAction } from './actions'
 import type { UserRole } from '@/types'
 
@@ -24,12 +25,8 @@ function SignupForm() {
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-lg">
 
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center">
-            <BookOpen className="w-6 h-6 text-white" />
-          </div>
-          <span className="font-bold text-brand-ink text-xl">SkillBridge</span>
-          <span className="font-bold text-brand-amber text-xl">Nigeria</span>
+        <Link href="/" className="flex items-center justify-center mb-8">
+          <Image src="/Skillora.png" alt="Skillora" width={160} height={42} className="h-10 w-auto" />
         </Link>
 
         <div className="bg-white rounded-2xl border border-[#E0DDD5] shadow-sm p-8">

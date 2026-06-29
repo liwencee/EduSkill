@@ -148,7 +148,7 @@ export default function YouthDashboard() {
                 <span className="text-xs font-bold text-orange-300 uppercase tracking-wide">Daily Tip</span>
               </div>
               <p className="text-sm font-medium leading-relaxed">
-                Spend just 30 minutes a day on SkillBridge and complete a course in 4 weeks. Small steps, big results! 🚀
+                Spend just 30 minutes a day on Skillora and complete a course in 4 weeks. Small steps, big results! 🚀
               </p>
             </div>
           </div>

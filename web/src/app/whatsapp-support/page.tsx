@@ -13,7 +13,7 @@ const SUPPORT_TOPICS = [
 
 const WHATSAPP_NUMBER = '+2348000000000' // Replace with your actual support number
 const WHATSAPP_MESSAGE = encodeURIComponent(
-  'Hello SkillBridge Support! I need help with my account.'
+  'Hello Skillora Support! I need help with my account.'
 )
 const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER.replace('+', '')}?text=${WHATSAPP_MESSAGE}`
 

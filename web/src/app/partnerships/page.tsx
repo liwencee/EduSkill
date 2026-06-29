@@ -18,7 +18,7 @@ const PARTNER_TYPES = [
   },
   {
     Icon: Globe, title: 'Government & NGO Partners',
-    desc: 'State governments and NGOs can deploy SkillBridge at scale — with offline support, local language content, and full impact reporting.',
+    desc: 'State governments and NGOs can deploy Skillora at scale — with offline support, local language content, and full impact reporting.',
     benefits: ['Multi-state deployment', 'Offline-first delivery', 'Impact & reporting', 'Custom content in local languages'],
     color: 'text-green-600', bg: 'bg-green-50', border: 'border-green-200',
   },

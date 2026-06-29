@@ -12,6 +12,19 @@ const PLAN_MAP: Record<string, { plan: string; days: number }> = {
   course_purchase:    { plan: 'course',           days: 36500 }, // ₦8,000 lifetime course access
 }
 
+// Minimum expected amount (NGN) per plan. The signature proves the payload
+// came from Paystack, but `plan_key` is set at checkout-init time and can be
+// tampered with — so we refuse to grant an expensive plan for a trivial
+// payment. Set to the LOW end of each plan's price range; adjust to your
+// real Paystack amounts.
+const PLAN_MIN_NGN: Record<string, number> = {
+  youth_monthly:      1500,
+  teacher_monthly:    2000,
+  institutional_term: 50000,
+  result_gen_monthly: 5000,
+  course_purchase:    8000,
+}
+
 export async function POST(req: NextRequest) {
   const ctx = logRequest('/api/paystack', req)
 
@@ -28,7 +41,11 @@ export async function POST(req: NextRequest) {
   const hash = crypto.createHmac('sha512', process.env.PAYSTACK_SECRET_KEY!)
     .update(body).digest('hex')
 
-  if (hash !== req.headers.get('x-paystack-signature')) {
+  // Constant-time comparison to avoid leaking the signature via timing.
+  const signature = req.headers.get('x-paystack-signature') ?? ''
+  const expectedSig = Buffer.from(hash)
+  const receivedSig = Buffer.from(signature)
+  if (expectedSig.length !== receivedSig.length || !crypto.timingSafeEqual(expectedSig, receivedSig)) {
     logger.warn('Paystack webhook — invalid signature', { route: '/api/paystack' })
     logResponse('/api/paystack', ctx, 401)
     return NextResponse.json({ error: 'Invalid signature' }, { status: 401 })
@@ -63,6 +80,38 @@ export async function POST(req: NextRequest) {
 
   const isResultGenAddon = planKey === 'result_gen_monthly'
   const isCoursePurchase = planKey === 'course_purchase'
+
+  // ── Idempotency: Paystack retries webhooks — never grant twice ───
+  const { data: existingPayment } = await supabase
+    .from('payments')
+    .select('id')
+    .eq('paystack_ref', reference)
+    .maybeSingle()
+  if (existingPayment) {
+    logger.info('Paystack webhook — duplicate reference ignored', { route: '/api/paystack', reference })
+    logResponse('/api/paystack', ctx, 200)
+    return NextResponse.json({ ok: true })
+  }
+
+  // ── Amount integrity: refuse to grant a plan that was underpaid ──
+  const paidNgn = (amount ?? 0) / 100
+  const minNgn  = PLAN_MIN_NGN[planKey]
+  if (minNgn !== undefined && paidNgn < minNgn) {
+    logger.warn('Paystack charge.success — amount below plan minimum; access NOT granted', {
+      route: '/api/paystack', reference, userId, planKey, paidNgn, minNgn,
+    })
+    // Log the payment for manual review, but grant nothing.
+    await supabase.from('payments').insert({
+      user_id:      userId,
+      amount_ngn:   paidNgn,
+      plan:         planInfo.plan,
+      paystack_ref: reference,
+      status:       'amount_mismatch',
+      paid_at:      new Date().toISOString(),
+    })
+    logResponse('/api/paystack', ctx, 200)
+    return NextResponse.json({ ok: true })
+  }
 
   try {
     // Always log the payment

@@ -1,7 +1,8 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect, useRef } from 'react'
-import { Menu, X, BookOpen, LayoutDashboard, LogOut, ChevronDown, User, Bell } from 'lucide-react'
+import Image from 'next/image'
+import { Menu, X, LayoutDashboard, LogOut, ChevronDown, User, Bell } from 'lucide-react'
 import { useAuth } from '@/components/AuthProvider'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -114,11 +115,7 @@ export default function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-white/20 rounded-xl flex items-center justify-center border border-white/30">
-              <BookOpen className="w-5 h-5 text-white" />
-            </div>
-            <span className="font-heading font-bold text-white text-xl">SkillBridge</span>
-            <span className="font-heading font-bold text-[#F97316] text-xl">Nigeria</span>
+            <Image src="/Skillora.png" alt="Skillora" width={140} height={36} className="h-9 w-auto" priority />
           </Link>
 
           {/* Desktop nav */}

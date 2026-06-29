@@ -27,7 +27,7 @@ export default function OpportunityHubPage() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">OpportunityHub</h1>
           <p className="text-xl text-white/80 mb-6 leading-relaxed max-w-2xl">
-            Nigeria&apos;s skills-based job marketplace. Earn a SkillBridge certificate → get matched to jobs that actually match your skills.
+            Nigeria&apos;s skills-based job marketplace. Earn a Skillora certificate → get matched to jobs that actually match your skills.
             No experience? No problem — your certificate is your proof.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -95,7 +95,7 @@ export default function OpportunityHubPage() {
           <h2 className="text-3xl font-bold mb-10">From Certificate to Career</h2>
           <div className="grid md:grid-cols-3 gap-8">
             {[
-              { step: '1', title: 'Complete a Course',   desc: 'Finish any SkillBridge course and pass the assessment.' },
+              { step: '1', title: 'Complete a Course',   desc: 'Finish any Skillora course and pass the assessment.' },
               { step: '2', title: 'Your Profile Goes Live', desc: 'A verified candidate profile is auto-created from your certs.' },
               { step: '3', title: 'Get Matched & Hired', desc: 'AI matches you to jobs. Apply in one click. Get hired.' },
             ].map(s => (

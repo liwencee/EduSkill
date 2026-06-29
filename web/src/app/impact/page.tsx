@@ -48,7 +48,7 @@ export default function ImpactPage() {
             Real Numbers. <span className="text-[#F97316]">Real Lives.</span>
           </h1>
           <p className="text-xl text-white/80 leading-relaxed max-w-2xl mx-auto">
-            Since 2023, SkillBridge Nigeria has been quietly changing lives — one skill, one certificate, one job at a time.
+            Since 2023, Skillora has been quietly changing lives — one skill, one certificate, one job at a time.
           </p>
         </div>
       </section>

@@ -339,7 +339,7 @@ export default function LessonPage() {
                       <Sparkles className="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <p className="text-xs font-bold text-white/60 uppercase tracking-wide mb-1">SkillBridge AI Tutor</p>
+                      <p className="text-xs font-bold text-white/60 uppercase tracking-wide mb-1">Skillora AI Tutor</p>
                       <p className="text-sm leading-relaxed">{content.ai_intro}</p>
                     </div>
                   </div>

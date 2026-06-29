@@ -281,15 +281,15 @@ export const CPD_COURSES: CPDCourse[] = [
               'Effective prompting for Nigerian teachers: Always specify the NERDC curriculum level, the subject, the specific topic, and the student context. For example: "Create a 40-minute JSS 2 Basic Science lesson plan on Plant Reproduction, aligned to the NERDC curriculum. Students are in a rural school in Oyo State with limited lab equipment."',
               'What AI does well: Generating lesson plan structures, creating quiz questions with answer keys, suggesting differentiated activities for mixed-ability classes, translating content summaries into Yoruba/Igbo/Hausa for multilingual classrooms, and creating word problems with local context (using Naira, Nigerian names, local foods).',
               'What AI does NOT do well: It cannot replace your knowledge of your specific students. Always review AI-generated content for accuracy, cultural appropriateness, and alignment with the exact NERDC scheme of work for your state. Think of AI as a fast first draft, not a final product.',
-              'The SkillBridge AI Lesson Planner (available in the EduPro tab) is specifically trained on the NERDC curriculum. It generates plans with NERDC-aligned objectives, differentiation strategies, and assessment tasks — ready to use or customise.',
+              'The Skillora AI Lesson Planner (available in the EduPro tab) is specifically trained on the NERDC curriculum. It generates plans with NERDC-aligned objectives, differentiation strategies, and assessment tasks — ready to use or customise.',
             ],
             key_takeaways: [
               'AI can save 3–5 hours of lesson prep per week',
               'Always specify NERDC level, subject, topic, and student context in prompts',
               'AI generates good first drafts — always review for accuracy and cultural fit',
-              'The SkillBridge AI Planner is pre-trained on the NERDC curriculum',
+              'The Skillora AI Planner is pre-trained on the NERDC curriculum',
             ],
-            practical_activity: 'Use the SkillBridge AI Lesson Planner to generate a lesson plan for your next class. Compare it to a plan you would write manually. Note what was useful and what you would change. Time how long the AI version takes vs. your usual prep time.',
+            practical_activity: 'Use the Skillora AI Lesson Planner to generate a lesson plan for your next class. Compare it to a plan you would write manually. Note what was useful and what you would change. Time how long the AI version takes vs. your usual prep time.',
             quiz: [
               {
                 question: 'How much preparation time can AI tools save Nigerian teachers per week?',
@@ -299,7 +299,7 @@ export const CPD_COURSES: CPDCourse[] = [
                   { text: '3–5 hours', correct: true },
                   { text: '10+ hours' },
                 ],
-                explanation: 'AI tools like ChatGPT and the SkillBridge Lesson Planner can save teachers 3–5 hours of preparation time per week.',
+                explanation: 'AI tools like ChatGPT and the Skillora Lesson Planner can save teachers 3–5 hours of preparation time per week.',
               },
               {
                 question: 'What should you always include when prompting AI for a lesson plan?',

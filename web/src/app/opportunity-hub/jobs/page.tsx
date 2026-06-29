@@ -57,7 +57,7 @@ export default async function JobsPage({ searchParams }: Props) {
           <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-brand-ink mb-2">OpportunityHub</h1>
-              <p className="text-brand-inkMid">Jobs, apprenticeships, and freelance gigs for SkillBridge graduates.</p>
+              <p className="text-brand-inkMid">Jobs, apprenticeships, and freelance gigs for Skillora graduates.</p>
             </div>
             <Link href="/employer/post-job"
               className="inline-flex items-center gap-2 bg-brand-blue text-white font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors whitespace-nowrap shrink-0">
@@ -164,7 +164,7 @@ export default async function JobsPage({ searchParams }: Props) {
             <div className="text-center py-20 text-brand-inkLight">
               <Briefcase className="w-12 h-12 mx-auto mb-3 opacity-30" />
               <p className="font-medium text-brand-ink">No jobs found</p>
-              <p className="text-sm mt-1 mb-6">Be the first to post an opportunity for SkillBridge graduates.</p>
+              <p className="text-sm mt-1 mb-6">Be the first to post an opportunity for Skillora graduates.</p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <a href="/opportunity-hub/jobs"
                   className="inline-flex items-center justify-center gap-1 border border-brand-blue text-brand-blue text-sm font-medium px-4 py-2 rounded-xl hover:bg-blue-50 transition-colors">

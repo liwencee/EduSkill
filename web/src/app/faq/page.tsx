@@ -9,8 +9,8 @@ const FAQS = [
   {
     category: 'Getting Started',
     items: [
-      { q: 'Is SkillBridge Nigeria free to use?', a: 'Yes! You can sign up and access dozens of free courses at no cost. Some premium courses and certificate programmes require payment, starting from ₦2,500.' },
-      { q: 'What devices can I use?', a: 'SkillBridge works on any Android smartphone (even entry-level ₦15,000 phones), iOS, and desktop browsers. Our app is optimised for low-end devices and slow connections.' },
+      { q: 'Is Skillora free to use?', a: 'Yes! You can sign up and access dozens of free courses at no cost. Some premium courses and certificate programmes require payment, starting from ₦2,500.' },
+      { q: 'What devices can I use?', a: 'Skillora works on any Android smartphone (even entry-level ₦15,000 phones), iOS, and desktop browsers. Our app is optimised for low-end devices and slow connections.' },
       { q: 'Do I need a constant internet connection?', a: 'No. Download courses on Wi-Fi and study completely offline. Your progress syncs automatically when you reconnect — perfect for areas with unreliable data.' },
       { q: 'What languages are available?', a: 'Courses are available in English, Yoruba, Igbo, Hausa, and Nigerian Pidgin. We\'re adding more local languages in 2025.' },
     ],
@@ -68,7 +68,7 @@ export default function FAQPage() {
             <HelpCircle className="w-4 h-4" /> Help Centre
           </div>
           <h1 className="font-heading text-5xl font-bold mb-4">Frequently Asked <span className="text-[#F97316]">Questions</span></h1>
-          <p className="text-xl text-white/80">Everything you need to know about SkillBridge Nigeria.</p>
+          <p className="text-xl text-white/80">Everything you need to know about Skillora.</p>
         </div>
       </section>
 

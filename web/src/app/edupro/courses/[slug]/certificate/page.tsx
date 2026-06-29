@@ -153,7 +153,7 @@ export default function CPDCertificatePage() {
                       <Award className="w-5 h-5 text-white" />
                     </div>
                     <div className="text-left">
-                      <p className="font-bold text-[#378ADD] text-lg leading-tight">SkillBridge</p>
+                      <p className="font-bold text-[#378ADD] text-lg leading-tight">Skillora</p>
                       <p className="font-bold text-[#EF9F27] text-lg leading-tight -mt-1">Nigeria</p>
                     </div>
                   </div>
@@ -224,7 +224,7 @@ export default function CPDCertificatePage() {
                   </div>
                   <div>
                     <p className="text-xs text-[#9A9A97] uppercase tracking-wider mb-1">Issued By</p>
-                    <p className="text-sm font-semibold text-[#2C2C2A]">SkillBridge Nigeria</p>
+                    <p className="text-sm font-semibold text-[#2C2C2A]">Skillora</p>
                     <p className="text-xs text-[#9A9A97]">EduPro CPD Programme</p>
                   </div>
                 </div>

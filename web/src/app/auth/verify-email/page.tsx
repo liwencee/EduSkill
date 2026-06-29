@@ -1,18 +1,14 @@
 import Link from 'next/link'
-import { BookOpen, Mail, ArrowRight, RefreshCw } from 'lucide-react'
+import Image from 'next/image'
+import { Mail, ArrowRight, RefreshCw } from 'lucide-react'
 
 export default function VerifyEmailPage() {
   return (
     <div className="min-h-screen bg-brand-bg flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
 
-        {/* Logo */}
-        <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center">
-            <BookOpen className="w-6 h-6 text-white" />
-          </div>
-          <span className="font-bold text-brand-ink text-xl">SkillBridge</span>
-          <span className="font-bold text-brand-amber text-xl">Nigeria</span>
+        <Link href="/" className="flex items-center justify-center mb-8">
+          <Image src="/Skillora.png" alt="Skillora" width={160} height={42} className="h-10 w-auto" />
         </Link>
 
         {/* Card */}
@@ -31,7 +27,7 @@ export default function VerifyEmailPage() {
           <div className="text-left bg-[#EEF2FF] rounded-xl p-4 mb-6 space-y-3">
             {[
               { step: '1', text: 'Open your email inbox' },
-              { step: '2', text: 'Find the email from SkillBridge Nigeria' },
+              { step: '2', text: 'Find the email from Skillora' },
               { step: '3', text: 'Click "Verify my email"' },
               { step: '4', text: 'You\'ll be redirected to your dashboard' },
             ].map(s => (

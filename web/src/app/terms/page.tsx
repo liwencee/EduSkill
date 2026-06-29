@@ -5,7 +5,7 @@ import { FileText } from 'lucide-react'
 const SECTIONS = [
   {
     title: '1. Acceptance of Terms',
-    content: `By accessing or using SkillBridge Nigeria ("the Platform"), you agree to be bound by these Terms of Use and our Privacy Policy. If you do not agree, please do not use the Platform. These terms apply to all users, including learners, teachers, employers, and visitors.`,
+    content: `By accessing or using Skillora ("the Platform"), you agree to be bound by these Terms of Use and our Privacy Policy. If you do not agree, please do not use the Platform. These terms apply to all users, including learners, teachers, employers, and visitors.`,
   },
   {
     title: '2. Eligibility',
@@ -21,11 +21,11 @@ const SECTIONS = [
   },
   {
     title: '5. Course Content & Intellectual Property',
-    content: `All course content, including videos, assessments, lesson plans, and AI-generated materials, is owned by SkillBridge Nigeria or its content partners and is protected by Nigerian and international copyright law. You are granted a non-exclusive, non-transferable licence to access purchased content for personal, non-commercial educational use only.`,
+    content: `All course content, including videos, assessments, lesson plans, and AI-generated materials, is owned by Skillora or its content partners and is protected by Nigerian and international copyright law. You are granted a non-exclusive, non-transferable licence to access purchased content for personal, non-commercial educational use only.`,
   },
   {
     title: '6. Certificates',
-    content: `Certificates issued by SkillBridge Nigeria are awarded upon genuine completion of course requirements including assessments. Any attempt to fraudulently obtain a certificate — including cheating on assessments, sharing answers, or impersonating another user — will result in immediate account termination and invalidation of all issued certificates.`,
+    content: `Certificates issued by Skillora are awarded upon genuine completion of course requirements including assessments. Any attempt to fraudulently obtain a certificate — including cheating on assessments, sharing answers, or impersonating another user — will result in immediate account termination and invalidation of all issued certificates.`,
   },
   {
     title: '7. Payments & Refunds',
@@ -33,11 +33,11 @@ const SECTIONS = [
   },
   {
     title: '8. OpportunityHub (Job Board)',
-    content: `Employers posting on OpportunityHub must be legitimate registered Nigerian businesses. Job listings must not be discriminatory, illegal, or misleading. SkillBridge Nigeria is not responsible for employment outcomes, salary disputes, or conditions of any employment arranged through the Platform. We do not guarantee job placement.`,
+    content: `Employers posting on OpportunityHub must be legitimate registered Nigerian businesses. Job listings must not be discriminatory, illegal, or misleading. Skillora is not responsible for employment outcomes, salary disputes, or conditions of any employment arranged through the Platform. We do not guarantee job placement.`,
   },
   {
     title: '9. Limitation of Liability',
-    content: `To the fullest extent permitted by Nigerian law, SkillBridge Nigeria is not liable for any indirect, incidental, or consequential damages arising from your use of the Platform. Our total liability to you for any claim shall not exceed the amount you paid to us in the 12 months preceding the claim.`,
+    content: `To the fullest extent permitted by Nigerian law, Skillora is not liable for any indirect, incidental, or consequential damages arising from your use of the Platform. Our total liability to you for any claim shall not exceed the amount you paid to us in the 12 months preceding the claim.`,
   },
   {
     title: '10. Termination',
@@ -74,7 +74,7 @@ export default function TermsPage() {
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white border-[3px] border-indigo-100 rounded-3xl p-8 md:p-12 shadow-[0_6px_0_rgba(79,70,229,0.08)] space-y-8">
             <p className="text-gray-600 leading-relaxed text-base border-l-4 border-[#F97316] pl-5 bg-orange-50 py-3 pr-3 rounded-r-xl">
-              Please read these Terms carefully before using SkillBridge Nigeria. By creating an account, you agree to these Terms in full.
+              Please read these Terms carefully before using Skillora. By creating an account, you agree to these Terms in full.
             </p>
             {SECTIONS.map(s => (
               <div key={s.title}>

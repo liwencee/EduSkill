@@ -49,6 +49,38 @@ export async function POST(req: NextRequest) {
     )
   }
 
+  // ── Require an authenticated session ─────────────────────────────
+  // No anonymous calls: gpt-4o is expensive and the IP limiter above is
+  // per-serverless-instance, so an unauthenticated endpoint is a
+  // denial-of-wallet risk. Block first, then apply a real per-user budget.
+  let user: { id: string } | null = null
+  try {
+    const { createClient } = await import('@/lib/supabase/server')
+    const supabase = createClient()
+    const { data } = await supabase.auth.getUser()
+    user = data.user
+  } catch {
+    user = null
+  }
+  if (!user) {
+    logResponse('/api/lesson-plan', ctx, 401)
+    return NextResponse.json(
+      { error: 'Please sign in to generate lesson plans.' },
+      { status: 401, headers: rateLimitHeaders(rl) }
+    )
+  }
+
+  // Per-user budget (the real control — survives IP rotation)
+  const userRl = rateLimit(user.id, 'lesson-plan:user', LIMITS.lessonPlan.max, LIMITS.lessonPlan.windowMs)
+  if (!userRl.success) {
+    logger.warn('Per-user rate limit exceeded — lesson-plan', { userId: user.id, route: '/api/lesson-plan' })
+    logResponse('/api/lesson-plan', ctx, 429)
+    return NextResponse.json(
+      { error: 'Too many requests. Please wait a moment before generating another lesson plan.' },
+      { status: 429, headers: rateLimitHeaders(userRl) }
+    )
+  }
+
   const { subject, topic, subTopic, grade, duration, objectives } = await req.json()
 
   if (!subject || !topic || !grade) {

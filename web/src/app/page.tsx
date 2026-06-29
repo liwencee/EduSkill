@@ -487,7 +487,7 @@ export default function LandingPage() {
               Lives Changed <span className="text-[#4F46E5]">Every Day</span>
             </h2>
             <p className="text-gray-500 text-lg max-w-xl mx-auto">
-              From classrooms in Enugu to markets in Kano — SkillBridge is changing real lives.
+              From classrooms in Enugu to markets in Kano — Skillora is changing real lives.
             </p>
           </div>
 
@@ -563,7 +563,7 @@ export default function LandingPage() {
                 Built for <span className="text-[#F97316]">Real Nigerian</span><br /> Conditions
               </h2>
               <p className="text-white/65 text-lg mb-10 leading-relaxed">
-                No reliable power or internet? No problem. SkillBridge works with the Nigeria you have today.
+                No reliable power or internet? No problem. Skillora works with the Nigeria you have today.
               </p>
 
               <div className="grid grid-cols-2 gap-4">

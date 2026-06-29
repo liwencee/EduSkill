@@ -25,7 +25,7 @@ export default function CertificatesPage() {
           </div>
           <h2 className="text-xl font-bold text-[#1E1B4B] mb-2">No Certificates Yet</h2>
           <p className="text-gray-500 text-sm max-w-sm mx-auto mb-6">
-            Complete a CPD course on SkillBridge Nigeria to earn a verifiable digital certificate you can share with employers and add to your TRCN portfolio.
+            Complete a CPD course on Skillora to earn a verifiable digital certificate you can share with employers and add to your TRCN portfolio.
           </p>
           <Link href="/edupro/courses"
             className="inline-flex items-center gap-2 bg-[#4F46E5] text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors">
