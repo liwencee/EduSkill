@@ -142,7 +142,7 @@ export default function CPDCertificatePage() {
             <div ref={certRef} id="cpd-certificate" className="bg-white rounded-2xl shadow-lg overflow-hidden print:shadow-none print:rounded-none">
 
               {/* Top brand bar */}
-              <div className="h-3 bg-gradient-to-r from-[#378ADD] via-[#EF9F27] to-[#378ADD]" />
+              <div className="h-3 bg-gradient-to-r from-[#378ADD] via-[#F37321] to-[#378ADD]" />
 
               <div className="p-10 sm:p-14">
 
@@ -154,7 +154,7 @@ export default function CPDCertificatePage() {
                     </div>
                     <div className="text-left">
                       <p className="font-bold text-[#378ADD] text-lg leading-tight">Skillora</p>
-                      <p className="font-bold text-[#EF9F27] text-lg leading-tight -mt-1">Nigeria</p>
+                      <p className="font-bold text-[#F37321] text-lg leading-tight -mt-1">Nigeria</p>
                     </div>
                   </div>
                   <h2 className="text-sm font-semibold text-[#9A9A97] uppercase tracking-[0.2em] mb-2">
@@ -238,7 +238,7 @@ export default function CPDCertificatePage() {
               </div>
 
               {/* Bottom brand bar */}
-              <div className="h-3 bg-gradient-to-r from-[#378ADD] via-[#EF9F27] to-[#378ADD]" />
+              <div className="h-3 bg-gradient-to-r from-[#378ADD] via-[#F37321] to-[#378ADD]" />
             </div>
 
             {/* Post-certificate actions */}

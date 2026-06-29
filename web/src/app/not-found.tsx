@@ -54,7 +54,7 @@ export default function NotFound() {
           <span className="text-xs text-gray-400 font-medium tracking-wide uppercase">
             EduSkill Nigeria
           </span>
-          <div className="w-2 h-2 rounded-full bg-[#EF9F27]" />
+          <div className="w-2 h-2 rounded-full bg-[#F37321]" />
         </div>
 
       </div>

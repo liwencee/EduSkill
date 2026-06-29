@@ -19,7 +19,7 @@ const config: Config = {
           blue:      '#378ADD',
           blueDark:  '#1e4f8a',
           blueLight: '#EBF4FF',
-          amber:     '#EF9F27',
+          amber:     '#F37321',
           amberDark: '#C97E0A',
           ink:       '#2C2C2A',
           inkMid:    '#5A5A58',
