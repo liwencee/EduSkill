@@ -5,6 +5,7 @@ import { MessageSquare, ThumbsUp, Pin, PenLine, Loader2, Send, ChevronDown, Chev
 import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 import type { CommunityPost } from '@/types'
+import TeacherOnlyGate from '@/components/TeacherOnlyGate'
 
 const CATEGORIES = ['All', 'Question', 'Resource', 'Discussion']
 
@@ -183,6 +184,7 @@ export default function CommunityPage() {
   }
 
   return (
+    <TeacherOnlyGate>
     <div className="bg-brand-bg min-h-screen">
       <Navbar />
 
@@ -397,5 +399,6 @@ export default function CommunityPage() {
         </div>
       )}
     </div>
+    </TeacherOnlyGate>
   )
 }
