@@ -3,17 +3,19 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Briefcase, GraduationCap, Users,
-  Handshake, LogOut, ShieldCheck, ChevronRight,
+  Handshake, LogOut, ShieldCheck, ChevronRight, BookOpen, CreditCard,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 
 const NAV = [
   { href: '/admin',              label: 'Dashboard',    icon: LayoutDashboard },
+  { href: '/admin/courses',      label: 'Courses',      icon: BookOpen        },
   { href: '/admin/jobs',         label: 'Jobs',         icon: Briefcase       },
   { href: '/admin/teachers',     label: 'Teacher KYC',  icon: GraduationCap   },
   { href: '/admin/users',        label: 'Users',        icon: Users           },
   { href: '/admin/negotiations', label: 'Negotiations', icon: Handshake       },
+  { href: '/admin/payments',     label: 'Payments',     icon: CreditCard      },
 ]
 
 export default function AdminSidebar() {
