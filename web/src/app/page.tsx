@@ -5,6 +5,8 @@ import {
 } from 'lucide-react'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import ScrollReveal from '@/components/ScrollReveal'
+import CountUp from '@/components/CountUp'
 
 /* ── Data ──────────────────────────────────────────────────────────── */
 const COURSES = [
@@ -107,11 +109,12 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white font-sans overflow-x-hidden">
       <Navbar />
+      <ScrollReveal />
 
       {/* ════════════════════════════════════════════════════════════
           HERO
       ════════════════════════════════════════════════════════════ */}
-      <section className="relative bg-gradient-to-br from-[#378ADD] via-[#3B82F6] to-[#60A5FA] overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#378ADD] via-[#3B82F6] to-[#60A5FA] animate-gradient overflow-hidden">
         {/* Ambient blobs */}
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#F37321]/15 rounded-full blur-3xl pointer-events-none" />
@@ -142,7 +145,7 @@ export default function LandingPage() {
 
               <div className="flex flex-wrap gap-4 mb-8">
                 <Link href="/auth/signup"
-                  className="inline-flex items-center gap-2 bg-[#F37321] text-white font-bold px-8 py-4 rounded-2xl text-lg
+                  className="hover-shine inline-flex items-center gap-2 bg-[#F37321] text-white font-bold px-8 py-4 rounded-2xl text-lg
                              border-[3px] border-orange-800/25 shadow-[0_6px_0_rgba(154,52,18,0.5)]
                              hover:shadow-[0_2px_0_rgba(154,52,18,0.5)] hover:translate-y-1
                              transition-all duration-150 cursor-pointer">
@@ -183,22 +186,22 @@ export default function LandingPage() {
                 {/* Floating stat — top left */}
                 <div className="absolute -top-5 -left-10 bg-white border-[3px] border-blue-100 rounded-2xl px-5 py-3
                                 shadow-[0_6px_0_rgba(55,138,221,0.2),0_4px_16px_rgba(0,0,0,0.12)] animate-float">
-                  <div className="font-heading text-2xl font-bold text-[#378ADD]">48K+</div>
+                  <CountUp value={48} suffix="K+" className="font-heading text-2xl font-bold text-[#378ADD] block" />
                   <div className="text-xs text-gray-500 font-semibold">Active Learners</div>
                 </div>
 
                 {/* Floating stat — mid right */}
                 <div className="absolute top-1/2 -right-8 -translate-y-1/2 bg-white border-[3px] border-green-100 rounded-2xl px-5 py-3
-                                shadow-[0_6px_0_rgba(34,197,94,0.2),0_4px_16px_rgba(0,0,0,0.12)]"
-                  style={{ animationDelay: '2s' }}>
-                  <div className="font-heading text-2xl font-bold text-green-600">12K+</div>
+                                shadow-[0_6px_0_rgba(34,197,94,0.2),0_4px_16px_rgba(0,0,0,0.12)] animate-float-slow">
+                  <CountUp value={12} suffix="K+" className="font-heading text-2xl font-bold text-green-600 block" />
                   <div className="text-xs text-gray-500 font-semibold">Jobs Filled</div>
                 </div>
 
                 {/* Floating stat — bottom right */}
                 <div className="absolute -bottom-5 -right-8 bg-white border-[3px] border-orange-100 rounded-2xl px-5 py-3
-                                shadow-[0_6px_0_rgba(243,115,33,0.2),0_4px_16px_rgba(0,0,0,0.12)]">
-                  <div className="font-heading text-2xl font-bold text-[#F37321]">94%</div>
+                                shadow-[0_6px_0_rgba(243,115,33,0.2),0_4px_16px_rgba(0,0,0,0.12)] animate-float"
+                  style={{ animationDelay: '1.5s' }}>
+                  <CountUp value={94} suffix="%" className="font-heading text-2xl font-bold text-[#F37321] block" />
                   <div className="text-xs text-gray-500 font-semibold">Completion Rate</div>
                 </div>
               </div>
@@ -235,7 +238,7 @@ export default function LandingPage() {
       <section className="py-20 bg-[#EBF4FF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
-          <div className="text-center mb-14">
+          <div className="reveal text-center mb-14">
             <span className="inline-block bg-white border-[2px] border-blue-200 text-[#378ADD] font-bold text-sm px-5 py-2 rounded-full mb-5 shadow-clay-sm">
               100+ Courses Available
             </span>
@@ -251,7 +254,7 @@ export default function LandingPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {COURSES.map((c) => (
               <Link key={c.title} href={`/skillup/courses/${c.slug}`}
-                className={`group bg-white border-[3px] ${c.cardBorder} rounded-3xl overflow-hidden ${c.shadow}
+                className={`reveal group bg-white border-[3px] ${c.cardBorder} rounded-3xl overflow-hidden ${c.shadow}
                             hover:-translate-y-2 hover:shadow-none transition-all duration-200 cursor-pointer`}>
                 {/* Image */}
                 <div className="relative h-48 overflow-hidden">
@@ -424,7 +427,7 @@ export default function LandingPage() {
       ════════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-[#EBF4FF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="reveal text-center mb-14">
             <span className="inline-block bg-white border-[2px] border-blue-200 text-[#378ADD] font-bold text-sm px-5 py-2 rounded-full mb-5 shadow-clay-sm">
               Simple as 1-2-3
             </span>
@@ -455,7 +458,7 @@ export default function LandingPage() {
               },
             ].map((step) => (
               <div key={step.n}
-                className={`bg-white border-[3px] ${step.cardBorder} rounded-3xl overflow-hidden ${step.shadow}
+                className={`reveal bg-white border-[3px] ${step.cardBorder} rounded-3xl overflow-hidden ${step.shadow}
                             hover:-translate-y-2 hover:shadow-none transition-all duration-200 cursor-default`}>
                 <div className="relative h-44 overflow-hidden">
                   <img src={step.img} alt={step.title} loading="lazy" className="w-full h-full object-cover" />
@@ -479,7 +482,7 @@ export default function LandingPage() {
       ════════════════════════════════════════════════════════════ */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
+          <div className="reveal text-center mb-14">
             <span className="inline-block bg-orange-100 border-[2px] border-orange-200 text-[#F37321] font-bold text-sm px-5 py-2 rounded-full mb-5">
               Real Stories
             </span>
@@ -494,8 +497,8 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t) => (
               <div key={t.name}
-                className={`bg-[#F8F7F2] border-[3px] ${t.border} rounded-3xl p-7 ${t.shadow}
-                            hover:-translate-y-1 transition-all duration-200 cursor-default`}>
+                className={`reveal card-interactive bg-[#F8F7F2] border-[3px] ${t.border} rounded-3xl p-7 ${t.shadow}
+                            cursor-default`}>
                 {/* Stars */}
                 <div className="flex gap-1 mb-5">
                   {Array.from({ length: t.stars }).map((_, i) => (
@@ -527,17 +530,17 @@ export default function LandingPage() {
           {/* Social proof numbers */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { n: '4.9/5', l: 'Average Rating',    icon: Star,     c: 'text-[#F37321]', bg: 'bg-orange-50' },
-              { n: '48K+',  l: 'Active Students',    icon: Users,    c: 'text-[#378ADD]', bg: 'bg-blue-50' },
-              { n: '94%',   l: 'Completion Rate',    icon: Award,    c: 'text-green-600',  bg: 'bg-green-50' },
-              { n: '12K+',  l: 'Graduates Hired',    icon: Briefcase,c: 'text-purple-600', bg: 'bg-purple-50' },
-            ].map(({ n, l, icon: Icon, c, bg }) => (
+              { val: 4.9, dec: 1, suf: '/5', l: 'Average Rating',  icon: Star,     c: 'text-[#F37321]', bg: 'bg-orange-50' },
+              { val: 48,  dec: 0, suf: 'K+', l: 'Active Students',  icon: Users,    c: 'text-[#378ADD]', bg: 'bg-blue-50' },
+              { val: 94,  dec: 0, suf: '%',  l: 'Completion Rate',  icon: Award,    c: 'text-green-600',  bg: 'bg-green-50' },
+              { val: 12,  dec: 0, suf: 'K+', l: 'Graduates Hired',  icon: Briefcase,c: 'text-purple-600', bg: 'bg-purple-50' },
+            ].map(({ val, dec, suf, l, icon: Icon, c, bg }) => (
               <div key={l}
-                className="bg-white border-[3px] border-gray-100 rounded-3xl p-5 text-center shadow-clay hover:-translate-y-1 transition-all duration-200 cursor-default">
+                className="reveal reveal-zoom card-interactive bg-white border-[3px] border-gray-100 rounded-3xl p-5 text-center shadow-clay cursor-default">
                 <div className={`w-12 h-12 ${bg} rounded-2xl flex items-center justify-center mx-auto mb-3`}>
                   <Icon className={`w-6 h-6 ${c}`} />
                 </div>
-                <p className={`font-heading text-3xl font-bold ${c}`}>{n}</p>
+                <CountUp value={val} decimals={dec} suffix={suf} className={`font-heading text-3xl font-bold ${c}`} />
                 <p className="text-gray-500 text-sm mt-1">{l}</p>
               </div>
             ))}

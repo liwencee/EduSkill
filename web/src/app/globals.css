@@ -125,6 +125,77 @@
 }
 
 /* ────────────────────────────────────────────────────────────────────
+   Interactivity & motion — scroll reveal, hover, animated backgrounds
+   ──────────────────────────────────────────────────────────────────── */
+
+/* Scroll-reveal: elements start hidden + shifted, animate in when visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Directional variants */
+.reveal-left  { transform: translateX(-32px); }
+.reveal-right { transform: translateX(32px); }
+.reveal-zoom  { transform: scale(0.94); }
+.reveal-left.reveal-visible,
+.reveal-right.reveal-visible,
+.reveal-zoom.reveal-visible { transform: none; }
+
+/* Animated gradient background (subtle shifting hero) */
+.animate-gradient {
+  background-size: 180% 180%;
+  animation: gradientShift 14s ease infinite;
+}
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Gentle floating loop for hero cards / blobs */
+.animate-float      { animation: floatY 6s ease-in-out infinite; }
+.animate-float-slow { animation: floatY 9s ease-in-out infinite; }
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-14px); }
+}
+
+/* Shine sweep on hover (for CTA buttons / cards) */
+.hover-shine { position: relative; overflow: hidden; }
+.hover-shine::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -120%;
+  width: 60%; height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.7s ease;
+}
+.hover-shine:hover::after { left: 140%; }
+
+/* Card lift + glow on hover */
+.card-interactive {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+              box-shadow 0.25s ease;
+}
+.card-interactive:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px -12px rgba(30, 79, 138, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1 !important; transform: none !important; }
+  .animate-gradient, .animate-float, .animate-float-slow { animation: none !important; }
+}
+
+/* ────────────────────────────────────────────────────────────────────
    Print styles for "Save as PDF" on the Lesson Planner
    Hides navbar, sidebar form, and action buttons.
    Only the lesson plan output (#lesson-plan-output) is printed.
