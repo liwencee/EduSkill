@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-08T00:00:00Z",
+  "title": "Design System: Skillora",
+  "extensions": {
+    "colorMeta": {
+      "blue": { "role": "primary", "displayName": "Bridge Blue", "canonical": "#378ADD", "tonalRamp": ["#0C2036", "#123457", "#1E4F8A", "#2B6BB5", "#378ADD", "#6CA9E6", "#A3CBF0", "#EBF4FF"] },
+      "amber": { "role": "secondary", "displayName": "Crossing Amber", "canonical": "#F37321", "tonalRamp": ["#4A2205", "#7A3908", "#A8500C", "#C97E0A", "#F37321", "#F79657", "#FBC199", "#FDE7D6"] },
+      "brand-cream": { "role": "neutral", "displayName": "Warm Cream", "canonical": "#F1EFE8", "tonalRamp": ["#2C2C2A", "#5A5A58", "#9A9A97", "#C7C4BB", "#DDD9CF", "#E8E5DC", "#F1EFE8", "#FBFAF6"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#2C2C2A", "tonalRamp": ["#1A1A19", "#2C2C2A", "#3E3E3B", "#5A5A58", "#787875", "#9A9A97", "#C7C4BB", "#E5E3DC"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero and landing headlines only. Confident, not shouting." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles within a page." },
+      "title": { "displayName": "Title", "purpose": "Card titles, subsection heads, dialog titles." },
+      "body": { "displayName": "Body", "purpose": "All prose and UI copy. Cap prose at 65-75ch." },
+      "label": { "displayName": "Label", "purpose": "Buttons, form labels, badges, nav, metadata." }
+    },
+    "shadows": [
+      { "name": "card-rest", "value": "0 1px 2px rgba(0,0,0,0.05)", "purpose": "Quiet default for white product cards." },
+      { "name": "card-hover", "value": "0 4px 6px rgba(0,0,0,0.07)", "purpose": "Slight lift on hover to signal interactivity." },
+      { "name": "clay", "value": "0 8px 0 rgba(0,0,0,0.10), 0 4px 20px rgba(0,0,0,0.07)", "purpose": "Signature molded block. Marketing/hero surfaces only, paired with 24px radius." },
+      { "name": "clay-amber", "value": "0 8px 0 rgba(249,115,22,0.30), 0 4px 20px rgba(249,115,22,0.12)", "purpose": "Clay tinted with amber, for amber-role hero elements." },
+      { "name": "clay-blue", "value": "0 8px 0 rgba(55,138,221,0.25), 0 4px 20px rgba(55,138,221,0.10)", "purpose": "Clay tinted with blue, for blue-role hero elements." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default exponential ease-out for state transitions. No bounce, no elastic." },
+      { "name": "duration-state", "value": "200ms", "purpose": "Standard transition for hover/focus/active in product UI (150-250ms band)." },
+      { "name": "slide-up", "value": "translateY(16px) -> 0, opacity 0 -> 1, 0.4s ease-out", "purpose": "Entrance for revealed content. Must have a reduced-motion crossfade fallback." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main call-to-action per screen. Crossing Amber fill.",
+      "html": "<button class=\"ds-btn-primary\">Start Learning</button>",
+      "css": ".ds-btn-primary { background: #F37321; color: #fff; font-family: Nunito, system-ui, sans-serif; font-weight: 600; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; transition: background 0.2s cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary:hover { background: #C97E0A; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #F37321; } .ds-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "The common, non-terminal action. Bridge Blue fill.",
+      "html": "<button class=\"ds-btn-secondary\">Browse Courses</button>",
+      "css": ".ds-btn-secondary { background: #378ADD; color: #fff; font-family: Nunito, system-ui, sans-serif; font-weight: 600; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; transition: background 0.2s cubic-bezier(0.16,1,0.3,1); } .ds-btn-secondary:hover { background: #1E4F8A; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #378ADD; }"
+    },
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Lower-emphasis action. Blue border, fills on hover.",
+      "html": "<button class=\"ds-btn-outline\">Learn More</button>",
+      "css": ".ds-btn-outline { background: transparent; color: #378ADD; font-family: Nunito, system-ui, sans-serif; font-weight: 600; padding: 12px 24px; border: 2px solid #378ADD; border-radius: 12px; cursor: pointer; transition: background 0.2s, color 0.2s; } .ds-btn-outline:hover { background: #378ADD; color: #fff; } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 2px #fff, 0 0 0 4px #378ADD; }"
+    },
+    {
+      "name": "Standard Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Default white content card. Flat at rest, lifts on hover.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">Digital Marketing Mastery</h3><p class=\"ds-card-body\">4 weeks - EN / Pidgin - Learn to grow any business online.</p></div>",
+      "css": ".ds-card { background: #fff; border: 1px solid #E0DDD5; border-radius: 16px; padding: 24px; box-shadow: 0 1px 2px rgba(0,0,0,0.05); transition: box-shadow 0.2s, transform 0.2s cubic-bezier(0.16,1,0.3,1); } .ds-card:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.07); } .ds-card-title { font-family: Poppins, system-ui, sans-serif; font-weight: 600; font-size: 1.25rem; color: #2C2C2A; margin: 0 0 8px; } .ds-card-body { font-family: Nunito, system-ui, sans-serif; font-size: 1rem; line-height: 1.6; color: #5A5A58; margin: 0; }"
+    },
+    {
+      "name": "Clay Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Signature claymorphic card for marketing/hero surfaces. Rationed, not default.",
+      "html": "<div class=\"ds-clay-card\"><h3 class=\"ds-clay-title\">Empower Nigeria's Youth</h3></div>",
+      "css": ".ds-clay-card { background: #fff; border: 1px solid rgba(255,255,255,0.6); border-radius: 24px; padding: 24px; box-shadow: 0 8px 0 rgba(0,0,0,0.10), 0 4px 20px rgba(0,0,0,0.07); transition: transform 0.3s cubic-bezier(0.16,1,0.3,1); } .ds-clay-card:hover { transform: translateY(-4px); } .ds-clay-title { font-family: Poppins, system-ui, sans-serif; font-weight: 700; font-size: 1.5rem; color: #2C2C2A; margin: 0; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Standard form field. White fill, warm hairline border, blue focus ring.",
+      "html": "<label class=\"ds-label\">Email<input class=\"ds-input\" type=\"email\" placeholder=\"you@example.com\" /></label>",
+      "css": ".ds-label { display: block; font-family: Nunito, system-ui, sans-serif; font-weight: 600; font-size: 0.875rem; color: #2C2C2A; margin-bottom: 6px; } .ds-input { display: block; width: 100%; background: #fff; color: #2C2C2A; border: 1px solid #D5D2C8; border-radius: 12px; padding: 12px 16px; font-family: Nunito, system-ui, sans-serif; font-size: 1rem; } .ds-input::placeholder { color: #9A9A97; } .ds-input:focus-visible { outline: none; border-color: transparent; box-shadow: 0 0 0 2px #378ADD; }"
+    },
+    {
+      "name": "Category Badge",
+      "kind": "chip",
+      "refersTo": "button-ghost",
+      "description": "Pill badge for course category / status. Tinted bg + darker text in a role color.",
+      "html": "<span class=\"ds-badge ds-badge-amber\">Most Popular</span>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 9999px; font-family: Nunito, system-ui, sans-serif; font-size: 0.75rem; font-weight: 600; } .ds-badge-amber { background: #FDE7D6; color: #C97E0A; } .ds-badge-blue { background: #EBF4FF; color: #1E4F8A; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Confident Bridge",
+    "overview": "SkillBridge is a structural blue framework laid over warm, grounded terrain - the system that connects ambitious Nigerians to opportunity. Blue is the bridge: dependable, load-bearing. Cream is the ground it spans: warm, human, unpretentious. Amber is the traffic that crosses it: the one hot color reserved for the single most important action on any screen. The system reads as confident and distinctly Nigerian - proud and forward-looking, never a global-edtech template and never an aid-org brochure. It is product-first, serving teachers, youth, and employers on low-end Android over 2G, where restraint is the discipline and the tool should disappear into the task.",
+    "keyCharacteristics": [
+      "Warm cream ground, structural blue, single amber accent - a committed, legible 60/30/10 split.",
+      "One palette, one identity. No competing indigo. No rainbow-per-category cards in the app.",
+      "Tactile, confident components: rounded, chunky, satisfying - friendly weight without childishness.",
+      "Bandwidth is a design constraint: lean, fast, offline-friendly, WCAG AA.",
+      "Claymorphism as a signature spice, not the main dish."
+    ],
+    "rules": [
+      { "name": "The Single Crossing Rule", "body": "Amber (#F37321) is the only hot color and appears on at most one primary action per screen. Two ambers competing for the eye means neither wins.", "section": "colors" },
+      { "name": "The One-Ground Rule", "body": "There is exactly one palette: cream / blue / amber / ink. The legacy indigo edu-* tokens are retired and must not appear in new work.", "section": "colors" },
+      { "name": "The Two-Face Rule", "body": "Poppins heads, Nunito reads. Never swap them, never introduce a third family.", "section": "typography" },
+      { "name": "The Rationed Clay Rule", "body": "Claymorphism is spice, not the meal. It belongs on marketing heroes and moments of delight; product surfaces stay flat-to-shadow-sm.", "section": "elevation" },
+      { "name": "The No-Glass Rule", "body": "Glassmorphism is effectively banned as decoration. Reach for a solid surface instead.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the 60/30/10 rhythm: ~60% Warm Cream ground, ~30% Bridge Blue structure, ~10% Crossing Amber action.",
+      "Do reserve amber (#F37321) for the single primary action on a screen.",
+      "Do set headings in Poppins, body in Nunito, and nothing else.",
+      "Do keep product surfaces flat-to-shadow-sm; ration claymorphism to marketing and delight moments.",
+      "Do verify muted text: Ink Mid (#5A5A58) is the floor for body-sized secondary text on cream.",
+      "Do give every interactive element visible focus, hover, disabled, and where relevant loading/error states.",
+      "Do design for 2G first: display=swap fonts, lazy/optimized images, minimal JS, skeletons over spinners."
+    ],
+    "donts": [
+      "Don't use the retired indigo edu-* palette (#4F46E5, #818CF8, #1E1B4B, #EEF2FF).",
+      "Don't ship a rainbow of per-category card colors in the product app.",
+      "Don't use gradient text (background-clip: text); use a single solid color and emphasize with weight or size.",
+      "Don't use glassmorphism as decoration.",
+      "Don't use a colored border-left/border-right stripe as an accent.",
+      "Don't look like navy-and-white SaaS, or like an aid-org 'charity for Africa' brochure.",
+      "Don't animate for spectacle; motion conveys state (150-250ms) and always has a prefers-reduced-motion path."
+    ]
+  }
+}
