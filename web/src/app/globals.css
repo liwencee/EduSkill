@@ -101,12 +101,6 @@
   .heading-blue {
     @apply text-brand-blue font-bold font-heading;
   }
-  .gradient-text-amber {
-    @apply bg-gradient-to-r from-brand-amber to-amber-400 bg-clip-text text-transparent;
-  }
-  .gradient-text-blue {
-    @apply bg-gradient-to-r from-brand-blue to-blue-400 bg-clip-text text-transparent;
-  }
 
   /* ── Badges ──────────────────────────────────────────────────────── */
   .badge          { @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium; }

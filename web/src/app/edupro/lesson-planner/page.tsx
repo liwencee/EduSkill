@@ -320,16 +320,16 @@ export default function LessonPlannerPage() {
                 {/* ── LESSON NOTES ── */}
                 {plan.lesson_notes&&(
                   <div className="card overflow-hidden">
-                    <div className="px-5 py-3 bg-indigo-600 text-white flex items-center gap-2">
+                    <div className="px-5 py-3 bg-blue-600 text-white flex items-center gap-2">
                       <BookOpen className="w-4 h-4 shrink-0"/>
                       <h3 className="font-bold text-sm uppercase tracking-wide">📖 Lesson Notes</h3>
                     </div>
                     <div className="p-5 space-y-6">
 
                       {plan.lesson_notes.definition&&(
-                        <div className="bg-indigo-50 rounded-xl p-4 border border-indigo-100">
-                          <p className="text-xs font-bold text-indigo-600 uppercase tracking-wide mb-2">📌 Definition</p>
-                          <p className="text-sm text-indigo-900 leading-relaxed font-medium">{plan.lesson_notes.definition}</p>
+                        <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                          <p className="text-xs font-bold text-blue-600 uppercase tracking-wide mb-2">📌 Definition</p>
+                          <p className="text-sm text-blue-900 leading-relaxed font-medium">{plan.lesson_notes.definition}</p>
                         </div>
                       )}
 

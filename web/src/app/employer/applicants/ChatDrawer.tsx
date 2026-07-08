@@ -113,11 +113,11 @@ export default function ChatDrawer({
       />
 
       {/* Drawer */}
-      <div className="fixed inset-x-0 bottom-0 sm:inset-auto sm:right-6 sm:bottom-6 sm:w-[420px] z-50 flex flex-col bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl border border-indigo-100"
+      <div className="fixed inset-x-0 bottom-0 sm:inset-auto sm:right-6 sm:bottom-6 sm:w-[420px] z-50 flex flex-col bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl border border-blue-100"
         style={{ height: '82vh', maxHeight: '620px' }}>
 
         {/* ── Header ── */}
-        <div className="flex items-center gap-3 px-5 py-4 bg-[#4F46E5] rounded-t-3xl sm:rounded-t-2xl shrink-0">
+        <div className="flex items-center gap-3 px-5 py-4 bg-[#378ADD] rounded-t-3xl sm:rounded-t-2xl shrink-0">
           <div className="w-10 h-10 bg-white/25 rounded-full flex items-center justify-center text-white font-bold text-sm shrink-0">
             {initials(applicantName)}
           </div>
@@ -149,12 +149,12 @@ export default function ChatDrawer({
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
           {loading ? (
             <div className="flex justify-center py-10">
-              <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
+              <Loader2 className="w-6 h-6 text-blue-400 animate-spin" />
             </div>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center pb-6">
-              <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mb-3">
-                <MessageSquare className="w-7 h-7 text-indigo-300" />
+              <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-3">
+                <MessageSquare className="w-7 h-7 text-blue-300" />
               </div>
               <p className="text-sm font-semibold text-gray-600 mb-1">Start the conversation</p>
               <p className="text-xs text-gray-400 max-w-xs">
@@ -169,13 +169,13 @@ export default function ChatDrawer({
                 <div key={m.id} className={`flex gap-2 items-end ${isMe ? 'flex-row-reverse' : ''}`}>
                   {/* Avatar bubble */}
                   <div className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-bold
-                    ${isMe ? 'bg-[#4F46E5]' : 'bg-gray-400'}`}>
+                    ${isMe ? 'bg-[#378ADD]' : 'bg-gray-400'}`}>
                     {initials(name)}
                   </div>
                   {/* Bubble */}
                   <div className={`max-w-[72%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed break-words
                     ${isMe
-                      ? 'bg-[#4F46E5] text-white rounded-br-sm'
+                      ? 'bg-[#378ADD] text-white rounded-br-sm'
                       : 'bg-gray-100 text-gray-800 rounded-bl-sm'}`}>
                     {/* Sanitize on display as safety net */}
                     {sanitizeMessage(m.body)}
@@ -212,12 +212,12 @@ export default function ChatDrawer({
             }}
             placeholder="Type a message…"
             maxLength={2000}
-            className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+            className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
           />
           <button
             onClick={sendMessage}
             disabled={!text.trim() || sending}
-            className="w-10 h-10 shrink-0 bg-[#4F46E5] text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+            className="w-10 h-10 shrink-0 bg-[#378ADD] text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
             {sending
               ? <Loader2 className="w-4 h-4 animate-spin" />
               : <Send className="w-4 h-4" />}

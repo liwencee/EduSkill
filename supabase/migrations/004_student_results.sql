@@ -1,4 +1,4 @@
--- EduSkill — Student Results & Lesson Plan Cache
+-- Skillora — Student Results & Lesson Plan Cache
 -- Migration: 004_student_results.sql
 -- Run: supabase db push  OR  paste into Supabase SQL editor
 

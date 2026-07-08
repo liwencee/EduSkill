@@ -86,7 +86,7 @@ jobs:
             type=ref,event=branch
             type=semver,pattern={{version}}
           labels: |
-            org.opencontainers.image.title=EduSkill
+            org.opencontainers.image.title=Skillora
 
       # Lint stage runs inside Docker — build fails if ESLint errors
       - name: Build and push Docker image (lint → production)

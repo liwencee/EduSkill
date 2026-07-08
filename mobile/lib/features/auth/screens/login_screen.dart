@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: const Icon(Icons.school_rounded, color: Colors.white, size: 26),
                     ),
                     const SizedBox(width: 10),
-                    const Text('SkillBridge', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(AppColors.ink))),
+                    const Text('Skillora', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(AppColors.ink))),
                     // 10% amber brand word
                     const Text(' Nigeria', style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800, color: Color(AppColors.amber))),
                   ],

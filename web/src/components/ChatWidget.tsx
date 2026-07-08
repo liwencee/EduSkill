@@ -113,9 +113,9 @@ export default function ChatWidget() {
         <button
           onClick={() => setOpen(true)}
           aria-label="Open Skillora Assistant"
-          className="fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-[#4F46E5] text-white shadow-lg shadow-indigo-500/30 flex items-center justify-center hover:bg-indigo-700 hover:scale-105 transition-all">
+          className="fixed bottom-5 right-5 z-[60] w-14 h-14 rounded-full bg-[#378ADD] text-white shadow-lg shadow-blue-500/30 flex items-center justify-center hover:bg-blue-700 hover:scale-105 transition-all">
           <MessageCircle className="w-6 h-6" />
-          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#F97316] rounded-full border-2 border-white" />
+          <span className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-[#F37321] rounded-full border-2 border-white" />
         </button>
       )}
 
@@ -123,10 +123,10 @@ export default function ChatWidget() {
       {open && (
         <div className="fixed inset-x-0 bottom-0 sm:inset-x-auto sm:bottom-5 sm:right-5 z-[60]
           w-full sm:w-[380px] h-[80vh] sm:h-[560px] sm:max-h-[80vh]
-          bg-white sm:rounded-3xl shadow-2xl border border-indigo-100 flex flex-col overflow-hidden">
+          bg-white sm:rounded-3xl shadow-2xl border border-blue-100 flex flex-col overflow-hidden">
 
           {/* Header */}
-          <div className="bg-[#4F46E5] px-4 py-3 flex items-center gap-3 shrink-0">
+          <div className="bg-[#378ADD] px-4 py-3 flex items-center gap-3 shrink-0">
             <div className="w-9 h-9 bg-white/20 rounded-full flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
@@ -143,13 +143,13 @@ export default function ChatWidget() {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-[#F8F7FF]">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3 bg-[#F8F7F2]">
             {messages.map((m, i) => (
               <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[80%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap break-words
                   ${m.role === 'user'
-                    ? 'bg-[#4F46E5] text-white rounded-br-sm'
-                    : 'bg-white text-gray-800 rounded-bl-sm shadow-sm border border-indigo-50'}`}>
+                    ? 'bg-[#378ADD] text-white rounded-br-sm'
+                    : 'bg-white text-gray-800 rounded-bl-sm shadow-sm border border-blue-50'}`}>
                   {m.content}
                 </div>
               </div>
@@ -157,10 +157,10 @@ export default function ChatWidget() {
 
             {sending && (
               <div className="flex justify-start">
-                <div className="bg-white text-gray-500 rounded-2xl rounded-bl-sm shadow-sm border border-indigo-50 px-4 py-3 flex items-center gap-1">
-                  <span className="w-2 h-2 bg-indigo-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2 h-2 bg-indigo-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2 h-2 bg-indigo-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                <div className="bg-white text-gray-500 rounded-2xl rounded-bl-sm shadow-sm border border-blue-50 px-4 py-3 flex items-center gap-1">
+                  <span className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-2 h-2 bg-blue-300 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
                 </div>
               </div>
             )}
@@ -170,7 +170,7 @@ export default function ChatWidget() {
               <div className="flex flex-wrap gap-2 pt-2">
                 {SUGGESTIONS.map(s => (
                   <button key={s} onClick={() => send(s)}
-                    className="text-xs text-[#4F46E5] bg-white border border-indigo-200 rounded-full px-3 py-1.5 hover:bg-indigo-50 transition-colors">
+                    className="text-xs text-[#378ADD] bg-white border border-blue-200 rounded-full px-3 py-1.5 hover:bg-blue-50 transition-colors">
                     {s}
                   </button>
                 ))}
@@ -189,13 +189,13 @@ export default function ChatWidget() {
               placeholder="Ask me anything…"
               maxLength={2000}
               disabled={sending}
-              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent disabled:opacity-60"
+              className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent disabled:opacity-60"
             />
             <button
               onClick={() => send()}
               disabled={!input.trim() || sending}
               aria-label="Send message"
-              className="w-10 h-10 shrink-0 bg-[#4F46E5] text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+              className="w-10 h-10 shrink-0 bg-[#378ADD] text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
               {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             </button>
           </div>

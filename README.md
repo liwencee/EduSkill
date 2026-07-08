@@ -1,4 +1,4 @@
-# SkillBridge Nigeria
+# Skillora
 
 > Upskill Nigeria's Teachers. Empower Nigeria's Youth. Connect Both to Opportunity.
 

@@ -1,7 +1,7 @@
 {
   "name": "skillbridge-nigeria-api",
   "version": "1.0.0",
-  "description": "SkillBridge Nigeria — two-sided platform for teacher upskilling and youth vocational training",
+  "description": "Skillora — two-sided platform for teacher upskilling and youth vocational training",
   "main": "src/server.js",
   "engines": {
     "node": ">=18.0.0"

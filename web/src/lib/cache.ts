@@ -1,5 +1,5 @@
 /**
- * EduSkill — In-Memory LRU Response Cache
+ * Skillora — In-Memory LRU Response Cache
  *
  * Caches AI-generated responses (lesson plans, result recommendations)
  * to avoid duplicate OpenAI API calls for identical inputs.

@@ -148,7 +148,7 @@ export default async function AdminTeachersPage({ searchParams }: Props) {
                         <img src={prof.avatar_url} alt={prof.full_name}
                           className="w-12 h-12 rounded-full object-cover border-2 border-[#E0DDD5]" />
                       ) : (
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white font-bold">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold">
                           {prof?.full_name?.charAt(0) ?? 'T'}
                         </div>
                       )}

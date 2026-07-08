@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import AdminSidebar from './AdminSidebar'
 
-export const metadata = { title: 'Admin — EduSkill CMS' }
+export const metadata = { title: 'Admin — Skillora CMS' }
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   // Hard gate: must be signed in AND have role = 'admin'

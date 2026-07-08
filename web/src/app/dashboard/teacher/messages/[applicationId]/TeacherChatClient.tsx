@@ -87,10 +87,10 @@ export default function TeacherChatClient({
   const initials = (name: string) => name.trim().charAt(0).toUpperCase()
 
   return (
-    <div className="min-h-screen bg-[#EEF2FF] flex flex-col">
+    <div className="min-h-screen bg-[#EBF4FF] flex flex-col">
 
       {/* ── Top bar ── */}
-      <div className="bg-[#4F46E5] px-4 py-3 flex items-center gap-3 shrink-0">
+      <div className="bg-[#378ADD] px-4 py-3 flex items-center gap-3 shrink-0">
         <Link href="/dashboard/teacher/messages"
           className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/20 text-white/80 hover:text-white transition-colors">
           <ArrowLeft className="w-4 h-4" />
@@ -120,7 +120,7 @@ export default function TeacherChatClient({
         {messages.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-20 text-center">
             <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center mb-3 shadow-sm">
-              <MessageSquare className="w-7 h-7 text-indigo-300" />
+              <MessageSquare className="w-7 h-7 text-blue-300" />
             </div>
             <p className="text-sm font-semibold text-gray-600 mb-1">No messages yet</p>
             <p className="text-xs text-gray-400">The employer will start the conversation.</p>
@@ -132,13 +132,13 @@ export default function TeacherChatClient({
             return (
               <div key={m.id} className={`flex gap-2 items-end ${isMe ? 'flex-row-reverse' : ''}`}>
                 <div className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-white text-xs font-bold
-                  ${isMe ? 'bg-[#4F46E5]' : 'bg-gray-400'}`}>
+                  ${isMe ? 'bg-[#378ADD]' : 'bg-gray-400'}`}>
                   {initials(name)}
                 </div>
                 <div className={`max-w-[72%] px-3.5 py-2.5 rounded-2xl text-sm leading-relaxed break-words
                   ${isMe
-                    ? 'bg-[#4F46E5] text-white rounded-br-sm'
-                    : 'bg-white text-gray-800 rounded-bl-sm shadow-sm border border-indigo-50'}`}>
+                    ? 'bg-[#378ADD] text-white rounded-br-sm'
+                    : 'bg-white text-gray-800 rounded-bl-sm shadow-sm border border-blue-50'}`}>
                   {sanitizeMessage(m.body)}
                   <span className={`block text-[10px] mt-1 ${isMe ? 'text-white/55' : 'text-gray-400'}`}>
                     {new Date(m.created_at).toLocaleTimeString('en-NG', {
@@ -173,12 +173,12 @@ export default function TeacherChatClient({
           }}
           placeholder="Type a message…"
           maxLength={2000}
-          className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+          className="flex-1 bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-transparent"
         />
         <button
           onClick={sendMessage}
           disabled={!text.trim() || sending}
-          className="w-10 h-10 shrink-0 bg-[#4F46E5] text-white rounded-xl flex items-center justify-center hover:bg-indigo-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
+          className="w-10 h-10 shrink-0 bg-[#378ADD] text-white rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed">
           {sending
             ? <Loader2 className="w-4 h-4 animate-spin" />
             : <Send className="w-4 h-4" />}

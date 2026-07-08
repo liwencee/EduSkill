@@ -122,7 +122,7 @@ export default async function AdminUsersPage({ searchParams }: Props) {
                           <img src={u.avatar_url} alt={u.full_name}
                             className="w-9 h-9 rounded-full object-cover border border-[#E0DDD5] shrink-0" />
                         ) : (
-                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                          <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
                             {u.full_name?.charAt(0) ?? 'U'}
                           </div>
                         )}

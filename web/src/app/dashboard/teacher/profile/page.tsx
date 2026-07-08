@@ -251,9 +251,9 @@ export default function TeacherProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#EEF2FF] flex items-center justify-center">
+      <div className="min-h-screen bg-[#EBF4FF] flex items-center justify-center">
         <Navbar />
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     )
   }
@@ -264,27 +264,27 @@ export default function TeacherProfilePage() {
   const kycComplete = !!(nin.length === 11 && kyc.cert_url && kyc.cert_type && (kyc.years_of_service ?? 0) > 0)
 
   return (
-    <div className="min-h-screen bg-[#EEF2FF]">
+    <div className="min-h-screen bg-[#EBF4FF]">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Back */}
         <Link href="/dashboard/teacher"
-          className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline mb-6">
+          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline mb-6">
           <ArrowLeft className="w-4 h-4" /> Back to Dashboard
         </Link>
 
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-2xl font-bold text-[#1E1B4B]">Teacher Profile & KYC</h1>
+            <h1 className="text-2xl font-bold text-[#1E4F8A]">Teacher Profile & KYC</h1>
             <p className="text-sm text-gray-500 mt-1">Complete your profile to get verified and apply for jobs on the platform.</p>
           </div>
           {kyc.teacher_uid && (
-            <div className="flex items-center gap-2 bg-white border border-indigo-200 rounded-xl px-4 py-2">
-              <BadgeCheck className="w-5 h-5 text-indigo-600" />
+            <div className="flex items-center gap-2 bg-white border border-blue-200 rounded-xl px-4 py-2">
+              <BadgeCheck className="w-5 h-5 text-blue-600" />
               <div>
                 <p className="text-xs text-gray-500">Teacher ID</p>
-                <p className="text-sm font-bold text-[#1E1B4B] font-mono">{kyc.teacher_uid}</p>
+                <p className="text-sm font-bold text-[#1E4F8A] font-mono">{kyc.teacher_uid}</p>
               </div>
             </div>
           )}
@@ -305,22 +305,22 @@ export default function TeacherProfilePage() {
         <div className="space-y-6">
 
           {/* ── Avatar ──────────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <User className="w-5 h-5 text-indigo-500" /> Profile Photo
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4 flex items-center gap-2">
+              <User className="w-5 h-5 text-blue-500" /> Profile Photo
             </h2>
             <div className="flex items-center gap-6">
               <div className="relative">
                 {avatarPreview ? (
                   <img src={avatarPreview} alt="Avatar"
-                    className="w-24 h-24 rounded-full object-cover border-4 border-indigo-100" />
+                    className="w-24 h-24 rounded-full object-cover border-4 border-blue-100" />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold border-4 border-indigo-100">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white text-3xl font-bold border-4 border-blue-100">
                     {profile.full_name?.charAt(0)?.toUpperCase() ?? 'T'}
                   </div>
                 )}
                 {(kyc.has_badge || status === 'approved') && (
-                  <span className="absolute -bottom-1 -right-1 w-7 h-7 bg-indigo-600 rounded-full border-2 border-white flex items-center justify-center">
+                  <span className="absolute -bottom-1 -right-1 w-7 h-7 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center">
                     <BadgeCheck className="w-4 h-4 text-white" />
                   </span>
                 )}
@@ -329,7 +329,7 @@ export default function TeacherProfilePage() {
                 <p className="text-sm text-gray-600 mb-3">JPG, PNG or WebP · Max 2 MB</p>
                 <button onClick={() => avatarRef.current?.click()}
                   disabled={uploading === 'avatar'}
-                  className="inline-flex items-center gap-2 bg-indigo-600 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-60">
+                  className="inline-flex items-center gap-2 bg-blue-600 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60">
                   {uploading === 'avatar'
                     ? <Loader2 className="w-4 h-4 animate-spin" />
                     : <Camera className="w-4 h-4" />}
@@ -341,9 +341,9 @@ export default function TeacherProfilePage() {
           </div>
 
           {/* ── Basic Info ──────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <User className="w-5 h-5 text-indigo-500" /> Basic Information
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4 flex items-center gap-2">
+              <User className="w-5 h-5 text-blue-500" /> Basic Information
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
@@ -375,9 +375,9 @@ export default function TeacherProfilePage() {
           </div>
 
           {/* ── Professional Details ─────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <Award className="w-5 h-5 text-indigo-500" /> Professional Details
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4 flex items-center gap-2">
+              <Award className="w-5 h-5 text-blue-500" /> Professional Details
             </h2>
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
@@ -430,8 +430,8 @@ export default function TeacherProfilePage() {
                     onClick={() => toggleSubject(sub)}
                     className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                       subjects.includes(sub)
-                        ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'bg-white text-gray-600 border-gray-200 hover:border-indigo-300'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'bg-white text-gray-600 border-gray-200 hover:border-blue-300'
                     }`}>
                     {sub}
                   </button>
@@ -441,12 +441,12 @@ export default function TeacherProfilePage() {
           </div>
 
           {/* ── KYC Documents ────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-bold text-[#1E1B4B] flex items-center gap-2">
-                <Shield className="w-5 h-5 text-indigo-500" /> KYC Verification
+              <h2 className="font-bold text-[#1E4F8A] flex items-center gap-2">
+                <Shield className="w-5 h-5 text-blue-500" /> KYC Verification
               </h2>
-              <span className="inline-flex items-center gap-1.5 text-xs text-indigo-600 bg-indigo-50 px-2 py-1 rounded-full">
+              <span className="inline-flex items-center gap-1.5 text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
                 <Info className="w-3 h-3" /> Verified teachers get the platform badge
               </span>
             </div>
@@ -458,7 +458,7 @@ export default function TeacherProfilePage() {
                 <p className="text-sm font-bold text-amber-800">NIN required to save your profile &amp; get your Teacher ID</p>
                 <p className="text-xs text-amber-700 mt-0.5">
                   Your National Identification Number (NIN) is compulsory. You will not be able to save your profile
-                  or receive your unique EduSkill Teacher ID (e.g. <span className="font-mono font-semibold">EDU-T-2025-01042</span>) without it.
+                  or receive your unique Skillora Teacher ID (e.g. <span className="font-mono font-semibold">EDU-T-2025-01042</span>) without it.
                 </p>
               </div>
             </div>
@@ -526,7 +526,7 @@ export default function TeacherProfilePage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-xs font-medium text-green-700">Certificate uploaded</p>
                       {kyc.cert_verified && (
-                        <p className="text-xs text-green-600">✓ Verified by EduSkill</p>
+                        <p className="text-xs text-green-600">✓ Verified by Skillora</p>
                       )}
                     </div>
                     <button type="button" onClick={() => certRef.current?.click()}
@@ -535,9 +535,9 @@ export default function TeacherProfilePage() {
                 ) : (
                   <button type="button" onClick={() => certRef.current?.click()}
                     disabled={uploading === 'cert'}
-                    className="w-full flex flex-col items-center gap-2 p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-indigo-300 hover:bg-indigo-50 transition-colors text-gray-500 disabled:opacity-60">
+                    className="w-full flex flex-col items-center gap-2 p-4 border-2 border-dashed border-gray-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-colors text-gray-500 disabled:opacity-60">
                     {uploading === 'cert'
-                      ? <Loader2 className="w-6 h-6 animate-spin text-indigo-500" />
+                      ? <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
                       : <Upload className="w-6 h-6" />}
                     <span className="text-xs">
                       {uploading === 'cert' ? 'Uploading…' : 'Click to upload PDF or image (max 5 MB)'}
@@ -550,8 +550,8 @@ export default function TeacherProfilePage() {
 
             {/* KYC progress indicator */}
             {status !== 'approved' && (
-              <div className="mt-5 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-                <p className="text-xs font-bold text-indigo-700 mb-2">KYC Completion Checklist</p>
+              <div className="mt-5 p-4 bg-blue-50 rounded-xl border border-blue-100">
+                <p className="text-xs font-bold text-blue-700 mb-2">KYC Completion Checklist</p>
                 <div className="space-y-1.5">
                   {[
                     { label: 'Profile photo uploaded', done: !!avatarPreview },
@@ -571,7 +571,7 @@ export default function TeacherProfilePage() {
                   ))}
                 </div>
                 {kycComplete && status === 'incomplete' && (
-                  <p className="mt-3 text-xs font-semibold text-indigo-700">
+                  <p className="mt-3 text-xs font-semibold text-blue-700">
                     ✓ All required fields complete — saving will submit your KYC for review.
                   </p>
                 )}
@@ -580,16 +580,16 @@ export default function TeacherProfilePage() {
           </div>
 
           {/* ── Visibility ───────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <Eye className="w-5 h-5 text-indigo-500" /> Profile Visibility
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4 flex items-center gap-2">
+              <Eye className="w-5 h-5 text-blue-500" /> Profile Visibility
             </h2>
             <label className="flex items-center gap-4 cursor-pointer">
               <div className="relative">
                 <input type="checkbox" className="sr-only"
                   checked={kyc.display_to_employers ?? true}
                   onChange={e => setKyc(k => ({ ...k, display_to_employers: e.target.checked }))} />
-                <div className={`w-11 h-6 rounded-full transition-colors ${kyc.display_to_employers ?? true ? 'bg-indigo-600' : 'bg-gray-300'}`} />
+                <div className={`w-11 h-6 rounded-full transition-colors ${kyc.display_to_employers ?? true ? 'bg-blue-600' : 'bg-gray-300'}`} />
                 <div className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform ${kyc.display_to_employers ?? true ? 'translate-x-5' : ''}`} />
               </div>
               <div>
@@ -609,7 +609,7 @@ export default function TeacherProfilePage() {
             <button onClick={handleSave} disabled={saving}
               className={`inline-flex items-center gap-2 font-bold px-8 py-3 rounded-xl transition-colors text-sm
                 ${nin.length === 11
-                  ? 'bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-60'
+                  ? 'bg-blue-600 hover:bg-blue-700 text-white disabled:opacity-60'
                   : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}>
               {saving

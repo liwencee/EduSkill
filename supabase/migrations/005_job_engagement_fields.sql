@@ -1,4 +1,4 @@
--- EduSkill — Job Engagement Terms
+-- Skillora — Job Engagement Terms
 -- Migration: 005_job_engagement_fields.sql
 --
 -- Adds rate_type and engagement_duration to job_listings so employers

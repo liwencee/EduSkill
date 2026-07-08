@@ -23,7 +23,7 @@ export default function ChatButton({
     <>
       <button
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-[#4F46E5] hover:bg-indigo-100 transition-colors border border-indigo-200">
+        className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-blue-50 text-[#378ADD] hover:bg-blue-100 transition-colors border border-blue-200">
         <MessageSquare className="w-3.5 h-3.5" />
         Chat
       </button>

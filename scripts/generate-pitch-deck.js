@@ -1,8 +1,8 @@
 'use strict';
 /**
- * EduSkill / SkillBridge Nigeria — Pitch Deck Generator
+ * Skillora / Skillora — Pitch Deck Generator
  * Run:  node scripts/generate-pitch-deck.js
- * Output: EduSkill-PitchDeck-2025.pptx  (project root)
+ * Output: Skillora-PitchDeck-2025.pptx  (project root)
  */
 
 const PptxGenJS = require('pptxgenjs');
@@ -40,10 +40,10 @@ const F = 'Calibri'; // Font face – available in all PowerPoint installs
 // ─────────────────────────────────────────────────────────────────
 const pres = new PptxGenJS();
 pres.layout  = 'LAYOUT_WIDE';   // 10" × 5.625"
-pres.title   = 'EduSkill — Investor Pitch Deck 2025';
-pres.subject = 'Seed Round — SkillBridge Nigeria Ltd.';
-pres.author  = 'SkillBridge Nigeria Ltd.';
-pres.company = 'SkillBridge Nigeria Ltd.';
+pres.title   = 'Skillora — Investor Pitch Deck 2025';
+pres.subject = 'Seed Round — Skillora Ltd.';
+pres.author  = 'Skillora Ltd.';
+pres.company = 'Skillora Ltd.';
 
 // ─── Layout constants ─────────────────────────────────────────────
 const W   = 10;        // slide width  (inches)
@@ -69,7 +69,7 @@ function hdr(slide, title) {
 /** Amber footer bar with company tag + slide number */
 function ftr(slide, num) {
   slide.addShape('rect', { x:0, y:FY, w:W, h:FH, fill:{ color:C.amber }, line:{ color:C.amber, width:0 } });
-  slide.addText('EduSkill  ·  SkillBridge Nigeria Ltd.  ·  eduskill.ng  ·  Confidential',
+  slide.addText('Skillora  ·  Skillora Ltd.  ·  eduskill.ng  ·  Confidential',
     { x:ML, y:FY, w:8.6, h:FH, fontFace:F, fontSize:6.5, color:C.ink, valign:'middle' });
   slide.addText(String(num),
     { x:9.55, y:FY, w:0.3, h:FH, fontFace:F, fontSize:7, bold:true, color:C.ink, align:'right', valign:'middle' });
@@ -107,13 +107,13 @@ function txt(slide, text, x, y, w, h, opts) {
   txt(s, '🎓', 0.3, 0.3, 1.4, 1.4, { fontSize:62, align:'center', valign:'middle' });
 
   // Brand name
-  txt(s, 'EduSkill', ML, 0.45, 6.0, 1.1, { fontSize:54, bold:true, color:C.white, valign:'middle' });
+  txt(s, 'Skillora', ML, 0.45, 6.0, 1.1, { fontSize:54, bold:true, color:C.white, valign:'middle' });
 
   // Amber divider
   s.addShape('rect', { x:ML, y:1.62, w:4.6, h:0.055, fill:{ color:C.amber }, line:{ color:C.amber, width:0 } });
 
   // Sub-brand
-  txt(s, 'SkillBridge Nigeria Ltd.', ML, 1.72, 6.0, 0.44, { fontSize:17, color:C.amber, bold:true });
+  txt(s, 'Skillora Ltd.', ML, 1.72, 6.0, 0.44, { fontSize:17, color:C.amber, bold:true });
 
   // Tagline
   txt(s, 'Empowering Every Nigerian\nLearner and Teacher', ML, 2.25, 5.8, 0.9, { fontSize:14.5, color:'C8DCF0', lineSpacingMultiple:1.4 });
@@ -496,7 +496,7 @@ function txt(slide, text, x, y, w, h, opts) {
 // ─────────────────────────────────────────────────────────────────
 (function competitionSlide() {
   const s = pres.addSlide();
-  hdr(s, 'Competitive Landscape — Why EduSkill Wins');
+  hdr(s, 'Competitive Landscape — Why Skillora Wins');
   ftr(s, 10);
 
   // Moat callout
@@ -513,7 +513,7 @@ function txt(slide, text, x, y, w, h, opts) {
   const hC = (t) => ({ text:t, options:{ bold:true, fill:{ color:C.blue }, color:C.white, align:'center', valign:'middle', fontSize:11 } });
 
   const rows = [
-    [ fC('Feature'),                hC('EduSkill'), hC('Coursera / Udemy'), hC('uLesson'), hC('Jobberman') ],
+    [ fC('Feature'),                hC('Skillora'), hC('Coursera / Udemy'), hC('uLesson'), hC('Jobberman') ],
     [ 'Nigeria-specific content',   HL('  ✓  '), N('  ✗  '), P('  ~  '), N('  ✗  ') ],
     [ 'Teacher CPD / TRCN aligned', HL('  ✓  '), N('  ✗  '), N('  ✗  '), N('  ✗  ') ],
     [ 'AI Lesson Planner',          HL('  ✓  '), N('  ✗  '), N('  ✗  '), N('  ✗  ') ],
@@ -545,7 +545,7 @@ function txt(slide, text, x, y, w, h, opts) {
     { role:'FOUNDER & CEO',      bg:C.blueLight,   bc:C.blue,     icon:'👤',
       desc:'Background in education\npolicy and EdTech.\nDrives product vision\nand partnerships.' },
     { role:'CTO / CO-FOUNDER',   bg:C.amberLight,  bc:C.amberDark, icon:'💻',
-      desc:'Full-stack engineer,\nNext.js & AI / ML.\nBuilt EduSkill\nfrom 0 → 1.' },
+      desc:'Full-stack engineer,\nNext.js & AI / ML.\nBuilt Skillora\nfrom 0 → 1.' },
     { role:'HEAD OF CURRICULUM', bg:C.greenLight,  bc:C.green,    icon:'📚',
       desc:'Ex-NERDC curriculum\ndeveloper, TRCN trainer.\nDesigned all 4\nCPD modules.' },
     { role:'HEAD OF GROWTH',     bg:C.purpleLight, bc:C.purple,   icon:'📈',
@@ -736,7 +736,7 @@ function txt(slide, text, x, y, w, h, opts) {
     0.6, 0.5, 8.6, 1.85, { fontSize:18, color:C.white, lineSpacingMultiple:1.45, italic:true });
 
   // CTA line
-  txt(s, 'EduSkill is the infrastructure that makes that possible.',
+  txt(s, 'Skillora is the infrastructure that makes that possible.',
     ML, 2.48, CW, 0.45, { fontSize:15, bold:true, color:C.amber });
 
   // Divider
@@ -757,21 +757,21 @@ function txt(slide, text, x, y, w, h, opts) {
   });
 
   // Brand + tagline
-  txt(s, '🎓  EduSkill', ML, 3.88, CW, 0.65, { fontSize:34, bold:true, color:C.white, align:'center' });
+  txt(s, '🎓  Skillora', ML, 3.88, CW, 0.65, { fontSize:34, bold:true, color:C.white, align:'center' });
   txt(s, '"Every Nigerian Deserves World-Class Skills"',
     ML, 4.57, CW, 0.38, { fontSize:12.5, color:C.amber, align:'center', italic:true });
 
   // Footer
-  txt(s, 'EduSkill  ·  SkillBridge Nigeria Ltd.  ·  eduskill.ng  ·  Confidential — Not for Distribution  ·  May 2025',
+  txt(s, 'Skillora  ·  Skillora Ltd.  ·  eduskill.ng  ·  Confidential — Not for Distribution  ·  May 2025',
     ML, FY, W-ML, FH, { fontSize:6.5, color:C.ink, valign:'middle' });
 })();
 
 // ─────────────────────────────────────────────────────────────────
 //  WRITE OUTPUT FILE
 // ─────────────────────────────────────────────────────────────────
-const outFile = path.join(__dirname, '..', 'EduSkill-PitchDeck-2025.pptx');
+const outFile = path.join(__dirname, '..', 'Skillora-PitchDeck-2025.pptx');
 
-console.log('\n⏳  Generating EduSkill Pitch Deck (15 slides)…');
+console.log('\n⏳  Generating Skillora Pitch Deck (15 slides)…');
 
 pres.writeFile({ fileName: outFile })
   .then(() => {

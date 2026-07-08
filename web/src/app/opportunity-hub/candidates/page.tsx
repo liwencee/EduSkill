@@ -136,14 +136,14 @@ export default async function CandidatesPage({ searchParams }: Props) {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#EEF2FF]">
+      <div className="min-h-screen bg-[#EBF4FF]">
 
         {/* ── Hero ──────────────────────────────────────────────────────── */}
-        <div className="bg-gradient-to-r from-[#1E1B4B] to-[#4F46E5] text-white py-12">
+        <div className="bg-gradient-to-r from-[#1E4F8A] to-[#378ADD] text-white py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex items-center gap-3 mb-3">
               <GraduationCap className="w-8 h-8 text-orange-300" />
-              <span className="text-white/70 text-sm font-medium">EduSkill · Certified Teacher Pool</span>
+              <span className="text-white/70 text-sm font-medium">Skillora · Certified Teacher Pool</span>
             </div>
             <h1 className="text-3xl font-bold mb-2">Find Your Best-Match Teacher</h1>
             <p className="text-white/75 max-w-2xl text-sm leading-relaxed">
@@ -165,7 +165,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
               {searchParams.exp   && <input type="hidden" name="exp"      value={searchParams.exp} />}
               {searchParams.verified && <input type="hidden" name="verified" value={searchParams.verified} />}
               <button type="submit"
-                className="bg-[#F97316] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm whitespace-nowrap">
+                className="bg-[#F37321] hover:bg-orange-600 text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm whitespace-nowrap">
                 Search
               </button>
             </form>
@@ -177,10 +177,10 @@ export default async function CandidatesPage({ searchParams }: Props) {
 
             {/* ── Filter Sidebar ─────────────────────────────────────────── */}
             <aside className="lg:w-64 shrink-0">
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5 sticky top-6">
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-5 sticky top-6">
                 <div className="flex items-center gap-2 mb-5">
-                  <SlidersHorizontal className="w-4 h-4 text-[#4F46E5]" />
-                  <span className="font-bold text-[#1E1B4B] text-sm">Filters</span>
+                  <SlidersHorizontal className="w-4 h-4 text-[#378ADD]" />
+                  <span className="font-bold text-[#1E4F8A] text-sm">Filters</span>
                   {hasFilters && (
                     <a href="/opportunity-hub/candidates"
                       className="ml-auto text-xs text-red-500 hover:underline">Clear all</a>
@@ -194,8 +194,8 @@ export default async function CandidatesPage({ searchParams }: Props) {
                     : buildUrl(searchParams, { verified: '1' })}
                     className={`flex items-center gap-2 w-full px-3 py-2.5 rounded-xl border text-sm font-medium transition-colors ${
                       searchParams.verified === '1'
-                        ? 'bg-indigo-600 text-white border-indigo-600'
-                        : 'border-indigo-200 text-[#1E1B4B] hover:bg-indigo-50'
+                        ? 'bg-blue-600 text-white border-blue-600'
+                        : 'border-blue-200 text-[#1E4F8A] hover:bg-blue-50'
                     }`}>
                     <BadgeCheck className="w-4 h-4" />
                     KYC Verified Only
@@ -211,7 +211,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
                         href={buildUrl(searchParams, { cert: ct === 'All' ? '' : ct })}
                         className={`block px-3 py-1.5 rounded-lg text-sm transition-colors ${
                           (searchParams.cert ?? 'All') === ct || (!searchParams.cert && ct === 'All')
-                            ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                            ? 'bg-blue-50 text-blue-700 font-semibold'
                             : 'text-gray-600 hover:bg-gray-50'
                         }`}>
                         {ct}
@@ -229,7 +229,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
                         href={buildUrl(searchParams, { exp: ef.value })}
                         className={`block px-3 py-1.5 rounded-lg text-sm transition-colors ${
                           (searchParams.exp ?? '') === ef.value
-                            ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                            ? 'bg-blue-50 text-blue-700 font-semibold'
                             : 'text-gray-600 hover:bg-gray-50'
                         }`}>
                         {ef.label}
@@ -247,7 +247,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
                         href={buildUrl(searchParams, { state: st === 'All States' ? '' : st })}
                         className={`block px-3 py-1.5 rounded-lg text-sm transition-colors ${
                           (searchParams.state ?? 'All States') === st || (!searchParams.state && st === 'All States')
-                            ? 'bg-indigo-50 text-indigo-700 font-semibold'
+                            ? 'bg-blue-50 text-blue-700 font-semibold'
                             : 'text-gray-600 hover:bg-gray-50'
                         }`}>
                         {st}
@@ -263,27 +263,27 @@ export default async function CandidatesPage({ searchParams }: Props) {
               {/* Result count + sort */}
               <div className="flex items-center justify-between mb-5">
                 <p className="text-sm text-gray-500">
-                  <span className="font-bold text-[#1E1B4B]">{teachers.length}</span> teacher{teachers.length !== 1 ? 's' : ''} found
-                  {hasFilters && <span className="text-indigo-600 ml-1">(filtered)</span>}
+                  <span className="font-bold text-[#1E4F8A]">{teachers.length}</span> teacher{teachers.length !== 1 ? 's' : ''} found
+                  {hasFilters && <span className="text-blue-600 ml-1">(filtered)</span>}
                 </p>
                 <Link href="/employer/post-job"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#F97316] hover:bg-orange-600 px-4 py-2 rounded-xl transition-colors">
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-[#F37321] hover:bg-orange-600 px-4 py-2 rounded-xl transition-colors">
                   <Briefcase className="w-3.5 h-3.5" /> Post a Job
                 </Link>
               </div>
 
               {teachers.length === 0 ? (
-                <div className="bg-white rounded-2xl border border-indigo-100 p-16 text-center">
+                <div className="bg-white rounded-2xl border border-blue-100 p-16 text-center">
                   <Users className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="font-semibold text-[#1E1B4B] mb-2">No teachers found</p>
+                  <p className="font-semibold text-[#1E4F8A] mb-2">No teachers found</p>
                   <p className="text-sm text-gray-400 mb-4">
                     {hasFilters
                       ? 'Try adjusting your filters — teachers with visible profiles will appear here.'
-                      : 'Teachers will appear here once they complete their KYC profile on EduSkill.'}
+                      : 'Teachers will appear here once they complete their KYC profile on Skillora.'}
                   </p>
                   {hasFilters && (
                     <a href="/opportunity-hub/candidates"
-                      className="inline-flex items-center gap-1 text-sm text-indigo-600 hover:underline">
+                      className="inline-flex items-center gap-1 text-sm text-blue-600 hover:underline">
                       Clear all filters
                     </a>
                   )}
@@ -300,23 +300,23 @@ export default async function CandidatesPage({ searchParams }: Props) {
                     return (
                       <div key={t.id}
                         className={`bg-white rounded-2xl border shadow-sm hover:shadow-md transition-shadow flex flex-col ${
-                          isVerified ? 'border-indigo-200' : 'border-indigo-100'
+                          isVerified ? 'border-blue-200' : 'border-blue-100'
                         }`}>
                         {/* Card Header */}
-                        <div className={`px-5 pt-5 pb-4 ${isVerified ? 'bg-gradient-to-br from-indigo-50 to-white rounded-t-2xl' : ''}`}>
+                        <div className={`px-5 pt-5 pb-4 ${isVerified ? 'bg-gradient-to-br from-blue-50 to-white rounded-t-2xl' : ''}`}>
                           <div className="flex items-start gap-3">
                             {/* Avatar */}
                             <div className="relative shrink-0">
                               {profile.avatar_url ? (
                                 <img src={profile.avatar_url} alt={profile.full_name}
-                                  className="w-14 h-14 rounded-full object-cover border-2 border-indigo-100" />
+                                  className="w-14 h-14 rounded-full object-cover border-2 border-blue-100" />
                               ) : (
-                                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#4F46E5] to-[#7C3AED] flex items-center justify-center text-white text-xl font-bold border-2 border-indigo-100">
+                                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-[#378ADD] to-[#378ADD] flex items-center justify-center text-white text-xl font-bold border-2 border-blue-100">
                                   {profile.full_name?.charAt(0)?.toUpperCase() ?? 'T'}
                                 </div>
                               )}
                               {isVerified && (
-                                <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-indigo-600 rounded-full border-2 border-white flex items-center justify-center">
+                                <span className="absolute -bottom-1 -right-1 w-5 h-5 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center">
                                   <BadgeCheck className="w-3 h-3 text-white" />
                                 </span>
                               )}
@@ -326,11 +326,11 @@ export default async function CandidatesPage({ searchParams }: Props) {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-start justify-between gap-2">
                                 <div>
-                                  <h3 className="font-bold text-[#1E1B4B] text-sm leading-tight line-clamp-1">
+                                  <h3 className="font-bold text-[#1E4F8A] text-sm leading-tight line-clamp-1">
                                     {profile.full_name}
                                   </h3>
                                   {t.teacher_uid && (
-                                    <p className="text-xs font-mono text-indigo-500 mt-0.5">{t.teacher_uid}</p>
+                                    <p className="text-xs font-mono text-blue-500 mt-0.5">{t.teacher_uid}</p>
                                   )}
                                 </div>
                                 <div className="shrink-0 text-right">
@@ -359,7 +359,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
                           <div className="flex flex-wrap gap-2 text-xs text-gray-600">
                             {t.cert_type && (
                               <span className="flex items-center gap-1 font-medium">
-                                <Award className="w-3 h-3 text-indigo-400" />
+                                <Award className="w-3 h-3 text-blue-400" />
                                 {t.cert_type}
                                 {t.cert_verified && <span className="text-green-500 font-bold">✓</span>}
                               </span>
@@ -404,7 +404,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
 
                           {/* Specialization */}
                           {t.subject_specialization && (
-                            <p className="text-xs text-indigo-600 font-medium line-clamp-1">
+                            <p className="text-xs text-blue-600 font-medium line-clamp-1">
                               {t.subject_specialization}
                             </p>
                           )}
@@ -414,7 +414,7 @@ export default async function CandidatesPage({ searchParams }: Props) {
                             <div className="flex flex-wrap gap-1 pt-1">
                               {(t.subject_areas ?? []).slice(0, 3).map((s: string) => (
                                 <span key={s}
-                                  className="text-xs bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded-full">
+                                  className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">
                                   {s}
                                 </span>
                               ))}
@@ -435,13 +435,13 @@ export default async function CandidatesPage({ searchParams }: Props) {
                         </div>
 
                         {/* Card Footer */}
-                        <div className="px-5 pb-5 pt-2 border-t border-indigo-50 flex gap-2">
+                        <div className="px-5 pb-5 pt-2 border-t border-blue-50 flex gap-2">
                           <Link href={`/opportunity-hub/candidates/${t.id}`}
-                            className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-[#4F46E5] border border-indigo-200 hover:bg-indigo-50 px-3 py-2 rounded-xl transition-colors">
+                            className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-[#378ADD] border border-blue-200 hover:bg-blue-50 px-3 py-2 rounded-xl transition-colors">
                             View Profile <ChevronRight className="w-3.5 h-3.5" />
                           </Link>
                           <Link href="/employer/post-job"
-                            className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-[#F97316] hover:bg-orange-600 px-3 py-2 rounded-xl transition-colors">
+                            className="flex-1 flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-[#F37321] hover:bg-orange-600 px-3 py-2 rounded-xl transition-colors">
                             <Briefcase className="w-3.5 h-3.5" /> Hire
                           </Link>
                         </div>

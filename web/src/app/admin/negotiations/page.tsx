@@ -6,7 +6,7 @@ import NegotiationActions from './NegotiationActions'
 const NEG_STATUS_COLORS: Record<string, string> = {
   negotiating:  'bg-amber-100  text-amber-700',
   agreed:       'bg-blue-100   text-blue-700',
-  paid:         'bg-indigo-100 text-indigo-700',
+  paid:         'bg-blue-100 text-blue-700',
   in_progress:  'bg-teal-100   text-teal-700',
   completed:    'bg-green-100  text-green-700',
   cancelled:    'bg-gray-100   text-gray-500',
@@ -91,7 +91,7 @@ export default async function AdminNegotiationsPage({ searchParams }: Props) {
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         {[
-          { label: 'Total',      value: counts.all,       color: 'bg-indigo-600', filter: 'all'       },
+          { label: 'Total',      value: counts.all,       color: 'bg-blue-600', filter: 'all'       },
           { label: 'Active',     value: counts.active,    color: 'bg-teal-600',   filter: 'active'    },
           { label: 'Held',       value: counts.held,      color: 'bg-amber-500',  filter: 'held'      },
           { label: 'Completed',  value: counts.completed, color: 'bg-green-600',  filter: 'completed' },

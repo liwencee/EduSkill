@@ -65,11 +65,11 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#EEF2FF]">
+      <div className="min-h-screen bg-[#EBF4FF]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
           <Link href="/opportunity-hub/candidates"
-            className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline mb-6">
+            className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline mb-6">
             <ArrowLeft className="w-4 h-4" /> Back to Candidates
           </Link>
 
@@ -79,9 +79,9 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
             <div className="lg:col-span-1 space-y-4">
 
               {/* Main profile card */}
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm overflow-hidden">
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm overflow-hidden">
                 {/* Cover strip */}
-                <div className="h-20 bg-gradient-to-r from-[#1E1B4B] to-[#4F46E5]" />
+                <div className="h-20 bg-gradient-to-r from-[#1E4F8A] to-[#378ADD]" />
 
                 <div className="px-5 pb-5">
                   {/* Avatar — overlapping cover */}
@@ -90,21 +90,21 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
                       <img src={profile.avatar_url} alt={profile.full_name}
                         className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-md" />
                     ) : (
-                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#4F46E5] to-[#7C3AED] flex items-center justify-center text-white text-2xl font-bold border-4 border-white shadow-md">
+                      <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#378ADD] to-[#378ADD] flex items-center justify-center text-white text-2xl font-bold border-4 border-white shadow-md">
                         {initials}
                       </div>
                     )}
                     {teacher.has_badge && (
-                      <span className="absolute bottom-0 right-0 w-6 h-6 bg-indigo-600 rounded-full border-2 border-white flex items-center justify-center">
+                      <span className="absolute bottom-0 right-0 w-6 h-6 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center">
                         <BadgeCheck className="w-3.5 h-3.5 text-white" />
                       </span>
                     )}
                   </div>
 
-                  <h1 className="text-lg font-bold text-[#1E1B4B] leading-tight">{profile.full_name}</h1>
+                  <h1 className="text-lg font-bold text-[#1E4F8A] leading-tight">{profile.full_name}</h1>
 
                   {teacher.teacher_uid && (
-                    <p className="text-xs font-mono text-indigo-500 mt-0.5 mb-2">{teacher.teacher_uid}</p>
+                    <p className="text-xs font-mono text-blue-500 mt-0.5 mb-2">{teacher.teacher_uid}</p>
                   )}
 
                   <div className="flex flex-wrap gap-1.5 mb-3">
@@ -130,7 +130,7 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
                   <div className="space-y-2">
                     {profile.email && (
                       <a href={`mailto:${profile.email}`}
-                        className="flex items-center gap-2 w-full text-xs font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-2.5 rounded-xl transition-colors">
+                        className="flex items-center gap-2 w-full text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-2.5 rounded-xl transition-colors">
                         <Mail className="w-4 h-4" /> {profile.email}
                       </a>
                     )}
@@ -156,19 +156,19 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
 
                   {/* Hire CTA */}
                   <Link href="/employer/post-job"
-                    className="mt-4 flex items-center justify-center gap-2 w-full bg-[#F97316] hover:bg-orange-600 text-white font-bold text-sm px-4 py-3 rounded-xl transition-colors">
+                    className="mt-4 flex items-center justify-center gap-2 w-full bg-[#F37321] hover:bg-orange-600 text-white font-bold text-sm px-4 py-3 rounded-xl transition-colors">
                     <Briefcase className="w-4 h-4" /> Post a Job for this Teacher
                   </Link>
                 </div>
               </div>
 
               {/* Stats */}
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-4">
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-4">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Stats</p>
                 <div className="grid grid-cols-2 gap-3">
                   {stats.map(s => (
-                    <div key={s.label} className="text-center p-2 bg-indigo-50 rounded-xl">
-                      <p className="text-lg font-bold text-[#1E1B4B]">{s.value}</p>
+                    <div key={s.label} className="text-center p-2 bg-blue-50 rounded-xl">
+                      <p className="text-lg font-bold text-[#1E4F8A]">{s.value}</p>
                       <p className="text-xs text-gray-500 leading-tight mt-0.5">{s.label}</p>
                     </div>
                   ))}
@@ -181,29 +181,29 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
 
               {/* About */}
               {profile.bio && (
-                <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5">
-                  <h2 className="font-bold text-[#1E1B4B] mb-3 flex items-center gap-2">
-                    <Users className="w-4 h-4 text-indigo-400" /> About
+                <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-5">
+                  <h2 className="font-bold text-[#1E4F8A] mb-3 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-blue-400" /> About
                   </h2>
                   <p className="text-sm text-gray-600 leading-relaxed">{profile.bio}</p>
                 </div>
               )}
 
               {/* Qualifications & Experience */}
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5">
-                <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-                  <GraduationCap className="w-4 h-4 text-indigo-400" /> Qualifications & Experience
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-5">
+                <h2 className="font-bold text-[#1E4F8A] mb-4 flex items-center gap-2">
+                  <GraduationCap className="w-4 h-4 text-blue-400" /> Qualifications & Experience
                 </h2>
                 <div className="grid sm:grid-cols-2 gap-4">
                   {teacher.cert_type && (
-                    <div className="flex items-start gap-3 p-3 bg-indigo-50 rounded-xl">
-                      <Award className="w-5 h-5 text-indigo-500 shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-3 p-3 bg-blue-50 rounded-xl">
+                      <Award className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-xs text-gray-500">Teaching Certificate</p>
-                        <p className="font-bold text-[#1E1B4B] text-sm">{teacher.cert_type}</p>
+                        <p className="font-bold text-[#1E4F8A] text-sm">{teacher.cert_type}</p>
                         {teacher.cert_verified && (
                           <p className="text-xs text-green-600 font-medium flex items-center gap-1 mt-0.5">
-                            <CheckCircle className="w-3 h-3" /> Verified by EduSkill
+                            <CheckCircle className="w-3 h-3" /> Verified by Skillora
                           </p>
                         )}
                       </div>
@@ -214,7 +214,7 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
                       <Clock className="w-5 h-5 text-orange-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-xs text-gray-500">Years of Service</p>
-                        <p className="font-bold text-[#1E1B4B] text-sm">
+                        <p className="font-bold text-[#1E4F8A] text-sm">
                           {teacher.years_of_service} year{teacher.years_of_service !== 1 ? 's' : ''}
                         </p>
                       </div>
@@ -225,7 +225,7 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
                       <BookOpen className="w-5 h-5 text-purple-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-xs text-gray-500">Current / Recent School</p>
-                        <p className="font-bold text-[#1E1B4B] text-sm">{teacher.school_name}</p>
+                        <p className="font-bold text-[#1E4F8A] text-sm">{teacher.school_name}</p>
                         {teacher.school_type && (
                           <p className="text-xs text-gray-500">{SCHOOL_TYPE_LABELS[teacher.school_type] ?? teacher.school_type}</p>
                         )}
@@ -237,7 +237,7 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
                       <Star className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
                       <div>
                         <p className="text-xs text-gray-500">Specialization</p>
-                        <p className="font-bold text-[#1E1B4B] text-sm">{teacher.subject_specialization}</p>
+                        <p className="font-bold text-[#1E4F8A] text-sm">{teacher.subject_specialization}</p>
                       </div>
                     </div>
                   )}
@@ -246,14 +246,14 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
 
               {/* Subjects */}
               {(teacher.subject_areas ?? []).length > 0 && (
-                <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5">
-                  <h2 className="font-bold text-[#1E1B4B] mb-3 flex items-center gap-2">
-                    <BookOpen className="w-4 h-4 text-indigo-400" /> Subjects Taught
+                <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-5">
+                  <h2 className="font-bold text-[#1E4F8A] mb-3 flex items-center gap-2">
+                    <BookOpen className="w-4 h-4 text-blue-400" /> Subjects Taught
                   </h2>
                   <div className="flex flex-wrap gap-2">
                     {(teacher.subject_areas ?? []).map((s: string) => (
                       <span key={s}
-                        className="text-sm bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1.5 rounded-full font-medium">
+                        className="text-sm bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1.5 rounded-full font-medium">
                         {s}
                       </span>
                     ))}
@@ -262,9 +262,9 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
               )}
 
               {/* Verification Summary */}
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-5">
-                <h2 className="font-bold text-[#1E1B4B] mb-3 flex items-center gap-2">
-                  <Shield className="w-4 h-4 text-indigo-400" /> Verification Summary
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-5">
+                <h2 className="font-bold text-[#1E4F8A] mb-3 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-blue-400" /> Verification Summary
                 </h2>
                 <div className="space-y-2">
                   {[
@@ -273,7 +273,7 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
                     { label: 'Certificate uploaded',  done: !!(teacher.cert_type) },
                     { label: 'Certificate verified',  done: teacher.cert_verified },
                     { label: 'KYC approved',          done: teacher.kyc_status === 'approved' },
-                    { label: 'EduSkill badge active', done: teacher.has_badge },
+                    { label: 'Skillora badge active', done: teacher.has_badge },
                   ].map(item => (
                     <div key={item.label} className="flex items-center gap-3">
                       {item.done
@@ -288,14 +288,14 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
               </div>
 
               {/* Hire CTA Banner */}
-              <div className="bg-gradient-to-r from-[#1E1B4B] to-[#4F46E5] rounded-2xl p-5 text-white">
+              <div className="bg-gradient-to-r from-[#1E4F8A] to-[#378ADD] rounded-2xl p-5 text-white">
                 <p className="font-bold text-lg mb-1">Ready to hire {profile.full_name.split(' ')[0]}?</p>
                 <p className="text-white/70 text-sm mb-4">
-                  Post a job on EduSkill and invite verified teachers to apply — or contact directly using the details on their profile.
+                  Post a job on Skillora and invite verified teachers to apply — or contact directly using the details on their profile.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Link href="/employer/post-job"
-                    className="flex items-center justify-center gap-2 bg-[#F97316] hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-xl transition-colors text-sm">
+                    className="flex items-center justify-center gap-2 bg-[#F37321] hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-xl transition-colors text-sm">
                     <Briefcase className="w-4 h-4" /> Post a Job
                   </Link>
                   <Link href="/employer/applicants"

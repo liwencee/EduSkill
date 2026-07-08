@@ -1144,7 +1144,7 @@ export const CPD_COURSES: CPDCourse[] = [
               'The benefits of mother-tongue instruction are massive: UNESCO research shows children learn 30–40% faster when instruction begins in their first language. Concepts understood in the mother tongue transfer to English. A child who understands "addition" in Yoruba (àròpɔ̀) will transfer that understanding to English naturally.',
               'Practical multilingual strategies: Code-switching — explain the concept in English, then summarise in the local language. Create bilingual word walls: key vocabulary in English on one side, the local language on the other. Use local proverbs and stories to illustrate concepts — they’re culturally relevant and memorable.',
               'For Pidgin English speakers: Nigerian Pidgin is a valid language spoken by 75+ million Nigerians. If your students communicate primarily in Pidgin, using it to explain complex concepts is effective pedagogy, not "lowering standards." Transition to formal English gradually.',
-              'Resources: The NERDC has published subject glossaries in Yoruba, Igbo, and Hausa for several subjects. The EduSkill AI Lesson Planner can generate lesson content in multiple Nigerian languages. Local language radio programmes (BBC Hausa, Wazobia FM) can supplement lessons.',
+              'Resources: The NERDC has published subject glossaries in Yoruba, Igbo, and Hausa for several subjects. The Skillora AI Lesson Planner can generate lesson content in multiple Nigerian languages. Local language radio programmes (BBC Hausa, Wazobia FM) can supplement lessons.',
             ],
             key_takeaways: [
               'Children learn 30–40% faster with mother-tongue instruction',

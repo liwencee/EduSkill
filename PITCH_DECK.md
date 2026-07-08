@@ -1,5 +1,5 @@
-# EduSkill — Pitch Deck
-### SkillBridge Nigeria Ltd.
+# Skillora — Pitch Deck
+### Skillora Ltd.
 **"Empowering Every Nigerian Learner and Teacher"**
 
 ---
@@ -9,7 +9,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                                                                   │
-│          🎓  EduSkill                                             │
+│          🎓  Skillora                                             │
 │          ─────────────────────────────                            │
 │          Nigeria's All-in-One                                     │
 │          EdTech Platform                                          │
@@ -17,7 +17,7 @@
 │          Upskilling Youth  ·  Empowering Teachers                │
 │          Driving Economic Inclusion                               │
 │                                                                   │
-│          SkillBridge Nigeria Ltd.   |   2025                     │
+│          Skillora Ltd.   |   2025                     │
 │          contact@eduskill.ng        |   eduskill.ng              │
 │                                                                   │
 └─────────────────────────────────────────────────────────────────┘
@@ -69,11 +69,11 @@
 
 ## SLIDE 4 — THE SOLUTION
 
-### EduSkill: One Platform. Two Ecosystems. Unlimited Impact.
+### Skillora: One Platform. Two Ecosystems. Unlimited Impact.
 
 ```
                         ┌─────────────────────┐
-                        │     EduSkill.ng      │
+                        │     Skillora.ng      │
                         │  eduskill.ng         │
                         └──────────┬──────────┘
                                    │
@@ -97,7 +97,7 @@
 
 ## SLIDE 5 — PRODUCT SHOWCASE
 
-### What EduSkill Looks Like in Action
+### What Skillora Looks Like in Action
 
 #### A. SkillUp (Youth Learners)
 - **Self-paced courses** — 4–8 weeks, mobile-first
@@ -241,9 +241,9 @@ PHASE 3  ──  GOVERNMENT & NGOs  (Months 13–24)
 
 ## SLIDE 10 — COMPETITIVE LANDSCAPE
 
-### Why EduSkill Wins
+### Why Skillora Wins
 
-| | EduSkill | Coursera/Udemy | uLesson | Jobberman |
+| | Skillora | Coursera/Udemy | uLesson | Jobberman |
 |---|---|---|---|---|
 | Nigeria-specific content | ✅ | ❌ | Partial | ❌ |
 | Teacher CPD / TRCN | ✅ | ❌ | ❌ | ❌ |
@@ -391,12 +391,12 @@ Q4 2025  ───────────────────────�
 │   young Nigerians and the                                        │
 │   teachers who believed in them.                                  │
 │                                                                   │
-│   EduSkill is the infrastructure                                 │
+│   Skillora is the infrastructure                                 │
 │   that makes that possible.                                       │
 │                                                                   │
 │   ─────────────────────────────                                  │
 │                                                                   │
-│   🎓  EduSkill / SkillBridge Nigeria                             │
+│   🎓  Skillora / Skillora                             │
 │   🌐  eduskill.ng                                                │
 │   📧  contact@eduskill.ng                                        │
 │   📞  +234 — — —                                                 │
@@ -410,7 +410,7 @@ Q4 2025  ───────────────────────�
 
 ## APPENDIX A — IMPACT METRICS (SDG Alignment)
 
-| UN SDG | How EduSkill Contributes |
+| UN SDG | How Skillora Contributes |
 |---|---|
 | SDG 4 — Quality Education | NERDC-aligned CPD, AI lesson tools |
 | SDG 8 — Decent Work | Vocational skills → employment |
@@ -444,5 +444,5 @@ Contact: **partnerships@eduskill.ng**
 
 ---
 
-*Document prepared by SkillBridge Nigeria Ltd. | Confidential — Not for Distribution*  
+*Document prepared by Skillora Ltd. | Confidential — Not for Distribution*  
 *Version 1.0 | May 2025*

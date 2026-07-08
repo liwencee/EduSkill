@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
       }
     } else {
       // No Daily API key — use free Jitsi Meet (no account needed)
-      roomUrl = `https://meet.jit.si/EduSkill-${roomName}`
+      roomUrl = `https://meet.jit.si/Skillora-${roomName}`
     }
 
     // Save room URL to DB

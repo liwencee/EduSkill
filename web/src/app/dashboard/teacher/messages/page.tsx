@@ -33,25 +33,25 @@ export default async function TeacherMessagesPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-[#EEF2FF]">
+      <div className="min-h-screen bg-[#EBF4FF]">
         <div className="max-w-2xl mx-auto px-4 py-8">
 
           <Link href="/dashboard/teacher"
-            className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline mb-6">
+            className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline mb-6">
             <ArrowLeft className="w-4 h-4" /> Teacher Dashboard
           </Link>
 
-          <h1 className="text-2xl font-bold text-[#1E1B4B] mb-1">Messages</h1>
+          <h1 className="text-2xl font-bold text-[#1E4F8A] mb-1">Messages</h1>
           <p className="text-sm text-gray-500 mb-6">
             Conversations with employers about your job applications.
           </p>
 
           {withChats.length === 0 ? (
-            <div className="bg-white rounded-2xl border border-indigo-100 p-14 text-center">
-              <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
-                <MessageSquare className="w-7 h-7 text-indigo-300" />
+            <div className="bg-white rounded-2xl border border-blue-100 p-14 text-center">
+              <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-3">
+                <MessageSquare className="w-7 h-7 text-blue-300" />
               </div>
-              <p className="font-semibold text-[#1E1B4B] mb-1">No messages yet</p>
+              <p className="font-semibold text-[#1E4F8A] mb-1">No messages yet</p>
               <p className="text-sm text-gray-400">
                 Employers will appear here once they message you about an application.
               </p>
@@ -68,15 +68,15 @@ export default async function TeacherMessagesPage() {
                   <Link
                     key={app.id}
                     href={`/dashboard/teacher/messages/${app.id}`}
-                    className="flex items-start gap-4 bg-white rounded-2xl border border-indigo-100 shadow-sm px-5 py-4 hover:bg-indigo-50 transition-colors group">
+                    className="flex items-start gap-4 bg-white rounded-2xl border border-blue-100 shadow-sm px-5 py-4 hover:bg-blue-50 transition-colors group">
 
-                    <div className="w-11 h-11 bg-[#4F46E5] rounded-xl flex items-center justify-center shrink-0">
+                    <div className="w-11 h-11 bg-[#378ADD] rounded-xl flex items-center justify-center shrink-0">
                       <Briefcase className="w-5 h-5 text-white" />
                     </div>
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2 mb-0.5">
-                        <p className="font-bold text-[#1E1B4B] text-sm truncate group-hover:text-[#4F46E5]">
+                        <p className="font-bold text-[#1E4F8A] text-sm truncate group-hover:text-[#378ADD]">
                           {job?.title ?? 'Job Application'}
                         </p>
                         {last?.created_at && (
@@ -99,7 +99,7 @@ export default async function TeacherMessagesPage() {
                     </div>
 
                     {unread > 0 && (
-                      <span className="w-5 h-5 bg-[#4F46E5] text-white text-[10px] font-bold rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                      <span className="w-5 h-5 bg-[#378ADD] text-white text-[10px] font-bold rounded-full flex items-center justify-center shrink-0 mt-0.5">
                         {unread > 9 ? '9+' : unread}
                       </span>
                     )}

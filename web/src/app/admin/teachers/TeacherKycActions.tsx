@@ -96,7 +96,7 @@ export default function TeacherKycActions({ teacherId, currentStatus, currentBad
         </div>
         {status === 'approved' && (
           <button onClick={updateBadge}
-            className="text-xs bg-indigo-100 text-indigo-700 px-2 py-1 rounded-lg hover:bg-indigo-200 transition-colors font-medium">
+            className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-lg hover:bg-blue-200 transition-colors font-medium">
             Update
           </button>
         )}

@@ -1,5 +1,5 @@
 /**
- * EduSkill — Sliding-Window Rate Limiter
+ * Skillora — Sliding-Window Rate Limiter
  *
  * Uses an in-process Map (works on Vercel serverless per-instance).
  * For multi-region / distributed rate limiting, swap the store for

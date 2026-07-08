@@ -36,16 +36,16 @@ export default function RoleGuard({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#EEF2FF] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      <div className="min-h-screen bg-[#EBF4FF] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     )
   }
 
   if (!user || !allowedRoles.includes(user.role as UserRole)) {
     return (
-      <div className="min-h-screen bg-[#EEF2FF] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+      <div className="min-h-screen bg-[#EBF4FF] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     )
   }

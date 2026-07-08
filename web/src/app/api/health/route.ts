@@ -1,5 +1,5 @@
 /**
- * EduSkill — Health Check Endpoint
+ * Skillora — Health Check Endpoint
  *
  * Used by:
  *   • Vercel uptime checks

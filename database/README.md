@@ -1,4 +1,4 @@
-# SkillBridge Nigeria — Database Setup
+# Skillora — Database Setup
 
 ## Quick Start (Supabase)
 
