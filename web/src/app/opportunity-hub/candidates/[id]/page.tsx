@@ -52,6 +52,16 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
 
   if (!teacher || !profile) notFound()
 
+  let cpdCertificates: { course_title: string; overall_score: number; issued_at: string }[] = []
+  try {
+    const { data } = await supabase
+      .from('cpd_certificates')
+      .select('course_title, overall_score, issued_at')
+      .eq('user_id', params.id)
+      .order('issued_at', { ascending: false })
+    cpdCertificates = data ?? []
+  } catch { /* DB unavailable — section just won't show */ }
+
   const kycCfg   = KYC_STATUS_LABELS[teacher.kyc_status ?? 'incomplete']
   const initials = profile.full_name?.split(' ').map((n: string) => n[0]).slice(0, 2).join('').toUpperCase() ?? 'T'
 
@@ -256,6 +266,33 @@ export default async function TeacherPublicProfilePage({ params }: Props) {
                         className="text-sm bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1.5 rounded-full font-medium">
                         {s}
                       </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* CPD Certifications */}
+              {cpdCertificates.length > 0 && (
+                <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-5">
+                  <h2 className="font-bold text-[#1E4F8A] mb-3 flex items-center gap-2">
+                    <Award className="w-4 h-4 text-green-500" /> CPD Certifications
+                  </h2>
+                  <div className="space-y-2">
+                    {cpdCertificates.map(c => (
+                      <div key={c.course_title} className="flex items-center gap-3 p-3 bg-green-50/60 border border-green-100 rounded-xl">
+                        <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
+                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-semibold text-[#1E4F8A] truncate">{c.course_title}</p>
+                          <p className="text-xs text-gray-500">
+                            Verified {new Date(c.issued_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </p>
+                        </div>
+                        <span className="text-xs font-bold text-green-700 bg-green-100 px-2.5 py-1 rounded-full shrink-0">
+                          {c.overall_score}% pass
+                        </span>
+                      </div>
                     ))}
                   </div>
                 </div>

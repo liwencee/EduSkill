@@ -3,11 +3,35 @@ import Link from 'next/link'
 import {
   BookOpen, Award, Users, ArrowRight, Zap, FileText,
   TrendingUp, MessageSquare, ChevronRight, Lightbulb, Star,
-  ClipboardList, ShieldCheck, Briefcase,
+  ClipboardList, ShieldCheck, Briefcase, CheckCircle,
 } from 'lucide-react'
 import { CPD_COURSES } from '@/lib/static-cpd-courses'
+import { createClient } from '@/lib/supabase/server'
 
-export default function TeacherDashboard() {
+export default async function TeacherDashboard() {
+  let certificates: { course_title: string; overall_score: number; issued_at: string }[] = []
+  let coursesStarted = 0
+
+  try {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (user) {
+      const [{ data: certData }, { data: progressData }] = await Promise.all([
+        supabase
+          .from('cpd_certificates')
+          .select('course_title, overall_score, issued_at')
+          .eq('user_id', user.id)
+          .order('issued_at', { ascending: false }),
+        supabase
+          .from('cpd_lesson_results')
+          .select('course_slug')
+          .eq('user_id', user.id),
+      ])
+      certificates = certData ?? []
+      coursesStarted = new Set((progressData ?? []).map(r => r.course_slug)).size
+    }
+  } catch { /* DB unavailable — dashboard still renders */ }
+
   return (
     <div className="min-h-screen bg-[#EBF4FF]">
       <Navbar />
@@ -50,8 +74,8 @@ export default function TeacherDashboard() {
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: 'CPD Courses',         value: 0, icon: BookOpen,  bg: 'bg-blue-50',  color: 'text-[#378ADD]' },
-            { label: 'Certificates Earned', value: 0, icon: Award,     bg: 'bg-orange-50',  color: 'text-[#F37321]' },
+            { label: 'CPD Courses',         value: coursesStarted, icon: BookOpen,  bg: 'bg-blue-50',  color: 'text-[#378ADD]' },
+            { label: 'Certificates Earned', value: certificates.length, icon: Award,     bg: 'bg-orange-50',  color: 'text-[#F37321]' },
             { label: 'Lesson Plans',        value: 0, icon: FileText,  bg: 'bg-purple-50',  color: 'text-purple-600' },
             { label: 'Students Reached',    value: 0, icon: Users,     bg: 'bg-green-50',   color: 'text-green-600'  },
           ].map(s => (
@@ -176,10 +200,31 @@ export default function TeacherDashboard() {
                 <h2 className="font-bold text-[#1E4F8A]">CPD Certificates</h2>
                 <Link href="/dashboard/certificates" className="text-xs text-[#378ADD] hover:underline">View all</Link>
               </div>
-              <div className="text-center py-4">
-                <Star className="w-10 h-10 text-gray-300 mx-auto mb-2" />
-                <p className="text-sm text-gray-500">Complete a CPD course to earn your certificate</p>
-              </div>
+              {certificates.length === 0 ? (
+                <div className="text-center py-4">
+                  <Star className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                  <p className="text-sm text-gray-500">Complete a CPD course to earn your certificate</p>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  {certificates.map(c => (
+                    <div key={c.course_title} className="flex items-center gap-3 p-2.5 rounded-xl bg-green-50/60 border border-green-100">
+                      <div className="w-9 h-9 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
+                        <CheckCircle className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-[#1E4F8A] truncate">{c.course_title}</p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(c.issued_at).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        </p>
+                      </div>
+                      <span className="text-xs font-bold text-green-700 bg-green-100 px-2 py-0.5 rounded-full shrink-0">
+                        {c.overall_score}%
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="bg-gradient-to-br from-[#1E4F8A] to-[#378ADD] rounded-2xl p-5 text-white">

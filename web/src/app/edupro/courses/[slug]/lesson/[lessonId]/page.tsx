@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import { useParams } from 'next/navigation'
 import Navbar from '@/components/Navbar'
 import { CPD_COURSES } from '@/lib/static-cpd-courses'
 import type { CPDLesson, CPDModule } from '@/lib/static-cpd-courses'
+import { createClient } from '@/lib/supabase/client'
 import {
   ArrowLeft, ArrowRight, BookOpen, CheckCircle, Clock, Lightbulb,
   Trophy, ChevronRight, Award
@@ -52,6 +53,7 @@ export default function CPDLessonPage() {
   // Quiz state
   const [selected, setSelected] = useState<Record<number, number>>({})
   const [showResults, setShowResults] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   const quizScore = useMemo(() => {
     if (!currentLesson || !showResults) return 0
@@ -64,6 +66,41 @@ export default function CPDLessonPage() {
       ? Math.round((correct / currentLesson.quiz.length) * 100)
       : 0
   }, [currentLesson, selected, showResults])
+
+  // ── Persist best score for this lesson whenever results are shown ──────────
+  useEffect(() => {
+    if (!showResults || !course || !currentLesson) return
+
+    async function saveResult() {
+      setSaving(true)
+      try {
+        const supabase = createClient()
+        const { data: { user } } = await supabase.auth.getUser()
+        if (!user) return
+
+        const { data: existing } = await supabase
+          .from('cpd_lesson_results')
+          .select('best_score, attempts')
+          .eq('user_id', user.id)
+          .eq('course_slug', course!.slug)
+          .eq('lesson_id', currentLesson!.id)
+          .maybeSingle()
+
+        const nextBest = Math.max(existing?.best_score ?? 0, quizScore)
+        await supabase.from('cpd_lesson_results').upsert({
+          user_id:     user.id,
+          course_slug: course!.slug,
+          lesson_id:   currentLesson!.id,
+          best_score:  nextBest,
+          attempts:    (existing?.attempts ?? 0) + 1,
+          updated_at:  new Date().toISOString(),
+        }, { onConflict: 'user_id,course_slug,lesson_id' })
+      } catch { /* fail silently — the lesson UI still works without persistence */ }
+      finally { setSaving(false) }
+    }
+    saveResult()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showResults])
 
   if (!course || !currentModule || !currentLesson) {
     return (
@@ -238,11 +275,34 @@ export default function CPDLessonPage() {
               <CheckCircle className="w-4 h-4" /> Check Answers
             </button>
           ) : (
-            <div className={`text-center p-4 rounded-xl ${quizScore >= course.pass_mark ? 'bg-green-50 border border-green-200' : 'bg-amber-50 border border-amber-200'}`}>
-              <p className="text-2xl font-bold mb-1" style={{ color: quizScore >= course.pass_mark ? '#16a34a' : '#d97706' }}>
+            <div className={`relative overflow-hidden text-center p-4 rounded-xl ${
+              quizScore >= course.pass_mark
+                ? 'bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200'
+                : 'bg-amber-50 border border-amber-200'
+            }`}>
+              {quizScore >= course.pass_mark && (
+                <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+                  {[
+                    { tx: -60, ty: -40, color: '#F37321', delay: '0ms'   },
+                    { tx: 55,  ty: -50, color: '#378ADD', delay: '40ms'  },
+                    { tx: -45, ty: 35,  color: '#16a34a', delay: '80ms'  },
+                    { tx: 60,  ty: 40,  color: '#F37321', delay: '120ms' },
+                    { tx: 0,   ty: -60, color: '#378ADD', delay: '60ms'  },
+                    { tx: -70, ty: 0,   color: '#16a34a', delay: '100ms' },
+                  ].map((s, i) => (
+                    <span
+                      key={i}
+                      className="animate-spark absolute top-1/2 left-1/2 w-2 h-2 rounded-full"
+                      style={{ backgroundColor: s.color, animationDelay: s.delay, ['--tx' as string]: `${s.tx}px`, ['--ty' as string]: `${s.ty}px` }}
+                    />
+                  ))}
+                </div>
+              )}
+              <p className={`relative text-2xl font-bold mb-1 ${quizScore >= course.pass_mark ? 'animate-pop-in' : ''}`}
+                style={{ color: quizScore >= course.pass_mark ? '#16a34a' : '#d97706' }}>
                 {quizScore}%
               </p>
-              <p className="text-sm text-brand-inkMid">
+              <p className="relative text-sm text-brand-inkMid">
                 {quizScore >= course.pass_mark
                   ? 'Great work! You passed this lesson.'
                   : `You need ${course.pass_mark}% to pass. Review the material and try again.`}

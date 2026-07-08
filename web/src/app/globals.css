@@ -196,6 +196,20 @@
   box-shadow: 0 18px 40px -12px rgba(30, 79, 138, 0.25);
 }
 
+/* Quiz-pass celebration — a one-time earned moment, not a loop */
+@keyframes popIn {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.animate-pop-in { animation: popIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes sparkBurst {
+  0%   { transform: translate(0, 0) scale(1);   opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+}
+.animate-spark { animation: sparkBurst 0.7s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
 @media (prefers-reduced-motion: reduce) {
   .reveal { opacity: 1 !important; transform: none !important; }
   .animate-gradient, .animate-float, .animate-float-slow { animation: none !important; }
