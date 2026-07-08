@@ -129,7 +129,10 @@ export default function Navbar() {
           {/* CTA */}
           <div className="hidden md:flex items-center gap-3">
             {loading ? (
-              <div className="w-8 h-8 rounded-full bg-gray-100 animate-pulse" />
+              <>
+                <div className="w-14 h-4 rounded bg-gray-200 animate-pulse" />
+                <div className="w-32 h-9 rounded-xl bg-gray-200 animate-pulse" />
+              </>
             ) : user ? (
               <>
                 {/* Notification Bell (employer only) */}

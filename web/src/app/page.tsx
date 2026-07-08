@@ -145,14 +145,14 @@ export default function LandingPage() {
 
               <div className="flex flex-wrap gap-4 mb-8">
                 <Link href="/auth/signup"
-                  className="hover-shine inline-flex items-center gap-2 bg-[#F37321] text-white font-bold px-8 py-4 rounded-2xl text-lg
+                  className="hover-shine w-full sm:w-auto sm:min-w-[240px] inline-flex items-center justify-center gap-2 bg-[#F37321] text-white font-bold px-8 py-4 rounded-2xl text-lg
                              border-[3px] border-orange-800/25 shadow-[0_6px_0_rgba(154,52,18,0.5)]
                              hover:shadow-[0_2px_0_rgba(154,52,18,0.5)] hover:translate-y-1
                              transition-all duration-150 cursor-pointer">
                   Start Learning Free <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link href="/skillup"
-                  className="inline-flex items-center gap-2 bg-white/10 text-white font-bold px-8 py-4 rounded-2xl text-lg
+                  className="w-full sm:w-auto sm:min-w-[240px] inline-flex items-center justify-center gap-2 bg-white/10 text-white font-bold px-8 py-4 rounded-2xl text-lg
                              border-[3px] border-white/25 shadow-[0_6px_0_rgba(0,0,0,0.2)]
                              hover:bg-white/20 hover:shadow-[0_2px_0_rgba(0,0,0,0.2)] hover:translate-y-1
                              transition-all duration-150 cursor-pointer">
