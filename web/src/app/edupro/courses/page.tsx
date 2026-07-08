@@ -2,9 +2,11 @@ import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 import { BookOpen, Clock, Users, ArrowRight, CheckCircle, Star, Award } from 'lucide-react'
 import { CPD_COURSES } from '@/lib/static-cpd-courses'
+import TeacherOnlyGate from '@/components/TeacherOnlyGate'
 
 export default async function EduProCoursesPage() {
   return (
+    <TeacherOnlyGate>
     <div className="bg-brand-bg min-h-screen">
       <Navbar />
 
@@ -98,5 +100,6 @@ export default async function EduProCoursesPage() {
         </div>
       </div>
     </div>
+    </TeacherOnlyGate>
   )
 }

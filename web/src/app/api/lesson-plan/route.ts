@@ -34,6 +34,55 @@ CRITICAL — every plan MUST include "class_work" as an array of EXACTLY 5 quest
 
 Always respond with valid JSON matching the exact schema provided. Do not omit lesson_notes or class_work fields.`
 
+const FREE_LIMIT = 3
+
+// ── Monthly quota: 3 free lesson plans, then ₦5,000 premium unlocks unlimited ──
+async function checkAndIncrementQuota(userId: string): Promise<
+  | { allowed: true;  count: number }
+  | { allowed: false; count: number; limit: number; period: string }
+> {
+  try {
+    const { createClient } = await import('@/lib/supabase/server')
+    const supabase = createClient()
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('subscription, subscription_expires_at, lesson_plan_count, lesson_plan_period, lesson_plan_unlocked')
+      .eq('id', userId)
+      .single()
+
+    const currentPeriod = new Date().toISOString().slice(0, 7)
+    const isNewPeriod   = !profile || profile.lesson_plan_period !== currentPeriod
+    const count         = isNewPeriod ? 0 : (profile?.lesson_plan_count ?? 0)
+    const unlocked      = !isNewPeriod && (profile?.lesson_plan_unlocked ?? false)
+
+    const isActivePremium =
+      (profile?.subscription === 'teacher_premium' || profile?.subscription === 'institutional') &&
+      !!profile?.subscription_expires_at &&
+      new Date(profile.subscription_expires_at) > new Date()
+
+    if (!isActivePremium && !unlocked && count >= FREE_LIMIT) {
+      return { allowed: false, count, limit: FREE_LIMIT, period: currentPeriod }
+    }
+
+    // Increment using the service role (bypasses RLS)
+    const { createClient: svcClient } = await import('@supabase/supabase-js')
+    const svc = svcClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    )
+    await svc.from('profiles').update({
+      lesson_plan_count:  count + 1,
+      lesson_plan_period: currentPeriod,
+    }).eq('id', userId)
+
+    return { allowed: true, count: count + 1 }
+  } catch {
+    // DB unavailable / columns missing — allow through (fail open for resilience)
+    return { allowed: true, count: 0 }
+  }
+}
+
 export async function POST(req: NextRequest) {
   const ctx = logRequest('/api/lesson-plan', req)
 
@@ -78,6 +127,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       { error: 'Too many requests. Please wait a moment before generating another lesson plan.' },
       { status: 429, headers: rateLimitHeaders(userRl) }
+    )
+  }
+
+  // ── Monthly quota check (3 free lesson plans per teacher per month) ──────────
+  const quota = await checkAndIncrementQuota(user.id)
+  if (!quota.allowed) {
+    logger.warn('Lesson planner quota exceeded', {
+      route: '/api/lesson-plan', userId: user.id, count: quota.count,
+    })
+    logResponse('/api/lesson-plan', ctx, 402)
+    return NextResponse.json(
+      { error: 'QUOTA_EXCEEDED', count: quota.count, limit: quota.limit, period: quota.period },
+      { status: 402 }
     )
   }
 

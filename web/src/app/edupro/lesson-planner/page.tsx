@@ -1,12 +1,25 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from '@/components/Navbar'
 import {
   Wand2, Loader2, Download, RefreshCw, BookOpen,
   Target, CheckSquare, Users, Home,
   Link2, FileText, Pencil, Star, Key, PlayCircle,
+  Lock, X, Zap, CreditCard,
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+
+// ₦5,000/month Individual Teacher premium — unlocks unlimited AI tools
+const PREMIUM_PAY_URL = 'https://paystack.shop/pay/2b2b77ixz-'
+
+interface UsageInfo {
+  count:     number
+  limit:     number
+  remaining: number | null   // null = unlimited (premium / unlocked)
+  unlocked:  boolean
+  isPremium: boolean
+  period:    string
+}
 
 const GRADE_LEVELS = [
   'Nursery 1','Nursery 2',
@@ -91,9 +104,27 @@ export default function LessonPlannerPage() {
   const [loading,    setLoading]    = useState(false)
   const [exporting,  setExporting]  = useState(false)
   const [plan,       setPlan]       = useState<LessonPlan | null>(null)
+  const [usageInfo,  setUsageInfo]  = useState<UsageInfo | null>(null)
+  const [showUpgrade, setShowUpgrade] = useState(false)
+
+  async function refreshUsage() {
+    try {
+      const res = await fetch('/api/lesson-usage')
+      if (res.ok) setUsageInfo(await res.json())
+    } catch { /* ignore — banner just won't show */ }
+  }
+
+  useEffect(() => { refreshUsage() }, [])
 
   async function generatePlan() {
     if (!subject || !topic || !grade) { toast.error('Please fill in Subject, Topic and Grade'); return }
+
+    // Client-side guard: if we already know the trial is used up, show the paywall
+    if (usageInfo && !usageInfo.isPremium && !usageInfo.unlocked && usageInfo.remaining === 0) {
+      setShowUpgrade(true)
+      return
+    }
+
     setLoading(true); setPlan(null)
     try {
       const res = await fetch('/api/lesson-plan', {
@@ -101,12 +132,22 @@ export default function LessonPlannerPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ subject, topic, subTopic, grade, duration, objectives }),
       })
+
+      if (res.status === 402) {
+        // Quota exceeded — trial is over
+        setShowUpgrade(true)
+        setUsageInfo(prev => prev ? { ...prev, remaining: 0 } : prev)
+        refreshUsage()
+        return
+      }
+
       if (!res.ok) throw new Error()
       const data = await res.json()
       setPlan(data.plan)
       toast.success('Lesson plan generated!')
+      refreshUsage()
     } catch { toast.error('Could not generate plan. Please try again.') }
-    setLoading(false)
+    finally { setLoading(false) }
   }
 
   async function downloadDOCX() {
@@ -211,6 +252,46 @@ export default function LessonPlannerPage() {
                   <textarea value={objectives} onChange={e=>setObjectives(e.target.value)}
                     className="input h-20 resize-none" placeholder="Any specific exam skills or objectives?" />
                 </div>
+
+                {/* Trial / quota banner */}
+                {usageInfo && !usageInfo.isPremium && !usageInfo.unlocked && (
+                  <div className={`rounded-xl px-4 py-3 text-sm border ${
+                    usageInfo.remaining === 0
+                      ? 'bg-red-50 border-red-200'
+                      : usageInfo.remaining === 1
+                        ? 'bg-amber-50 border-amber-200'
+                        : 'bg-emerald-50 border-emerald-200'
+                  }`}>
+                    <p className={`font-semibold ${
+                      usageInfo.remaining === 0 ? 'text-red-700' : usageInfo.remaining === 1 ? 'text-amber-700' : 'text-emerald-700'
+                    }`}>
+                      {usageInfo.remaining === 0
+                        ? 'Free trial used up'
+                        : `${usageInfo.remaining} of ${usageInfo.limit} free lesson plan${usageInfo.remaining === 1 ? '' : 's'} left this month`}
+                    </p>
+                    {usageInfo.remaining === 0 && (
+                      <button onClick={() => setShowUpgrade(true)}
+                        className="mt-1 text-xs font-bold text-red-700 underline">
+                        Upgrade to Premium — ₦5,000/month →
+                      </button>
+                    )}
+                    {/* trial dots */}
+                    <div className="flex items-center gap-1.5 mt-2">
+                      {Array.from({ length: usageInfo.limit }).map((_, i) => (
+                        <span key={i} className={`h-1.5 flex-1 rounded-full ${
+                          i < usageInfo.count
+                            ? usageInfo.remaining === 0 ? 'bg-red-400' : 'bg-amber-400'
+                            : 'bg-gray-200'
+                        }`} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {usageInfo && (usageInfo.isPremium || usageInfo.unlocked) && (
+                  <div className="rounded-xl px-4 py-3 text-sm bg-emerald-50 border border-emerald-200 flex items-center gap-2 text-emerald-700 font-semibold">
+                    <Zap className="w-4 h-4" /> Premium active — unlimited lesson plans
+                  </div>
+                )}
 
                 <button onClick={generatePlan} disabled={loading}
                   className="btn-primary w-full flex items-center justify-center gap-2">
@@ -527,6 +608,45 @@ export default function LessonPlannerPage() {
           </div>
         </div>
       </div>
+
+      {/* ── Upgrade paywall modal ── */}
+      {showUpgrade && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 no-print"
+          onClick={() => setShowUpgrade(false)}>
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative"
+            onClick={e => e.stopPropagation()}>
+            <button onClick={() => setShowUpgrade(false)}
+              className="absolute top-4 right-4 text-brand-inkLight hover:text-brand-ink transition-colors">
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="w-16 h-16 rounded-2xl bg-amber-100 flex items-center justify-center mx-auto mb-5">
+              <Lock className="w-8 h-8 text-amber-600" />
+            </div>
+
+            <h2 className="text-2xl font-bold text-brand-ink text-center mb-2">Free Trial Complete</h2>
+            <p className="text-brand-inkMid text-center text-sm mb-6">
+              You&apos;ve used all <strong>{usageInfo?.limit ?? 3} free lesson plans</strong> this month.
+              Upgrade to <strong>Premium</strong> for <strong>unlimited</strong> AI lesson plans
+              <span className="whitespace-nowrap"> and result generation</span>.
+            </p>
+
+            <div className="bg-brand-blueLight rounded-xl p-5 mb-6 text-center">
+              <p className="text-3xl font-bold text-brand-blue">₦5,000<span className="text-base font-normal text-brand-inkLight">/month</span></p>
+              <p className="text-xs text-brand-inkMid mt-1">Cancel anytime · Unlimited lesson plans &amp; results</p>
+            </div>
+
+            <a href={PREMIUM_PAY_URL} target="_blank" rel="noopener noreferrer"
+              className="btn-primary w-full inline-flex items-center justify-center gap-2 mb-3">
+              <CreditCard className="w-4 h-4" /> Upgrade to Premium
+            </a>
+            <button onClick={() => setShowUpgrade(false)}
+              className="w-full text-center text-sm text-brand-inkLight hover:text-brand-ink transition-colors">
+              Maybe later
+            </button>
+          </div>
+        </div>
+      )}
     </>
   )
 }

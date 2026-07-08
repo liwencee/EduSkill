@@ -33,7 +33,15 @@ export default function TeacherDashboard() {
               </Link>
               <Link href="/edupro/courses"
                 className="inline-flex items-center gap-2 bg-white/20 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
-                Browse CPD Courses
+                <BookOpen className="w-4 h-4" /> Browse CPD Courses
+              </Link>
+              <Link href="/edupro/community"
+                className="inline-flex items-center gap-2 bg-white/20 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
+                <Users className="w-4 h-4" /> Teacher Community
+              </Link>
+              <Link href="/edupro/certificates"
+                className="inline-flex items-center gap-2 bg-white/20 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-white/30 transition-colors">
+                <Award className="w-4 h-4" /> CPD Certificates
               </Link>
             </div>
           </div>
