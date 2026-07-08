@@ -137,7 +137,7 @@ export default async function JobsPage({ searchParams }: Props) {
                           </span>
                         )}
                         {j.engagement_duration && (
-                          <span className="flex items-center gap-1 text-indigo-600 font-medium">
+                          <span className="flex items-center gap-1 text-blue-600 font-medium">
                             <CalendarDays className="w-3 h-3" />{j.engagement_duration}
                           </span>
                         )}

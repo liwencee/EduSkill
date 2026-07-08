@@ -52,7 +52,7 @@ export default function NotFound() {
         <div className="flex items-center justify-center gap-2">
           <div className="w-2 h-2 rounded-full bg-[#378ADD]" />
           <span className="text-xs text-gray-400 font-medium tracking-wide uppercase">
-            EduSkill Nigeria
+            Skillora Nigeria
           </span>
           <div className="w-2 h-2 rounded-full bg-[#F37321]" />
         </div>

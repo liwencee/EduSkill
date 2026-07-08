@@ -22,7 +22,7 @@ class AppColors {
 }
 
 class AppConstants {
-  static const String appName       = 'SkillBridge Nigeria';
+  static const String appName       = 'Skillora';
   static const String supabaseUrl   = String.fromEnvironment('SUPABASE_URL');
   static const String supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY');
 

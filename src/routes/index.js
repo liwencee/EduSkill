@@ -6,7 +6,7 @@ router.use('/skillup', require('./skillup.routes'));
 router.use('/opportunity', require('./opportunity.routes'));
 
 router.get('/health', (req, res) => {
-  res.json({ success: true, message: 'SkillBridge Nigeria API is running', timestamp: new Date().toISOString() });
+  res.json({ success: true, message: 'Skillora API is running', timestamp: new Date().toISOString() });
 });
 
 module.exports = router;

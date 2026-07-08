@@ -160,11 +160,11 @@ export default function CPDLessonPage() {
         {/* Practical Activity */}
         <div className="bg-orange-50 border border-orange-200 rounded-2xl p-6 mb-10">
           <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-[#F97316] rounded-lg flex items-center justify-center shrink-0">
+            <div className="w-8 h-8 bg-[#F37321] rounded-lg flex items-center justify-center shrink-0">
               <Lightbulb className="w-4 h-4 text-white" />
             </div>
             <div>
-              <p className="text-xs font-bold text-[#F97316] uppercase tracking-wide mb-1">Practical Activity</p>
+              <p className="text-xs font-bold text-[#F37321] uppercase tracking-wide mb-1">Practical Activity</p>
               <p className="text-sm text-orange-900 font-medium leading-relaxed">{currentLesson.practical_activity}</p>
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function CPDLessonPage() {
         {/* Quiz */}
         <div className="bg-white rounded-2xl border border-[#E0DDD5] shadow-sm p-6 mb-10">
           <h2 className="font-bold text-brand-ink text-lg mb-1 flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-[#F97316]" /> Knowledge Check
+            <Trophy className="w-5 h-5 text-[#F37321]" /> Knowledge Check
           </h2>
           <p className="text-sm text-brand-inkLight mb-6">
             Test what you&apos;ve learned in this lesson. Score {course.pass_mark}% across all lessons to earn your certificate.

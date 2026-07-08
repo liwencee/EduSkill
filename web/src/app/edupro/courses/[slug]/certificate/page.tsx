@@ -254,7 +254,7 @@ export default function CPDCertificatePage() {
               </Link>
               <Link href="/dashboard/certificates" className="card p-5 flex items-center gap-3 hover:border-brand-blue/40">
                 <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center shrink-0">
-                  <Share2 className="w-5 h-5 text-[#F97316]" />
+                  <Share2 className="w-5 h-5 text-[#F37321]" />
                 </div>
                 <div>
                   <p className="font-semibold text-brand-ink text-sm">My Certificates</p>

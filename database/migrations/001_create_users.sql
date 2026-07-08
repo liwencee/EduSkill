@@ -1,6 +1,6 @@
 -- ============================================================
 -- Migration 001: Users & Auth
--- SkillBridge Nigeria — Core identity layer
+-- Skillora — Core identity layer
 -- ============================================================
 
 -- Enable UUID generation

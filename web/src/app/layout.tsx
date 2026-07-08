@@ -25,10 +25,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
-        <meta name="theme-color" content="#4F46E5" />
+        <meta name="theme-color" content="#378ADD" />
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       </head>
-      <body className="font-sans bg-white text-edu-text antialiased">
+      <body className="font-sans bg-brand-bg text-brand-ink antialiased">
         <AuthProvider>
         {children}
         <ChatWidget />
@@ -36,7 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           position="top-right"
           toastOptions={{
             duration: 4000,
-            style: { background: '#1E1B4B', color: '#fff', borderRadius: '16px', fontFamily: 'var(--font-nunito)' },
+            style: { background: '#1e4f8a', color: '#fff', borderRadius: '16px', fontFamily: 'var(--font-nunito)' },
           }}
         />
         </AuthProvider>

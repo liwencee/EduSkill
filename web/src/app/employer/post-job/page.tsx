@@ -156,9 +156,9 @@ export default function PostJobPage() {
   // ── Waiting for AuthProvider to resolve ──────────────────────────────────
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-[#EEF2FF] flex items-center justify-center">
+      <div className="min-h-screen bg-[#EBF4FF] flex items-center justify-center">
         <Navbar />
-        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
       </div>
     )
   }
@@ -166,16 +166,16 @@ export default function PostJobPage() {
   // ── Not signed in ─────────────────────────────────────────────────────────
   if (!user) {
     return (
-      <div className="min-h-screen bg-[#EEF2FF]">
+      <div className="min-h-screen bg-[#EBF4FF]">
         <Navbar />
         <div className="max-w-lg mx-auto px-4 py-20 text-center">
           <div className="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-8 h-8 text-red-500" />
           </div>
-          <h1 className="text-xl font-bold text-[#1E1B4B] mb-2">Login Required</h1>
+          <h1 className="text-xl font-bold text-[#1E4F8A] mb-2">Login Required</h1>
           <p className="text-gray-500 text-sm mb-6">Sign in to post a job listing.</p>
           <Link href="/auth/login?next=/employer/post-job"
-            className="inline-flex items-center gap-2 bg-[#4F46E5] text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors">
+            className="inline-flex items-center gap-2 bg-[#378ADD] text-white font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors">
             Log In to Continue
           </Link>
         </div>
@@ -186,13 +186,13 @@ export default function PostJobPage() {
   // ── Signed in but not an employer — offer role switch ─────────────────────
   if (!isEmployer) {
     return (
-      <div className="min-h-screen bg-[#EEF2FF]">
+      <div className="min-h-screen bg-[#EBF4FF]">
         <Navbar />
         <div className="max-w-lg mx-auto px-4 py-20 text-center">
           <div className="w-16 h-16 bg-amber-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
             <AlertCircle className="w-8 h-8 text-amber-500" />
           </div>
-          <h1 className="text-xl font-bold text-[#1E1B4B] mb-2">Employer Account Needed</h1>
+          <h1 className="text-xl font-bold text-[#1E4F8A] mb-2">Employer Account Needed</h1>
           <p className="text-gray-500 text-sm mb-6">
             Your account is set to <strong>{user.role}</strong>.
             Switch to an Employer account — no new sign-up needed.
@@ -200,14 +200,14 @@ export default function PostJobPage() {
           <button
             onClick={switchToEmployer}
             disabled={switching}
-            className="inline-flex items-center gap-2 bg-[#4F46E5] text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-60">
+            className="inline-flex items-center gap-2 bg-[#378ADD] text-white font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60">
             {switching
               ? <><Loader2 className="w-4 h-4 animate-spin" /> Switching…</>
               : <><RefreshCw className="w-4 h-4" /> Switch to Employer Account</>}
           </button>
           <p className="text-xs text-gray-400 mt-4">
             Already an employer?{' '}
-            <Link href="/auth/login" className="text-indigo-600 underline">Sign in again</Link>
+            <Link href="/auth/login" className="text-blue-600 underline">Sign in again</Link>
           </p>
         </div>
       </div>
@@ -217,23 +217,23 @@ export default function PostJobPage() {
   // ── Success screen ────────────────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="min-h-screen bg-[#EEF2FF]">
+      <div className="min-h-screen bg-[#EBF4FF]">
         <Navbar />
         <div className="max-w-2xl mx-auto px-4 py-20 text-center">
           <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
-          <h1 className="text-2xl font-bold text-[#1E1B4B] mb-2">Job Posted Successfully!</h1>
+          <h1 className="text-2xl font-bold text-[#1E4F8A] mb-2">Job Posted Successfully!</h1>
           <p className="text-gray-500 mb-8">
             Your listing is now live and visible to 3,200+ certified job seekers across Nigeria.
           </p>
           <div className="flex flex-wrap gap-3 justify-center">
             <Link href="/dashboard/employer"
-              className="inline-flex items-center gap-2 bg-[#4F46E5] text-white font-bold px-6 py-3 rounded-xl hover:bg-indigo-700 transition-colors">
+              className="inline-flex items-center gap-2 bg-[#378ADD] text-white font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors">
               Back to Dashboard
             </Link>
             <button onClick={() => setSubmitted(false)}
-              className="inline-flex items-center gap-2 border border-indigo-200 text-[#4F46E5] font-bold px-6 py-3 rounded-xl hover:bg-indigo-50 transition-colors">
+              className="inline-flex items-center gap-2 border border-blue-200 text-[#378ADD] font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors">
               Post Another Job
             </button>
           </div>
@@ -244,17 +244,17 @@ export default function PostJobPage() {
 
   // ── Form ──────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-[#EEF2FF]">
+    <div className="min-h-screen bg-[#EBF4FF]">
       <Navbar />
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
         {/* Header */}
         <div className="mb-6">
           <Link href="/dashboard/employer"
-            className="inline-flex items-center gap-1 text-sm text-[#4F46E5] hover:underline mb-4">
+            className="inline-flex items-center gap-1 text-sm text-[#378ADD] hover:underline mb-4">
             <ArrowLeft className="w-4 h-4" /> Back to Dashboard
           </Link>
-          <h1 className="text-2xl font-bold text-[#1E1B4B]">Post a New Job</h1>
+          <h1 className="text-2xl font-bold text-[#1E4F8A]">Post a New Job</h1>
           <p className="text-gray-500 text-sm mt-1">
             Reach Nigeria&apos;s best certified graduates — free to post.
           </p>
@@ -263,44 +263,44 @@ export default function PostJobPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
 
           {/* ── Basic Info ────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <Briefcase className="w-5 h-5 text-[#4F46E5]" /> Job Details
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4 flex items-center gap-2">
+              <Briefcase className="w-5 h-5 text-[#378ADD]" /> Job Details
             </h2>
             <div className="space-y-4">
 
               <div>
-                <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                   Job Title <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text" required
                   value={form.title} onChange={e => set('title', e.target.value)}
                   placeholder="e.g. Digital Marketing Officer"
-                  className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] focus:border-transparent text-sm"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                   Company / Organisation Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text" required
                   value={form.company_name} onChange={e => set('company_name', e.target.value)}
                   placeholder="e.g. Dangote Industries Ltd"
-                  className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] focus:border-transparent text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] focus:border-transparent text-sm"
                 />
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                  <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                     Skill Category <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <select required value={form.category} onChange={e => set('category', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
+                      className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm appearance-none bg-white">
                       <option value="">Select a category</option>
                       {SKILL_CATEGORIES.map(c => <option key={c}>{c}</option>)}
                     </select>
@@ -309,12 +309,12 @@ export default function PostJobPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                  <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                     Job Type
                   </label>
                   <div className="relative">
                     <select value={form.job_type} onChange={e => set('job_type', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
+                      className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm appearance-none bg-white">
                       {JOB_TYPES.map(t => (
                         <option key={t.value} value={t.value}>{t.label}</option>
                       ))}
@@ -327,18 +327,18 @@ export default function PostJobPage() {
           </div>
 
           {/* ── Location ──────────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4 flex items-center gap-2">
-              <MapPin className="w-5 h-5 text-[#F97316]" /> Location &amp; Deadline
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4 flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-[#F37321]" /> Location &amp; Deadline
             </h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                   State / Location <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <select required value={form.location_state} onChange={e => set('location_state', e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
+                    className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm appearance-none bg-white">
                     <option value="">Select a state</option>
                     {STATES.map(s => <option key={s}>{s}</option>)}
                   </select>
@@ -347,22 +347,22 @@ export default function PostJobPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                   <Clock className="w-3.5 h-3.5 inline" /> Application Deadline
                 </label>
                 <input
                   type="date"
                   value={form.deadline} onChange={e => set('deadline', e.target.value)}
                   min={new Date().toISOString().split('T')[0]}
-                  className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
+                  className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm"
                 />
               </div>
             </div>
           </div>
 
           {/* ── Engagement Terms (pay + duration) ─────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-1 flex items-center gap-2">
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-1 flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-green-600" /> Engagement Terms
             </h2>
             <p className="text-xs text-gray-400 mb-4">
@@ -373,12 +373,12 @@ export default function PostJobPage() {
               {/* Pay structure + duration side-by-side */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                  <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                     Pay Structure
                   </label>
                   <div className="relative">
                     <select value={form.rate_type} onChange={e => set('rate_type', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
+                      className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm appearance-none bg-white">
                       {RATE_TYPES.map(r => (
                         <option key={r.value} value={r.value}>{r.label}</option>
                       ))}
@@ -388,12 +388,12 @@ export default function PostJobPage() {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                  <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                     <CalendarDays className="w-3.5 h-3.5 inline" /> Engagement Duration
                   </label>
                   <div className="relative">
                     <select value={form.engagement_duration} onChange={e => set('engagement_duration', e.target.value)}
-                      className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm appearance-none bg-white">
+                      className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm appearance-none bg-white">
                       <option value="">Select duration</option>
                       {DURATIONS.map(d => <option key={d}>{d}</option>)}
                     </select>
@@ -410,7 +410,7 @@ export default function PostJobPage() {
                   return (
                     <>
                       <div>
-                        <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                        <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                           {isFixed ? 'Fixed Price (₦)' : `Min Rate (₦${suffix})`}
                         </label>
                         <div className="relative">
@@ -419,13 +419,13 @@ export default function PostJobPage() {
                             type="number" min={0}
                             value={form.salary_min} onChange={e => set('salary_min', e.target.value)}
                             placeholder={isFixed ? 'e.g. 200000' : 'e.g. 5000'}
-                            className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
+                            className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm"
                           />
                         </div>
                       </div>
                       {!isFixed && (
                         <div>
-                          <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                          <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                             Max Rate (₦{suffix})
                           </label>
                           <div className="relative">
@@ -434,7 +434,7 @@ export default function PostJobPage() {
                               type="number" min={0}
                               value={form.salary_max} onChange={e => set('salary_max', e.target.value)}
                               placeholder="e.g. 10000"
-                              className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm"
+                              className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm"
                             />
                           </div>
                         </div>
@@ -457,7 +457,7 @@ export default function PostJobPage() {
                     </span>
                   )}
                   {form.engagement_duration && (
-                    <span className="inline-flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-indigo-100">
+                    <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-blue-100">
                       <CalendarDays className="w-3 h-3" /> {form.engagement_duration}
                     </span>
                   )}
@@ -467,45 +467,45 @@ export default function PostJobPage() {
           </div>
 
           {/* ── Description ───────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4">Job Description</h2>
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4">Job Description</h2>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                   Description <span className="text-red-500">*</span>
                 </label>
                 <textarea required rows={5}
                   value={form.description} onChange={e => set('description', e.target.value)}
                   placeholder="Describe the role, responsibilities, and what a typical day looks like…"
-                  className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm resize-none"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-[#1E1B4B] mb-1.5">
+                <label className="block text-sm font-semibold text-[#1E4F8A] mb-1.5">
                   Requirements
                 </label>
                 <textarea rows={4}
                   value={form.requirements} onChange={e => set('requirements', e.target.value)}
                   placeholder="List skills, experience, or qualifications needed (one per line)…"
-                  className="w-full px-4 py-2.5 rounded-xl border border-indigo-100 text-[#1E1B4B] focus:outline-none focus:ring-2 focus:ring-[#4F46E5] text-sm resize-none"
+                  className="w-full px-4 py-2.5 rounded-xl border border-blue-100 text-[#1E4F8A] focus:outline-none focus:ring-2 focus:ring-[#378ADD] text-sm resize-none"
                 />
               </div>
             </div>
           </div>
 
           {/* ── Preferences ───────────────────────────────────────────── */}
-          <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-6">
-            <h2 className="font-bold text-[#1E1B4B] mb-4">Preferences</h2>
+          <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
+            <h2 className="font-bold text-[#1E4F8A] mb-4">Preferences</h2>
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={form.require_cert}
                 onChange={e => set('require_cert', e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded accent-[#4F46E5]"
+                className="mt-0.5 w-4 h-4 rounded accent-[#378ADD]"
               />
               <div>
-                <p className="text-sm font-semibold text-[#1E1B4B]">Require Skillora Certification</p>
+                <p className="text-sm font-semibold text-[#1E4F8A]">Require Skillora Certification</p>
                 <p className="text-xs text-gray-500 mt-0.5">
                   Only show your listing to candidates who hold a verified Skillora certificate in the relevant skill.
                 </p>
@@ -515,7 +515,7 @@ export default function PostJobPage() {
 
           {/* ── Submit ────────────────────────────────────────────────── */}
           <button type="submit" disabled={loading || !user}
-            className="w-full inline-flex items-center justify-center gap-2 bg-[#F97316] text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-60 text-base">
+            className="w-full inline-flex items-center justify-center gap-2 bg-[#F37321] text-white font-bold py-3.5 rounded-xl hover:bg-orange-600 transition-colors disabled:opacity-60 text-base">
             {loading
               ? <><Loader2 className="w-5 h-5 animate-spin" /> Posting…</>
               : <><CheckCircle className="w-5 h-5" /> Post Job — Free</>}

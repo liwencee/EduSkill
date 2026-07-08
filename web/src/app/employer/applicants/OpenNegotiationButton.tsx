@@ -69,7 +69,7 @@ export default function OpenNegotiationButton({
     <button
       onClick={openNegotiation}
       disabled={loading}
-      className="inline-flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition-colors disabled:opacity-60 whitespace-nowrap">
+      className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-3 py-2 rounded-xl transition-colors disabled:opacity-60 whitespace-nowrap">
       {loading
         ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
         : <MessageSquare className="w-3.5 h-3.5" />}

@@ -41,14 +41,14 @@ export default function ApplicantActions({ applicationId, currentStatus }: Props
           value={status}
           onChange={e => updateStatus(e.target.value)}
           disabled={loading}
-          className="appearance-none pr-8 pl-3 py-2 text-xs font-bold border border-indigo-200 rounded-xl bg-white hover:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer disabled:opacity-60">
+          className="appearance-none pr-8 pl-3 py-2 text-xs font-bold border border-blue-200 rounded-xl bg-white hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer disabled:opacity-60">
           {STATUSES.map(s => (
             <option key={s.value} value={s.value}>{s.label}</option>
           ))}
         </select>
         <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
           {loading
-            ? <Loader2 className="w-3 h-3 animate-spin text-indigo-500" />
+            ? <Loader2 className="w-3 h-3 animate-spin text-blue-500" />
             : <ChevronDown className="w-3 h-3 text-gray-400" />}
         </div>
       </div>

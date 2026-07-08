@@ -121,7 +121,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard label="Total Users"        value={stats.total_users        ?? 0} icon={Users}        color="bg-brand-blue"      href="/admin/users" />
         <StatCard label="Teachers"           value={stats.teachers           ?? 0} sub={`${stats.approved_kyc ?? 0} KYC approved`} icon={GraduationCap} color="bg-green-600" href="/admin/teachers" />
-        <StatCard label="Employers"          value={stats.employers          ?? 0} icon={Users}        color="bg-indigo-600"      href="/admin/users" />
+        <StatCard label="Employers"          value={stats.employers          ?? 0} icon={Users}        color="bg-blue-600"      href="/admin/users" />
         <StatCard label="Pending KYC"        value={stats.pending_kyc        ?? 0} sub="Awaiting review" icon={Clock}         color="bg-amber-500"   href="/admin/teachers" />
         <StatCard label="Total Jobs"         value={stats.total_jobs         ?? 0} sub={`${stats.active_jobs ?? 0} active`} icon={Briefcase} color="bg-brand-blue" href="/admin/jobs" />
         <StatCard label="Applications"       value={stats.total_applications ?? 0} icon={FileText}     color="bg-purple-600"     href="/admin/jobs" />
@@ -220,7 +220,7 @@ export default async function AdminDashboard() {
             <div className="space-y-3">
               {recentUsers.map((u: any) => (
                 <div key={u.id} className="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-bg transition-colors">
-                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold shrink-0">
                     {u.full_name?.charAt(0) ?? 'U'}
                   </div>
                   <div className="flex-1 min-w-0">

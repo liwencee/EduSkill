@@ -32,7 +32,7 @@ export default function CourseCard({ course, showEnroll = true }: Props) {
   return (
     <Link href={`/skillup/courses/${course.slug}`} className="card block group overflow-hidden">
       {/* Thumbnail */}
-      <div className="relative h-44 bg-gradient-to-br from-indigo-50 to-indigo-100 overflow-hidden">
+      <div className="relative h-44 bg-gradient-to-br from-brand-blueLight to-brand-bgAlt overflow-hidden">
         {course.thumbnail_url ? (
           <Image src={course.thumbnail_url} alt={course.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" />
         ) : (
@@ -64,7 +64,7 @@ export default function CourseCard({ course, showEnroll = true }: Props) {
           )}
         </div>
 
-        <h3 className="font-semibold text-gray-900 text-sm leading-snug mb-1 line-clamp-2 group-hover:text-[#4F46E5] transition-colors">
+        <h3 className="font-semibold text-gray-900 text-sm leading-snug mb-1 line-clamp-2 group-hover:text-brand-blue transition-colors">
           {course.title}
         </h3>
 
@@ -83,10 +83,10 @@ export default function CourseCard({ course, showEnroll = true }: Props) {
 
         {showEnroll && (
           <div className="flex items-center justify-between">
-            <span className="font-bold text-[#1E1B4B] text-sm">
+            <span className="font-bold text-brand-ink text-sm">
               {course.is_free ? 'Free' : `₦${price.toLocaleString()}`}
             </span>
-            <span className="text-xs text-[#4F46E5] font-semibold group-hover:underline">
+            <span className="text-xs text-brand-blue font-semibold group-hover:underline">
               Enrol Now →
             </span>
           </div>

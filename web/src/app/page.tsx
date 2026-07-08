@@ -23,9 +23,9 @@ const COURSES = [
     image: 'https://images.unsplash.com/photo-1540058404349-2e5fabf32d75?w=600&q=80',
     title: 'Coding Basics for Beginners',
     slug: 'coding-basics',
-    category: 'Tech', catBg: 'bg-indigo-100', catText: 'text-indigo-700',
-    cardBorder: 'border-indigo-200', shadow: 'shadow-clay-indigo',
-    badgeText: 'New', badgeBg: 'bg-indigo-500',
+    category: 'Tech', catBg: 'bg-blue-100', catText: 'text-blue-700',
+    cardBorder: 'border-blue-200', shadow: 'shadow-clay-blue',
+    badgeText: 'New', badgeBg: 'bg-blue-500',
     weeks: 6, students: '1.8K', lang: 'EN / Yoruba', free: false,
   },
   {
@@ -72,7 +72,7 @@ const COURSES = [
 
 const PROGRESS_COURSES = [
   { title: 'Digital Marketing', pct: 85, bar: 'bg-orange-500' },
-  { title: 'Coding Basics',     pct: 42, bar: 'bg-indigo-500' },
+  { title: 'Coding Basics',     pct: 42, bar: 'bg-blue-500' },
   { title: 'Financial Literacy',pct: 100, bar: 'bg-green-500' },
 ]
 
@@ -82,7 +82,7 @@ const TESTIMONIALS = [
     avatar: 'https://images.unsplash.com/photo-1531123897727-8f129e1688ce?w=100&h=100&fit=crop&crop=face',
     quote: 'The AI lesson planner changed everything. I create full lesson plans in minutes — my students are more engaged than ever.',
     stars: 5, course: 'EduPro Teacher Training',
-    border: 'border-indigo-200', shadow: 'shadow-clay-indigo',
+    border: 'border-blue-200', shadow: 'shadow-clay-blue',
   },
   {
     name: 'Tunde Adeyemi', role: 'Youth Learner, Lagos',
@@ -111,10 +111,10 @@ export default function LandingPage() {
       {/* ════════════════════════════════════════════════════════════
           HERO
       ════════════════════════════════════════════════════════════ */}
-      <section className="relative bg-gradient-to-br from-[#4F46E5] via-[#5553E8] to-[#6366F1] overflow-hidden">
+      <section className="relative bg-gradient-to-br from-[#378ADD] via-[#3B82F6] to-[#60A5FA] overflow-hidden">
         {/* Ambient blobs */}
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#F97316]/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#F37321]/15 rounded-full blur-3xl pointer-events-none" />
         {/* Dot grid */}
         <div className="absolute inset-0 pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
@@ -125,13 +125,13 @@ export default function LandingPage() {
             {/* Left — copy */}
             <div className="text-white">
               <div className="inline-flex items-center gap-2 bg-white/10 border border-white/25 px-4 py-2 rounded-full text-sm font-semibold mb-6">
-                <span className="w-2 h-2 rounded-full bg-[#F97316] animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-[#F37321] animate-pulse" />
                 Nigeria&apos;s #1 Education Platform
               </div>
 
               <h1 className="font-heading text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] mb-6">
                 Learn Skills.<br />
-                <span className="text-[#F97316]">Earn Money.</span><br />
+                <span className="text-[#F37321]">Earn Money.</span><br />
                 Build Nigeria.
               </h1>
 
@@ -142,7 +142,7 @@ export default function LandingPage() {
 
               <div className="flex flex-wrap gap-4 mb-8">
                 <Link href="/auth/signup"
-                  className="inline-flex items-center gap-2 bg-[#F97316] text-white font-bold px-8 py-4 rounded-2xl text-lg
+                  className="inline-flex items-center gap-2 bg-[#F37321] text-white font-bold px-8 py-4 rounded-2xl text-lg
                              border-[3px] border-orange-800/25 shadow-[0_6px_0_rgba(154,52,18,0.5)]
                              hover:shadow-[0_2px_0_rgba(154,52,18,0.5)] hover:translate-y-1
                              transition-all duration-150 cursor-pointer">
@@ -181,9 +181,9 @@ export default function LandingPage() {
                 </div>
 
                 {/* Floating stat — top left */}
-                <div className="absolute -top-5 -left-10 bg-white border-[3px] border-indigo-100 rounded-2xl px-5 py-3
-                                shadow-[0_6px_0_rgba(79,70,229,0.2),0_4px_16px_rgba(0,0,0,0.12)] animate-float">
-                  <div className="font-heading text-2xl font-bold text-[#4F46E5]">48K+</div>
+                <div className="absolute -top-5 -left-10 bg-white border-[3px] border-blue-100 rounded-2xl px-5 py-3
+                                shadow-[0_6px_0_rgba(55,138,221,0.2),0_4px_16px_rgba(0,0,0,0.12)] animate-float">
+                  <div className="font-heading text-2xl font-bold text-[#378ADD]">48K+</div>
                   <div className="text-xs text-gray-500 font-semibold">Active Learners</div>
                 </div>
 
@@ -197,8 +197,8 @@ export default function LandingPage() {
 
                 {/* Floating stat — bottom right */}
                 <div className="absolute -bottom-5 -right-8 bg-white border-[3px] border-orange-100 rounded-2xl px-5 py-3
-                                shadow-[0_6px_0_rgba(249,115,22,0.2),0_4px_16px_rgba(0,0,0,0.12)]">
-                  <div className="font-heading text-2xl font-bold text-[#F97316]">94%</div>
+                                shadow-[0_6px_0_rgba(243,115,33,0.2),0_4px_16px_rgba(0,0,0,0.12)]">
+                  <div className="font-heading text-2xl font-bold text-[#F37321]">94%</div>
                   <div className="text-xs text-gray-500 font-semibold">Completion Rate</div>
                 </div>
               </div>
@@ -208,8 +208,8 @@ export default function LandingPage() {
           {/* Mobile stats */}
           <div className="lg:hidden grid grid-cols-2 gap-3 mt-8 mb-4">
             {[
-              { v: '48K+', l: 'Active Learners', c: 'text-[#4F46E5]' },
-              { v: '94%',  l: 'Completion Rate', c: 'text-[#F97316]' },
+              { v: '48K+', l: 'Active Learners', c: 'text-[#378ADD]' },
+              { v: '94%',  l: 'Completion Rate', c: 'text-[#F37321]' },
               { v: '3.2K', l: 'Teachers Trained', c: 'text-purple-400' },
               { v: '12K+', l: 'Jobs Filled',      c: 'text-green-400' },
             ].map(s => (
@@ -224,7 +224,7 @@ export default function LandingPage() {
         {/* Wave into next section */}
         <div className="relative mt-10 -mb-1">
           <svg viewBox="0 0 1440 72" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full block">
-            <path d="M0,36 C360,72 720,0 1080,36 C1260,54 1380,24 1440,36 L1440,72 L0,72 Z" fill="#EEF2FF" />
+            <path d="M0,36 C360,72 720,0 1080,36 C1260,54 1380,24 1440,36 L1440,72 L0,72 Z" fill="#EBF4FF" />
           </svg>
         </div>
       </section>
@@ -232,15 +232,15 @@ export default function LandingPage() {
       {/* ════════════════════════════════════════════════════════════
           COURSE CATALOG
       ════════════════════════════════════════════════════════════ */}
-      <section className="py-20 bg-[#EEF2FF]">
+      <section className="py-20 bg-[#EBF4FF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-14">
-            <span className="inline-block bg-white border-[2px] border-indigo-200 text-[#4F46E5] font-bold text-sm px-5 py-2 rounded-full mb-5 shadow-clay-sm">
+            <span className="inline-block bg-white border-[2px] border-blue-200 text-[#378ADD] font-bold text-sm px-5 py-2 rounded-full mb-5 shadow-clay-sm">
               100+ Courses Available
             </span>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E1B4B] mb-4">
-              Skills That <span className="text-[#F97316]">Pay the Bills</span>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E4F8A] mb-4">
+              Skills That <span className="text-[#F37321]">Pay the Bills</span>
             </h2>
             <p className="text-gray-600 text-lg max-w-2xl mx-auto leading-relaxed">
               Every course is designed for Nigerian realities — offline-friendly, locally relevant, and directly connected to jobs.
@@ -269,15 +269,15 @@ export default function LandingPage() {
 
                 {/* Body */}
                 <div className="p-5">
-                  <h3 className="font-heading text-lg font-bold text-[#1E1B4B] mb-2 group-hover:text-[#4F46E5] transition-colors">
+                  <h3 className="font-heading text-lg font-bold text-[#1E4F8A] mb-2 group-hover:text-[#378ADD] transition-colors">
                     {c.title}
                   </h3>
                   <p className="text-gray-500 text-sm mb-4">{c.weeks} weeks · {c.students} enrolled · {c.lang}</p>
                   <div className="flex items-center justify-between">
-                    <span className={`font-bold text-sm ${c.free ? 'text-green-600' : 'text-[#4F46E5]'}`}>
+                    <span className={`font-bold text-sm ${c.free ? 'text-green-600' : 'text-[#378ADD]'}`}>
                       {c.free ? 'Free' : 'Start Free'}
                     </span>
-                    <span className="inline-flex items-center gap-1 bg-[#4F46E5] group-hover:bg-[#F97316] text-white text-sm font-bold px-4 py-1.5 rounded-xl transition-colors duration-150">
+                    <span className="inline-flex items-center gap-1 bg-[#378ADD] group-hover:bg-[#F37321] text-white text-sm font-bold px-4 py-1.5 rounded-xl transition-colors duration-150">
                       Enroll <ArrowRight className="w-3.5 h-3.5" />
                     </span>
                   </div>
@@ -288,8 +288,8 @@ export default function LandingPage() {
 
           <div className="text-center mt-12">
             <Link href="/skillup/courses"
-              className="inline-flex items-center gap-2 bg-white border-[3px] border-indigo-200 text-[#4F46E5] font-bold px-8 py-4 rounded-2xl text-lg
-                         shadow-clay-indigo hover:shadow-none hover:translate-y-1 transition-all duration-150 cursor-pointer">
+              className="inline-flex items-center gap-2 bg-white border-[3px] border-blue-200 text-[#378ADD] font-bold px-8 py-4 rounded-2xl text-lg
+                         shadow-clay-blue hover:shadow-none hover:translate-y-1 transition-all duration-150 cursor-pointer">
               View All 100+ Courses <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
@@ -305,11 +305,11 @@ export default function LandingPage() {
 
             {/* Left — text */}
             <div>
-              <span className="inline-block bg-orange-100 text-[#F97316] font-bold text-sm px-5 py-2 rounded-full mb-5 border-[2px] border-orange-200">
+              <span className="inline-block bg-orange-100 text-[#F37321] font-bold text-sm px-5 py-2 rounded-full mb-5 border-[2px] border-orange-200">
                 Track Every Step
               </span>
-              <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E1B4B] mb-6">
-                Watch Yourself <span className="text-[#4F46E5]">Grow</span> Every Day
+              <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E4F8A] mb-6">
+                Watch Yourself <span className="text-[#378ADD]">Grow</span> Every Day
               </h2>
               <p className="text-gray-600 text-lg mb-10 leading-relaxed">
                 Your personal dashboard shows exactly how far you&apos;ve come. Earn certificates employers actually trust.
@@ -317,17 +317,17 @@ export default function LandingPage() {
 
               <div className="space-y-4">
                 {[
-                  { Icon: Target, title: 'Personal Learning Path', desc: 'AI-curated course sequences based on your career goals', bg: 'bg-indigo-50', iconColor: 'text-[#4F46E5]' },
-                  { Icon: Trophy, title: 'Verified Certificates', desc: 'Share on LinkedIn and attach directly to job applications', bg: 'bg-orange-50', iconColor: 'text-[#F97316]' },
+                  { Icon: Target, title: 'Personal Learning Path', desc: 'AI-curated course sequences based on your career goals', bg: 'bg-blue-50', iconColor: 'text-[#378ADD]' },
+                  { Icon: Trophy, title: 'Verified Certificates', desc: 'Share on LinkedIn and attach directly to job applications', bg: 'bg-orange-50', iconColor: 'text-[#F37321]' },
                   { Icon: Zap, title: 'Offline Progress Sync', desc: 'Learn anywhere offline — syncs automatically when you reconnect', bg: 'bg-green-50', iconColor: 'text-green-600' },
                 ].map(({ Icon, title, desc, bg, iconColor }) => (
                   <div key={title}
-                    className="flex items-start gap-4 bg-[#EEF2FF] border-[2px] border-indigo-100 rounded-2xl p-4">
+                    className="flex items-start gap-4 bg-[#EBF4FF] border-[2px] border-blue-100 rounded-2xl p-4">
                     <div className={`w-11 h-11 ${bg} rounded-xl flex items-center justify-center shrink-0`}>
                       <Icon className={`w-5 h-5 ${iconColor}`} />
                     </div>
                     <div>
-                      <p className="font-heading font-bold text-[#1E1B4B] text-base">{title}</p>
+                      <p className="font-heading font-bold text-[#1E4F8A] text-base">{title}</p>
                       <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
                     </div>
                   </div>
@@ -337,29 +337,29 @@ export default function LandingPage() {
 
             {/* Right — app mockup */}
             <div>
-              <div className="bg-[#EEF2FF] border-[3px] border-indigo-200 rounded-[36px] p-6
-                              shadow-[0_16px_0_rgba(79,70,229,0.2),0_8px_40px_rgba(79,70,229,0.12)]">
+              <div className="bg-[#EBF4FF] border-[3px] border-blue-200 rounded-[36px] p-6
+                              shadow-[0_16px_0_rgba(55,138,221,0.2),0_8px_40px_rgba(55,138,221,0.12)]">
 
                 {/* Greeting */}
                 <div className="flex items-center justify-between mb-6">
                   <div>
                     <p className="text-xs text-gray-400 font-semibold uppercase tracking-wide">Welcome back</p>
-                    <p className="font-heading font-bold text-[#1E1B4B] text-xl">Tunde 👋</p>
+                    <p className="font-heading font-bold text-[#1E4F8A] text-xl">Tunde 👋</p>
                   </div>
-                  <div className="w-11 h-11 rounded-2xl bg-[#4F46E5] flex items-center justify-center
-                                  text-white font-heading font-bold text-sm border-[2px] border-indigo-300">
+                  <div className="w-11 h-11 rounded-2xl bg-[#378ADD] flex items-center justify-center
+                                  text-white font-heading font-bold text-sm border-[2px] border-blue-300">
                     TA
                   </div>
                 </div>
 
                 {/* Overall progress ring */}
-                <div className="bg-white border-[2px] border-indigo-100 rounded-3xl p-5 mb-4
-                                shadow-[0_4px_0_rgba(79,70,229,0.10)]">
+                <div className="bg-white border-[2px] border-blue-100 rounded-3xl p-5 mb-4
+                                shadow-[0_4px_0_rgba(55,138,221,0.10)]">
                   <div className="flex items-center gap-6">
                     <div className="relative shrink-0">
                       <svg width="100" height="100" viewBox="0 0 100 100" aria-hidden="true">
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#EEF2FF" strokeWidth="10" />
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#4F46E5" strokeWidth="10"
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#EBF4FF" strokeWidth="10" />
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#378ADD" strokeWidth="10"
                           strokeLinecap="round"
                           strokeDasharray={CIRCUMFERENCE}
                           strokeDashoffset={CIRCUMFERENCE * (1 - 0.67)}
@@ -367,14 +367,14 @@ export default function LandingPage() {
                         />
                       </svg>
                       <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="font-heading font-bold text-[#4F46E5] text-xl leading-none">67%</span>
+                        <span className="font-heading font-bold text-[#378ADD] text-xl leading-none">67%</span>
                         <span className="text-[10px] text-gray-400 font-semibold">done</span>
                       </div>
                     </div>
                     <div>
-                      <p className="font-heading font-bold text-[#1E1B4B] text-lg mb-1">Great progress!</p>
+                      <p className="font-heading font-bold text-[#1E4F8A] text-lg mb-1">Great progress!</p>
                       <p className="text-gray-500 text-sm">2 of 3 courses active</p>
-                      <div className="inline-flex items-center gap-1 bg-orange-50 text-[#F97316] font-bold text-sm px-3 py-1 rounded-full mt-2">
+                      <div className="inline-flex items-center gap-1 bg-orange-50 text-[#F37321] font-bold text-sm px-3 py-1 rounded-full mt-2">
                         <Zap className="w-3.5 h-3.5" /> 4-day streak
                       </div>
                     </div>
@@ -386,7 +386,7 @@ export default function LandingPage() {
                   {PROGRESS_COURSES.map((p) => (
                     <div key={p.title}
                       className="bg-white border-[2px] border-gray-100 rounded-2xl p-4 shadow-[0_2px_0_rgba(0,0,0,0.04)]">
-                      <div className="flex justify-between text-sm font-semibold text-[#1E1B4B] mb-2">
+                      <div className="flex justify-between text-sm font-semibold text-[#1E4F8A] mb-2">
                         <span>{p.title}</span>
                         <span className={p.pct === 100 ? 'text-green-600' : 'text-gray-400'}>{p.pct}%</span>
                       </div>
@@ -403,7 +403,7 @@ export default function LandingPage() {
                   <div className="grid grid-cols-3 gap-2">
                     {[
                       { Icon: Trophy, label: 'First Course', bg: 'bg-yellow-50', color: 'text-yellow-500' },
-                      { Icon: Zap,    label: '30-Day Streak',bg: 'bg-orange-50', color: 'text-[#F97316]' },
+                      { Icon: Zap,    label: '30-Day Streak',bg: 'bg-orange-50', color: 'text-[#F37321]' },
                       { Icon: Target, label: 'Perfect Score',bg: 'bg-green-50',  color: 'text-green-500' },
                     ].map(({ Icon, label, bg, color }) => (
                       <div key={label} className={`${bg} rounded-xl p-3 text-center border border-gray-100`}>
@@ -422,14 +422,14 @@ export default function LandingPage() {
       {/* ════════════════════════════════════════════════════════════
           HOW IT WORKS
       ════════════════════════════════════════════════════════════ */}
-      <section className="py-20 bg-[#EEF2FF]">
+      <section className="py-20 bg-[#EBF4FF]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <span className="inline-block bg-white border-[2px] border-indigo-200 text-[#4F46E5] font-bold text-sm px-5 py-2 rounded-full mb-5 shadow-clay-sm">
+            <span className="inline-block bg-white border-[2px] border-blue-200 text-[#378ADD] font-bold text-sm px-5 py-2 rounded-full mb-5 shadow-clay-sm">
               Simple as 1-2-3
             </span>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E1B4B]">
-              Your Journey to <span className="text-[#4F46E5]">Success</span>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E4F8A]">
+              Your Journey to <span className="text-[#378ADD]">Success</span>
             </h2>
           </div>
 
@@ -438,13 +438,13 @@ export default function LandingPage() {
               {
                 n: '01', title: 'Sign Up Free',
                 desc: 'Create your account in 2 minutes. No credit card needed. Works on any Android phone.',
-                numBg: 'bg-[#4F46E5]', cardBorder: 'border-indigo-200', shadow: 'shadow-clay-indigo',
+                numBg: 'bg-[#378ADD]', cardBorder: 'border-blue-200', shadow: 'shadow-clay-blue',
                 img: 'https://images.unsplash.com/photo-1473649085228-583485e6e4d7?w=400&q=80',
               },
               {
                 n: '02', title: 'Choose Your Course',
                 desc: 'Browse 100+ practical courses in business, tech, creative arts, and agriculture.',
-                numBg: 'bg-[#F97316]', cardBorder: 'border-orange-200', shadow: 'shadow-clay-orange',
+                numBg: 'bg-[#F37321]', cardBorder: 'border-orange-200', shadow: 'shadow-clay-orange',
                 img: 'https://images.unsplash.com/photo-1620829813573-7c9e1877706f?w=400&q=80',
               },
               {
@@ -465,7 +465,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="font-heading text-2xl font-bold text-[#1E1B4B] mb-3">{step.title}</h3>
+                  <h3 className="font-heading text-2xl font-bold text-[#1E4F8A] mb-3">{step.title}</h3>
                   <p className="text-gray-600 leading-relaxed">{step.desc}</p>
                 </div>
               </div>
@@ -480,11 +480,11 @@ export default function LandingPage() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
-            <span className="inline-block bg-orange-100 border-[2px] border-orange-200 text-[#F97316] font-bold text-sm px-5 py-2 rounded-full mb-5">
+            <span className="inline-block bg-orange-100 border-[2px] border-orange-200 text-[#F37321] font-bold text-sm px-5 py-2 rounded-full mb-5">
               Real Stories
             </span>
-            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E1B4B] mb-4">
-              Lives Changed <span className="text-[#4F46E5]">Every Day</span>
+            <h2 className="font-heading text-4xl md:text-5xl font-bold text-[#1E4F8A] mb-4">
+              Lives Changed <span className="text-[#378ADD]">Every Day</span>
             </h2>
             <p className="text-gray-500 text-lg max-w-xl mx-auto">
               From classrooms in Enugu to markets in Kano — Skillora is changing real lives.
@@ -494,12 +494,12 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {TESTIMONIALS.map((t) => (
               <div key={t.name}
-                className={`bg-[#F8F7FF] border-[3px] ${t.border} rounded-3xl p-7 ${t.shadow}
+                className={`bg-[#F8F7F2] border-[3px] ${t.border} rounded-3xl p-7 ${t.shadow}
                             hover:-translate-y-1 transition-all duration-200 cursor-default`}>
                 {/* Stars */}
                 <div className="flex gap-1 mb-5">
                   {Array.from({ length: t.stars }).map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-[#F97316] text-[#F97316]" />
+                    <Star key={i} className="w-5 h-5 fill-[#F37321] text-[#F37321]" />
                   ))}
                 </div>
                 {/* Quote */}
@@ -511,12 +511,12 @@ export default function LandingPage() {
                   <img src={t.avatar} alt={t.name} loading="lazy"
                     className="w-12 h-12 rounded-2xl border-[3px] border-white shadow-md object-cover" />
                   <div>
-                    <p className="font-heading font-bold text-[#1E1B4B] text-base">{t.name}</p>
+                    <p className="font-heading font-bold text-[#1E4F8A] text-base">{t.name}</p>
                     <p className="text-gray-500 text-sm">{t.role}</p>
                   </div>
                 </div>
                 <div className="pt-4 border-t border-gray-200">
-                  <span className="text-xs font-bold text-[#4F46E5] bg-indigo-50 px-3 py-1.5 rounded-full">
+                  <span className="text-xs font-bold text-[#378ADD] bg-blue-50 px-3 py-1.5 rounded-full">
                     {t.course}
                   </span>
                 </div>
@@ -527,8 +527,8 @@ export default function LandingPage() {
           {/* Social proof numbers */}
           <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { n: '4.9/5', l: 'Average Rating',    icon: Star,     c: 'text-[#F97316]', bg: 'bg-orange-50' },
-              { n: '48K+',  l: 'Active Students',    icon: Users,    c: 'text-[#4F46E5]', bg: 'bg-indigo-50' },
+              { n: '4.9/5', l: 'Average Rating',    icon: Star,     c: 'text-[#F37321]', bg: 'bg-orange-50' },
+              { n: '48K+',  l: 'Active Students',    icon: Users,    c: 'text-[#378ADD]', bg: 'bg-blue-50' },
               { n: '94%',   l: 'Completion Rate',    icon: Award,    c: 'text-green-600',  bg: 'bg-green-50' },
               { n: '12K+',  l: 'Graduates Hired',    icon: Briefcase,c: 'text-purple-600', bg: 'bg-purple-50' },
             ].map(({ n, l, icon: Icon, c, bg }) => (
@@ -548,9 +548,9 @@ export default function LandingPage() {
       {/* ════════════════════════════════════════════════════════════
           BUILT FOR NIGERIA
       ════════════════════════════════════════════════════════════ */}
-      <section className="py-20 bg-[#1E1B4B] text-white relative overflow-hidden">
-        <div className="absolute -top-32 right-0 w-96 h-96 bg-[#4F46E5]/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#F97316]/10 rounded-full blur-3xl pointer-events-none" />
+      <section className="py-20 bg-[#1E4F8A] text-white relative overflow-hidden">
+        <div className="absolute -top-32 right-0 w-96 h-96 bg-[#378ADD]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-[#F37321]/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
@@ -560,7 +560,7 @@ export default function LandingPage() {
                 Made for Nigeria
               </span>
               <h2 className="font-heading text-4xl md:text-5xl font-bold mb-5 leading-tight">
-                Built for <span className="text-[#F97316]">Real Nigerian</span><br /> Conditions
+                Built for <span className="text-[#F37321]">Real Nigerian</span><br /> Conditions
               </h2>
               <p className="text-white/65 text-lg mb-10 leading-relaxed">
                 No reliable power or internet? No problem. Skillora works with the Nigeria you have today.
@@ -568,7 +568,7 @@ export default function LandingPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 {[
-                  { Icon: Wifi,       title: 'Works on 2G',    desc: 'Course downloads under 50MB', color: 'text-[#F97316]' },
+                  { Icon: Wifi,       title: 'Works on 2G',    desc: 'Course downloads under 50MB', color: 'text-[#F37321]' },
                   { Icon: Smartphone, title: 'Any Android',    desc: 'Works on phones from ₦15K',   color: 'text-purple-400' },
                   { Icon: Download,   title: 'Full Offline',   desc: 'Download on WiFi, learn anywhere', color: 'text-green-400' },
                   { Icon: Globe,      title: '5 Languages',    desc: 'EN, Yoruba, Igbo, Hausa, Pidgin', color: 'text-blue-400' },
@@ -594,7 +594,7 @@ export default function LandingPage() {
                 />
               </div>
               {/* Download card */}
-              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 bg-[#F97316]
+              <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 w-3/4 bg-[#F37321]
                               border-[3px] border-orange-700/30 rounded-2xl py-4 px-6 text-center
                               shadow-[0_6px_0_rgba(154,52,18,0.5)]">
                 <Download className="w-6 h-6 text-white mx-auto mb-1" />
@@ -609,9 +609,9 @@ export default function LandingPage() {
       {/* ════════════════════════════════════════════════════════════
           ENROLLMENT CTA
       ════════════════════════════════════════════════════════════ */}
-      <section className="py-24 bg-gradient-to-br from-[#4F46E5] to-[#6366F1] relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-[#378ADD] to-[#60A5FA] relative overflow-hidden">
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#F97316]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#F37321]/10 rounded-full blur-3xl pointer-events-none" />
         {/* Dot grid */}
         <div className="absolute inset-0 pointer-events-none"
           style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)', backgroundSize: '28px 28px' }} />
@@ -619,7 +619,7 @@ export default function LandingPage() {
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-white/10 border-[3px] border-white/20 rounded-3xl mb-8
                           shadow-[0_8px_0_rgba(0,0,0,0.15)]">
-            <Award className="w-10 h-10 text-[#F97316]" />
+            <Award className="w-10 h-10 text-[#F37321]" />
           </div>
 
           <h2 className="font-heading text-5xl md:text-6xl font-bold text-white mb-5 leading-tight">
@@ -639,7 +639,7 @@ export default function LandingPage() {
                          transition-all text-base"
             />
             <button type="submit"
-              className="inline-flex items-center justify-center gap-2 bg-[#F97316] text-white font-bold px-7 py-4 rounded-2xl text-base
+              className="inline-flex items-center justify-center gap-2 bg-[#F37321] text-white font-bold px-7 py-4 rounded-2xl text-base
                          border-[3px] border-orange-800/25 shadow-[0_6px_0_rgba(154,52,18,0.5)]
                          hover:shadow-[0_2px_0_rgba(154,52,18,0.5)] hover:translate-y-1
                          transition-all duration-150 cursor-pointer whitespace-nowrap">

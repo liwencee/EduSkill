@@ -1,5 +1,5 @@
 /**
- * EduSkill — Structured Logger
+ * Skillora — Structured Logger
  *
  * Outputs JSON in production (ingested by Vercel / Datadog / Sentry).
  * Pretty-prints with emoji in development for readability.

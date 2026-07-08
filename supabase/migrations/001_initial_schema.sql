@@ -1,4 +1,4 @@
--- SkillBridge Nigeria — Initial Schema
+-- Skillora — Initial Schema
 -- Run in Supabase SQL editor or via supabase db push
 
 -- Enable extensions

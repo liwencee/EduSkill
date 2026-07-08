@@ -45,10 +45,10 @@ const FAQS = [
 function FAQItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className={`border-[2px] rounded-2xl transition-all duration-200 ${open ? 'border-[#4F46E5] bg-indigo-50' : 'border-gray-200 bg-white'}`}>
+    <div className={`border-[2px] rounded-2xl transition-all duration-200 ${open ? 'border-[#378ADD] bg-blue-50' : 'border-gray-200 bg-white'}`}>
       <button onClick={() => setOpen(!open)} className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left">
-        <span className="font-heading font-semibold text-[#1E1B4B] text-base">{q}</span>
-        <ChevronDown className={`w-5 h-5 shrink-0 text-[#4F46E5] transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+        <span className="font-heading font-semibold text-[#1E4F8A] text-base">{q}</span>
+        <ChevronDown className={`w-5 h-5 shrink-0 text-[#378ADD] transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
       </button>
       {open && <p className="px-6 pb-5 text-gray-600 text-sm leading-relaxed">{a}</p>}
     </div>
@@ -61,23 +61,23 @@ export default function FAQPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#4F46E5] to-[#6366F1] text-white py-20 px-4 relative overflow-hidden">
+      <section className="bg-gradient-to-br from-[#378ADD] to-[#60A5FA] text-white py-20 px-4 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
         <div className="relative max-w-3xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/25 px-4 py-2 rounded-full text-sm font-semibold mb-6">
             <HelpCircle className="w-4 h-4" /> Help Centre
           </div>
-          <h1 className="font-heading text-5xl font-bold mb-4">Frequently Asked <span className="text-[#F97316]">Questions</span></h1>
+          <h1 className="font-heading text-5xl font-bold mb-4">Frequently Asked <span className="text-[#F37321]">Questions</span></h1>
           <p className="text-xl text-white/80">Everything you need to know about Skillora.</p>
         </div>
       </section>
 
       {/* FAQs */}
-      <section className="py-20 bg-[#EEF2FF]">
+      <section className="py-20 bg-[#EBF4FF]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           {FAQS.map(section => (
             <div key={section.category}>
-              <h2 className="font-heading text-2xl font-bold text-[#1E1B4B] mb-5">{section.category}</h2>
+              <h2 className="font-heading text-2xl font-bold text-[#1E4F8A] mb-5">{section.category}</h2>
               <div className="space-y-3">
                 {section.items.map(item => <FAQItem key={item.q} {...item} />)}
               </div>
@@ -89,11 +89,11 @@ export default function FAQPage() {
       {/* Still need help */}
       <section className="py-16 bg-white">
         <div className="max-w-xl mx-auto px-4 text-center">
-          <MessageCircle className="w-12 h-12 text-[#4F46E5] mx-auto mb-4" />
-          <h2 className="font-heading text-3xl font-bold text-[#1E1B4B] mb-3">Still Have Questions?</h2>
+          <MessageCircle className="w-12 h-12 text-[#378ADD] mx-auto mb-4" />
+          <h2 className="font-heading text-3xl font-bold text-[#1E4F8A] mb-3">Still Have Questions?</h2>
           <p className="text-gray-500 mb-6">Our support team replies within 24 hours — or reach us instantly on WhatsApp.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-[#4F46E5] text-white font-bold px-7 py-3.5 rounded-2xl border-[3px] border-indigo-800/20 shadow-[0_4px_0_rgba(79,70,229,0.3)] hover:translate-y-1 hover:shadow-none transition-all duration-150">
+            <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-[#378ADD] text-white font-bold px-7 py-3.5 rounded-2xl border-[3px] border-blue-800/20 shadow-[0_4px_0_rgba(55,138,221,0.3)] hover:translate-y-1 hover:shadow-none transition-all duration-150">
               Contact Us
             </Link>
             <a href="https://wa.me/2348000000000" target="_blank" rel="noopener noreferrer"

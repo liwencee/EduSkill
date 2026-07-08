@@ -118,7 +118,7 @@ export default async function JobDetailPage({ params }: Props) {
                         </span>
                       )}
                       {job.engagement_duration && (
-                        <span className="flex items-center gap-1 text-indigo-600 font-medium">
+                        <span className="flex items-center gap-1 text-blue-600 font-medium">
                           <CalendarDays className="w-3 h-3" />{job.engagement_duration}
                         </span>
                       )}
@@ -221,7 +221,7 @@ export default async function JobDetailPage({ params }: Props) {
                   </div>
                   {teacherProfile.kyc_status === 'incomplete' && (
                     <Link href="/dashboard/teacher/profile"
-                      className="mt-3 block text-xs text-center text-indigo-600 underline">
+                      className="mt-3 block text-xs text-center text-blue-600 underline">
                       Complete your KYC to strengthen your application →
                     </Link>
                   )}

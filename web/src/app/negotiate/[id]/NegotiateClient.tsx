@@ -298,16 +298,16 @@ export default function NegotiateClient({
   const rateSuffix = RATE_TYPES.find(r => r.value === neg.agreed_rate_type)?.suffix ?? ''
 
   return (
-    <div className="min-h-screen bg-[#EEF2FF]">
+    <div className="min-h-screen bg-[#EBF4FF]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
         <Link href={isEmployer ? '/employer/applicants' : '/dashboard/teacher'}
-          className="inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline mb-4">
+          className="inline-flex items-center gap-2 text-sm text-blue-600 hover:underline mb-4">
           <ArrowLeft className="w-4 h-4" /> Back
         </Link>
 
         {/* ── Progress bar ──────────────────────────────────────────────────── */}
-        <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-4 mb-4">
+        <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-4 mb-4">
           <div className="flex items-center gap-2 overflow-x-auto">
             {STATUS_STEPS.map((step, i) => {
               const current = stepIndex(status)
@@ -317,13 +317,13 @@ export default function NegotiateClient({
               return (
                 <div key={step.key} className="flex items-center gap-2 shrink-0">
                   <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-colors ${
-                    done ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-400'
+                    done ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'
                   }`}>
                     <Icon className="w-3.5 h-3.5" />
                     {step.label}
                   </div>
                   {i < STATUS_STEPS.length - 1 && (
-                    <div className={`w-6 h-0.5 rounded ${done ? 'bg-indigo-400' : 'bg-gray-200'}`} />
+                    <div className={`w-6 h-0.5 rounded ${done ? 'bg-blue-400' : 'bg-gray-200'}`} />
                   )}
                 </div>
               )
@@ -337,7 +337,7 @@ export default function NegotiateClient({
           <div className="lg:col-span-2 flex flex-col">
 
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#1E1B4B] to-[#4F46E5] rounded-t-2xl px-5 py-4 text-white">
+            <div className="bg-gradient-to-r from-[#1E4F8A] to-[#378ADD] rounded-t-2xl px-5 py-4 text-white">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center text-white font-bold">
                   {otherParty?.full_name?.charAt(0) ?? '?'}
@@ -354,7 +354,7 @@ export default function NegotiateClient({
             </div>
 
             {/* Messages */}
-            <div className="flex-1 bg-white border-x border-indigo-100 p-4 overflow-y-auto min-h-[360px] max-h-[480px] space-y-3">
+            <div className="flex-1 bg-white border-x border-blue-100 p-4 overflow-y-auto min-h-[360px] max-h-[480px] space-y-3">
               {messages.length === 0 && (
                 <div className="text-center py-10 text-gray-400">
                   <MessageSquare className="w-8 h-8 mx-auto mb-2 opacity-30" />
@@ -372,7 +372,7 @@ export default function NegotiateClient({
                 if (isSystem) {
                   return (
                     <div key={msg.id} className="text-center">
-                      <span className="text-xs bg-indigo-50 text-indigo-600 px-3 py-1 rounded-full">{msg.body}</span>
+                      <span className="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full">{msg.body}</span>
                     </div>
                   )
                 }
@@ -389,13 +389,13 @@ export default function NegotiateClient({
 
                 return (
                   <div key={msg.id} className={`flex gap-2 ${isMine ? 'flex-row-reverse' : ''}`}>
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 ${isMine ? 'bg-indigo-600' : 'bg-orange-500'}`}>
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold shrink-0 ${isMine ? 'bg-blue-600' : 'bg-orange-500'}`}>
                       {senderName.charAt(0)}
                     </div>
                     <div className={`max-w-[75%] ${isMine ? 'items-end' : 'items-start'} flex flex-col gap-1`}>
                       {isOffer && (
-                        <div className={`rounded-2xl p-3 border-2 ${isMine ? 'bg-indigo-600 border-indigo-700 text-white rounded-tr-sm' : 'bg-amber-50 border-amber-200 text-amber-900 rounded-tl-sm'}`}>
-                          <p className={`text-xs font-bold mb-1 ${isMine ? 'text-indigo-200' : 'text-amber-600'}`}>
+                        <div className={`rounded-2xl p-3 border-2 ${isMine ? 'bg-blue-600 border-blue-700 text-white rounded-tr-sm' : 'bg-amber-50 border-amber-200 text-amber-900 rounded-tl-sm'}`}>
+                          <p className={`text-xs font-bold mb-1 ${isMine ? 'text-blue-200' : 'text-amber-600'}`}>
                             {msg.message_type === 'offer' ? '💰 Offer' : '🔄 Counter-Offer'}
                           </p>
                           <p className="text-xl font-bold">
@@ -405,24 +405,24 @@ export default function NegotiateClient({
                             </span>
                           </p>
                           {msg.offered_duration && (
-                            <p className={`text-xs mt-0.5 ${isMine ? 'text-indigo-200' : 'text-amber-700'}`}>
+                            <p className={`text-xs mt-0.5 ${isMine ? 'text-blue-200' : 'text-amber-700'}`}>
                               Duration: {msg.offered_duration}
                             </p>
                           )}
                           {msg.offered_start_date && (
-                            <p className={`text-xs ${isMine ? 'text-indigo-200' : 'text-amber-700'}`}>
+                            <p className={`text-xs ${isMine ? 'text-blue-200' : 'text-amber-700'}`}>
                               Start: {new Date(msg.offered_start_date).toLocaleDateString('en-NG', { day: 'numeric', month: 'short', year: 'numeric' })}
                             </p>
                           )}
                           {msg.body && (
-                            <p className={`text-xs mt-2 pt-2 border-t ${isMine ? 'border-indigo-500 text-indigo-100' : 'border-amber-300 text-amber-800'}`}>
+                            <p className={`text-xs mt-2 pt-2 border-t ${isMine ? 'border-blue-500 text-blue-100' : 'border-amber-300 text-amber-800'}`}>
                               {msg.body}
                             </p>
                           )}
                         </div>
                       )}
                       {!isOffer && msg.body && (
-                        <div className={`rounded-2xl px-4 py-2.5 text-sm ${isMine ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-white border border-indigo-100 text-gray-800 rounded-tl-sm'}`}>
+                        <div className={`rounded-2xl px-4 py-2.5 text-sm ${isMine ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-white border border-blue-100 text-gray-800 rounded-tl-sm'}`}>
                           {msg.body}
                         </div>
                       )}
@@ -457,19 +457,19 @@ export default function NegotiateClient({
 
             {/* Offer form */}
             {showOffer && canMakeOffer && (
-              <div className="bg-indigo-50 border-x border-indigo-200 px-4 py-4 space-y-3">
-                <p className="text-sm font-bold text-indigo-800">
+              <div className="bg-blue-50 border-x border-blue-200 px-4 py-4 space-y-3">
+                <p className="text-sm font-bold text-blue-800">
                   {isTeacher ? 'Your Offer' : 'Counter-Offer'}
                 </p>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-xs text-indigo-700 font-medium mb-1 block">Rate (₦) *</label>
+                    <label className="text-xs text-blue-700 font-medium mb-1 block">Rate (₦) *</label>
                     <input type="number" min="0" placeholder="e.g. 5000"
                       className="input text-sm" value={offerRate}
                       onChange={e => setOfferRate(e.target.value)} />
                   </div>
                   <div>
-                    <label className="text-xs text-indigo-700 font-medium mb-1 block">Rate Type *</label>
+                    <label className="text-xs text-blue-700 font-medium mb-1 block">Rate Type *</label>
                     <select className="input text-sm" value={offerType}
                       onChange={e => setOfferType(e.target.value)}>
                       {RATE_TYPES.map(r => (
@@ -478,7 +478,7 @@ export default function NegotiateClient({
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs text-indigo-700 font-medium mb-1 block">Duration</label>
+                    <label className="text-xs text-blue-700 font-medium mb-1 block">Duration</label>
                     <select className="input text-sm" value={offerDur}
                       onChange={e => setOfferDur(e.target.value)}>
                       <option value="">Select duration</option>
@@ -486,7 +486,7 @@ export default function NegotiateClient({
                     </select>
                   </div>
                   <div>
-                    <label className="text-xs text-indigo-700 font-medium mb-1 block">Start Date</label>
+                    <label className="text-xs text-blue-700 font-medium mb-1 block">Start Date</label>
                     <input type="date" className="input text-sm" value={offerDate}
                       min={new Date().toISOString().split('T')[0]}
                       onChange={e => setOfferDate(e.target.value)} />
@@ -494,11 +494,11 @@ export default function NegotiateClient({
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => setShowOffer(false)}
-                    className="px-4 py-2 text-sm text-indigo-600 border border-indigo-200 rounded-xl hover:bg-white transition-colors">
+                    className="px-4 py-2 text-sm text-blue-600 border border-blue-200 rounded-xl hover:bg-white transition-colors">
                     Cancel
                   </button>
                   <button onClick={sendOffer} disabled={sending}
-                    className="flex-1 inline-flex items-center justify-center gap-2 bg-indigo-600 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-60">
+                    className="flex-1 inline-flex items-center justify-center gap-2 bg-blue-600 text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60">
                     {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                     Send Offer
                   </button>
@@ -508,9 +508,9 @@ export default function NegotiateClient({
 
             {/* Message input */}
             {!['completed','cancelled'].includes(status) && (
-              <div className="bg-white rounded-b-2xl border border-indigo-100 px-4 py-3 flex gap-2 items-end">
+              <div className="bg-white rounded-b-2xl border border-blue-100 px-4 py-3 flex gap-2 items-end">
                 <textarea rows={2}
-                  className="flex-1 resize-none text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  className="flex-1 resize-none text-sm border border-gray-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder={canMakeOffer ? 'Type a message or click Make Offer…' : 'Type a message…'}
                   value={text}
                   onChange={e => setText(e.target.value)}
@@ -518,12 +518,12 @@ export default function NegotiateClient({
                 />
                 {canMakeOffer && (
                   <button onClick={() => setShowOffer(v => !v)}
-                    className="px-3 py-2 text-xs font-bold text-indigo-600 border border-indigo-200 rounded-xl hover:bg-indigo-50 transition-colors whitespace-nowrap">
+                    className="px-3 py-2 text-xs font-bold text-blue-600 border border-blue-200 rounded-xl hover:bg-blue-50 transition-colors whitespace-nowrap">
                     <DollarSign className="w-4 h-4 inline -mt-0.5" /> Offer
                   </button>
                 )}
                 <button onClick={sendMessage} disabled={sending || !text.trim()}
-                  className="p-2.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-40">
+                  className="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-40">
                   {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 </button>
               </div>
@@ -538,11 +538,11 @@ export default function NegotiateClient({
               <div className={`rounded-2xl border p-4 shadow-sm ${
                 status === 'agreed' || stepIndex(status) > stepIndex('agreed')
                   ? 'bg-green-50 border-green-200'
-                  : 'bg-white border-indigo-100'
+                  : 'bg-white border-blue-100'
               }`}>
                 <div className="flex items-center gap-2 mb-3">
                   <HandshakeIcon className="w-5 h-5 text-green-600" />
-                  <p className="font-bold text-[#1E1B4B] text-sm">
+                  <p className="font-bold text-[#1E4F8A] text-sm">
                     {stepIndex(status) >= stepIndex('agreed') ? 'Agreed Terms' : 'Latest Offer'}
                   </p>
                   {stepIndex(status) >= stepIndex('agreed') && (
@@ -552,7 +552,7 @@ export default function NegotiateClient({
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-500">Rate</span>
-                    <span className="font-bold text-[#1E1B4B]">
+                    <span className="font-bold text-[#1E4F8A]">
                       ₦{Number(neg.agreed_rate_ngn).toLocaleString()}{rateSuffix}
                     </span>
                   </div>
@@ -591,13 +591,13 @@ export default function NegotiateClient({
 
             {/* Payment / Escrow section — shown after agreement */}
             {status === 'agreed' && isEmployer && (
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-4">
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <CreditCard className="w-5 h-5 text-indigo-600" />
-                  <p className="font-bold text-[#1E1B4B] text-sm">Escrow Payment</p>
+                  <CreditCard className="w-5 h-5 text-blue-600" />
+                  <p className="font-bold text-[#1E4F8A] text-sm">Escrow Payment</p>
                 </div>
                 <p className="text-xs text-gray-500 mb-4">
-                  Pay securely. Funds are held by EduSkill and released to the teacher only after you confirm the job is done.
+                  Pay securely. Funds are held by Skillora and released to the teacher only after you confirm the job is done.
                 </p>
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-3">
                   <div className="flex items-start gap-2">
@@ -635,23 +635,23 @@ export default function NegotiateClient({
 
             {/* Video Conference section */}
             {['agreed','payment_pending','in_progress','completed'].includes(status) && (
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-4">
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-4">
                 <div className="flex items-center gap-2 mb-3">
-                  <Video className="w-5 h-5 text-indigo-600" />
-                  <p className="font-bold text-[#1E1B4B] text-sm">Video Session</p>
-                  <span className="ml-auto text-xs text-indigo-500 bg-indigo-50 px-2 py-0.5 rounded-full font-medium">
+                  <Video className="w-5 h-5 text-blue-600" />
+                  <p className="font-bold text-[#1E4F8A] text-sm">Video Session</p>
+                  <span className="ml-auto text-xs text-blue-500 bg-blue-50 px-2 py-0.5 rounded-full font-medium">
                     Powered by Daily.co / Jitsi
                   </span>
                 </div>
 
                 {neg.meeting_room_url ? (
                   <div className="space-y-3">
-                    <div className="bg-indigo-50 rounded-xl p-3">
-                      <p className="text-xs text-indigo-600 font-medium mb-1">Meeting Link</p>
+                    <div className="bg-blue-50 rounded-xl p-3">
+                      <p className="text-xs text-blue-600 font-medium mb-1">Meeting Link</p>
                       <p className="text-xs text-gray-600 break-all font-mono">{neg.meeting_room_url}</p>
                     </div>
                     <a href={neg.meeting_room_url} target="_blank" rel="noopener noreferrer"
-                      className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-3 rounded-xl transition-colors text-sm">
+                      className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-3 rounded-xl transition-colors text-sm">
                       <Video className="w-4 h-4" />
                       Join Video Session
                     </a>
@@ -662,7 +662,7 @@ export default function NegotiateClient({
                       Generate a private video room for this session. Both parties can join with one click.
                     </p>
                     <button onClick={generateConference} disabled={confLoading}
-                      className="w-full flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 rounded-xl transition-colors text-sm disabled:opacity-60">
+                      className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2.5 rounded-xl transition-colors text-sm disabled:opacity-60">
                       {confLoading
                         ? <><Loader2 className="w-4 h-4 animate-spin" /> Creating room…</>
                         : <><Video className="w-4 h-4" /> Generate Meeting Link</>}
@@ -694,28 +694,28 @@ export default function NegotiateClient({
             )}
 
             {/* Teacher profile card */}
-            <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-4">
+            <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-4">
               <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-3">Teacher Profile</p>
               <div className="flex items-center gap-3 mb-3">
                 <div className="relative">
                   {teacher?.avatar_url ? (
                     <img src={teacher.avatar_url} alt={teacher.full_name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-indigo-100" />
+                      className="w-12 h-12 rounded-full object-cover border-2 border-blue-100" />
                   ) : (
-                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
                       {teacher?.full_name?.charAt(0) ?? 'T'}
                     </div>
                   )}
                   {(teacherProfile?.has_badge || teacherProfile?.kyc_status === 'approved') && (
-                    <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-indigo-600 rounded-full border-2 border-white flex items-center justify-center">
+                    <span className="absolute -bottom-0.5 -right-0.5 w-5 h-5 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center">
                       <BadgeCheck className="w-3 h-3 text-white" />
                     </span>
                   )}
                 </div>
                 <div>
-                  <p className="font-bold text-[#1E1B4B] text-sm">{teacher?.full_name}</p>
+                  <p className="font-bold text-[#1E4F8A] text-sm">{teacher?.full_name}</p>
                   {teacherProfile?.teacher_uid && (
-                    <p className="text-xs font-mono text-indigo-500">{teacherProfile.teacher_uid}</p>
+                    <p className="text-xs font-mono text-blue-500">{teacherProfile.teacher_uid}</p>
                   )}
                 </div>
               </div>
@@ -723,7 +723,7 @@ export default function NegotiateClient({
               <div className="space-y-1.5 text-xs text-gray-600">
                 {teacherProfile?.cert_type && (
                   <div className="flex items-center gap-1.5">
-                    <Award className="w-3.5 h-3.5 text-indigo-400" />
+                    <Award className="w-3.5 h-3.5 text-blue-400" />
                     <span>{teacherProfile.cert_type}</span>
                     {teacherProfile.cert_verified && <span className="text-green-500 font-bold">✓</span>}
                   </div>
@@ -762,8 +762,8 @@ export default function NegotiateClient({
 
             {/* Rating section */}
             {status === 'completed' && (
-              <div className="bg-white rounded-2xl border border-indigo-100 shadow-sm p-4">
-                <p className="text-sm font-bold text-[#1E1B4B] mb-3">
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-4">
+                <p className="text-sm font-bold text-[#1E4F8A] mb-3">
                   {isEmployer ? 'Rate this Teacher' : 'Rate this Employer'}
                 </p>
                 {(isEmployer ? neg.employer_rating : neg.teacher_rating) ? (
@@ -783,7 +783,7 @@ export default function NegotiateClient({
                       value={reviewText}
                       onChange={e => setReviewText(e.target.value)} />
                     <button onClick={submitRating} disabled={submittingRating || rating === 0}
-                      className="w-full bg-indigo-600 text-white text-sm font-bold py-2 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-60">
+                      className="w-full bg-blue-600 text-white text-sm font-bold py-2 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60">
                       {submittingRating ? 'Submitting…' : 'Submit Rating'}
                     </button>
                   </div>

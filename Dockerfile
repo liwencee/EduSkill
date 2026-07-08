@@ -1,5 +1,5 @@
 # =============================================================
-# EduSkill — multi-stage Dockerfile
+# Skillora — multi-stage Dockerfile
 #   Stage 1 (lint)       : runs ESLint — build fails on errors
 #   Stage 2 (builder)    : installs production-only deps
 #   Stage 3 (production) : lean, non-root, read-only image
@@ -36,9 +36,9 @@ FROM node:18-alpine AS production
 ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
-LABEL org.opencontainers.image.title="EduSkill" \
-      org.opencontainers.image.description="SkillBridge Nigeria — EduSkill API" \
-      org.opencontainers.image.vendor="SkillBridge Nigeria" \
+LABEL org.opencontainers.image.title="Skillora" \
+      org.opencontainers.image.description="Skillora API" \
+      org.opencontainers.image.vendor="Skillora" \
       org.opencontainers.image.source="https://github.com/liwencee/EduSkill"
 
 # Create non-root user

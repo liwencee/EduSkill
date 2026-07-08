@@ -47,26 +47,26 @@ export default function PrivacyPage() {
       <Navbar />
 
       {/* Hero */}
-      <section className="bg-gradient-to-br from-[#1E1B4B] to-[#4F46E5] text-white py-20 px-4">
+      <section className="bg-gradient-to-br from-[#1E4F8A] to-[#378ADD] text-white py-20 px-4">
         <div className="max-w-3xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 border border-white/25 px-4 py-2 rounded-full text-sm font-semibold mb-6">
             <Shield className="w-4 h-4" /> Legal
           </div>
-          <h1 className="font-heading text-5xl font-bold mb-4">Privacy <span className="text-[#F97316]">Policy</span></h1>
+          <h1 className="font-heading text-5xl font-bold mb-4">Privacy <span className="text-[#F37321]">Policy</span></h1>
           <p className="text-white/70 text-base">Last updated: 1 May 2026</p>
         </div>
       </section>
 
       {/* Content */}
-      <section className="py-20 bg-[#EEF2FF]">
+      <section className="py-20 bg-[#EBF4FF]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white border-[3px] border-indigo-100 rounded-3xl p-8 md:p-12 shadow-[0_6px_0_rgba(79,70,229,0.08)] space-y-8">
-            <p className="text-gray-600 leading-relaxed text-base border-l-4 border-[#4F46E5] pl-5 bg-indigo-50 py-3 pr-3 rounded-r-xl">
+          <div className="bg-white border-[3px] border-blue-100 rounded-3xl p-8 md:p-12 shadow-[0_6px_0_rgba(55,138,221,0.08)] space-y-8">
+            <p className="text-gray-600 leading-relaxed text-base border-l-4 border-[#378ADD] pl-5 bg-blue-50 py-3 pr-3 rounded-r-xl">
               At Skillora, your privacy is a fundamental right — not an afterthought. This policy explains what data we collect, how we use it, and the controls you have over it.
             </p>
             {SECTIONS.map(s => (
               <div key={s.title}>
-                <h2 className="font-heading text-xl font-bold text-[#1E1B4B] mb-3">{s.title}</h2>
+                <h2 className="font-heading text-xl font-bold text-[#1E4F8A] mb-3">{s.title}</h2>
                 <p className="text-gray-600 leading-relaxed text-sm">{s.content}</p>
               </div>
             ))}

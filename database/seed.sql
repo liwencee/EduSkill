@@ -1,5 +1,5 @@
 -- ============================================================
--- Seed Data — SkillBridge Nigeria
+-- Seed Data — Skillora
 -- Dev/staging only. DO NOT run in production.
 -- Passwords are bcrypt hashes of 'Test@1234'
 -- ============================================================
@@ -10,7 +10,7 @@
 INSERT INTO users (id, email, password_hash, name, role, tier, is_verified, state, preferred_language) VALUES
   ('00000000-0000-0000-0000-000000000001', 'admin@skillbridge.ng',
    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMwJFdnmbGS.v4.y3uFGY8Ox1K',
-   'SkillBridge Admin', 'admin', 'institutional', TRUE, 'Lagos', 'english'),
+   'Skillora Admin', 'admin', 'institutional', TRUE, 'Lagos', 'english'),
 
   ('00000000-0000-0000-0000-000000000002', 'teacher@skillbridge.ng',
    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMwJFdnmbGS.v4.y3uFGY8Ox1K',

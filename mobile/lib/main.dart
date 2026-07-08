@@ -38,11 +38,11 @@ void main() async {
     Hive.openBox(AppConstants.syncQueueBox),
   ]);
 
-  runApp(const SkillBridgeApp());
+  runApp(const SkilloraApp());
 }
 
-class SkillBridgeApp extends StatelessWidget {
-  const SkillBridgeApp({super.key});
+class SkilloraApp extends StatelessWidget {
+  const SkilloraApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class SkillBridgeApp extends StatelessWidget {
         Provider(create: (_) => CourseRepository(Supabase.instance.client)),
       ],
       child: MaterialApp.router(
-        title: 'SkillBridge Nigeria',
+        title: 'Skillora',
         debugShowCheckedModeBanner: false,
         theme: appTheme,
         routerConfig: appRouter,

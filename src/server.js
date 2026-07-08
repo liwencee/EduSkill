@@ -6,7 +6,7 @@ const config = require('./config');
 const logger = require('./utils/logger');
 
 const server = app.listen(config.port, () => {
-  logger.info(`SkillBridge Nigeria API running`, { port: config.port, env: config.env });
+  logger.info(`Skillora API running`, { port: config.port, env: config.env });
 });
 
 // Graceful shutdown

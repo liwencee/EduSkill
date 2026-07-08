@@ -120,7 +120,7 @@ export default function Navbar() {
           <nav className="hidden md:flex items-center gap-1">
             {navLinks.map(l => (
               <Link key={l.href} href={l.href}
-                className="text-gray-600 hover:text-[#4F46E5] hover:bg-indigo-50 font-medium text-sm px-4 py-2 rounded-xl transition-all duration-150 cursor-pointer">
+                className="text-gray-600 hover:text-[#378ADD] hover:bg-blue-50 font-medium text-sm px-4 py-2 rounded-xl transition-all duration-150 cursor-pointer">
                 {l.label}
               </Link>
             ))}
@@ -137,7 +137,7 @@ export default function Navbar() {
                   <div className="relative" ref={bellRef}>
                     <button
                       onClick={openBell}
-                      className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-indigo-50 text-gray-600 hover:text-[#4F46E5] transition-colors">
+                      className="relative w-9 h-9 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-blue-50 text-gray-600 hover:text-[#378ADD] transition-colors">
                       <Bell className="w-4 h-4" />
                       {unreadCount > 0 && (
                         <span className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
@@ -149,12 +149,12 @@ export default function Navbar() {
                     {bellOpen && (
                       <>
                         <div className="fixed inset-0 z-10" onClick={() => setBellOpen(false)} />
-                        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-indigo-100 overflow-hidden z-20">
+                        <div className="absolute right-0 top-full mt-2 w-80 bg-white rounded-2xl shadow-xl border border-blue-100 overflow-hidden z-20">
                           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                            <p className="font-bold text-sm text-[#1E1B4B]">Notifications</p>
+                            <p className="font-bold text-sm text-[#1E4F8A]">Notifications</p>
                             {notifications.length > 0 && (
                               <Link href="/employer/applicants" onClick={() => setBellOpen(false)}
-                                className="text-xs text-indigo-500 hover:underline">
+                                className="text-xs text-blue-500 hover:underline">
                                 View all applicants →
                               </Link>
                             )}
@@ -171,10 +171,10 @@ export default function Navbar() {
                                   key={n.id}
                                   href={n.link ?? '/employer/applicants'}
                                   onClick={() => setBellOpen(false)}
-                                  className={`flex items-start gap-3 px-4 py-3 hover:bg-indigo-50 transition-colors border-b border-gray-50 last:border-0 ${!n.is_read ? 'bg-indigo-50/60' : ''}`}>
-                                  <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.is_read ? 'bg-indigo-500' : 'bg-gray-200'}`} />
+                                  className={`flex items-start gap-3 px-4 py-3 hover:bg-blue-50 transition-colors border-b border-gray-50 last:border-0 ${!n.is_read ? 'bg-blue-50/60' : ''}`}>
+                                  <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.is_read ? 'bg-blue-500' : 'bg-gray-200'}`} />
                                   <div className="flex-1 min-w-0">
-                                    <p className="text-sm font-semibold text-[#1E1B4B] leading-tight">{n.title}</p>
+                                    <p className="text-sm font-semibold text-[#1E4F8A] leading-tight">{n.title}</p>
                                     {n.body && <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{n.body}</p>}
                                     <p className="text-[10px] text-gray-400 mt-1">
                                       {new Date(n.created_at).toLocaleString('en-NG', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
@@ -194,17 +194,17 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setUserMenuOpen(v => !v)}
-                    className="flex items-center gap-2 bg-gray-100 hover:bg-indigo-50 text-gray-700 rounded-xl px-3 py-2 transition-colors text-sm font-medium">
+                    className="flex items-center gap-2 bg-gray-100 hover:bg-blue-50 text-gray-700 rounded-xl px-3 py-2 transition-colors text-sm font-medium">
                     {user.avatarUrl ? (
                       <img src={user.avatarUrl} alt={user.fullName}
                         className="w-7 h-7 rounded-full object-cover border-2 border-gray-200" />
                     ) : (
-                      <div className="w-7 h-7 rounded-full bg-[#4F46E5] flex items-center justify-center text-white text-xs font-bold">
+                      <div className="w-7 h-7 rounded-full bg-[#378ADD] flex items-center justify-center text-white text-xs font-bold">
                         {initials}
                       </div>
                     )}
                     <span className="max-w-[120px] truncate">{user.fullName || user.email}</span>
-                    <span className="text-xs bg-[#4F46E5] px-1.5 py-0.5 rounded-full text-white">
+                    <span className="text-xs bg-[#378ADD] px-1.5 py-0.5 rounded-full text-white">
                       {ROLE_LABELS[user.role] ?? user.role}
                     </span>
                     <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
@@ -213,22 +213,22 @@ export default function Navbar() {
                   {userMenuOpen && (
                     <>
                       <div className="fixed inset-0 z-10" onClick={() => setUserMenuOpen(false)} />
-                      <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-indigo-100 overflow-hidden z-20">
+                      <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-2xl shadow-xl border border-blue-100 overflow-hidden z-20">
                         <div className="px-4 py-3 border-b border-gray-100">
                           <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                          <p className="text-sm font-semibold text-[#1E1B4B] truncate">{user.fullName}</p>
+                          <p className="text-sm font-semibold text-[#1E4F8A] truncate">{user.fullName}</p>
                         </div>
                         <div className="py-1">
                           <Link href={dashboardHref}
                             onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 transition-colors">
-                            <LayoutDashboard className="w-4 h-4 text-indigo-500" />
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                            <LayoutDashboard className="w-4 h-4 text-blue-500" />
                             Dashboard
                           </Link>
                           <Link href={user.role === 'teacher' ? '/dashboard/teacher/profile' : (user.role === 'employer' ? '/employer/post-job' : '/skillup/courses')}
                             onClick={() => setUserMenuOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-indigo-50 transition-colors">
-                            <User className="w-4 h-4 text-indigo-500" />
+                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition-colors">
+                            <User className="w-4 h-4 text-blue-500" />
                             {user.role === 'teacher' ? 'My Profile & KYC' : user.role === 'employer' ? 'Post a Job' : 'My Courses'}
                           </Link>
                         </div>
@@ -247,11 +247,11 @@ export default function Navbar() {
             ) : (
               <>
                 <Link href="/auth/login"
-                  className="text-gray-600 hover:text-[#4F46E5] font-medium text-sm transition-colors cursor-pointer">
+                  className="text-gray-600 hover:text-[#378ADD] font-medium text-sm transition-colors cursor-pointer">
                   Log in
                 </Link>
                 <Link href="/auth/signup"
-                  className="bg-[#F97316] text-white font-bold text-sm px-5 py-2.5 rounded-xl
+                  className="bg-[#F37321] text-white font-bold text-sm px-5 py-2.5 rounded-xl
                              border-[2px] border-orange-700/30 shadow-[0_4px_0_rgba(180,80,0,0.4)]
                              hover:shadow-[0_2px_0_rgba(180,80,0,0.4)] hover:translate-y-0.5
                              transition-all duration-150 cursor-pointer">
@@ -292,9 +292,9 @@ export default function Navbar() {
               <Link key={n.id} href={n.link ?? '/employer/applicants'}
                 onClick={() => setBellOpen(false)}
                 className={`flex items-start gap-3 py-3 border-b border-gray-100 last:border-0 ${!n.is_read ? 'opacity-100' : 'opacity-70'}`}>
-                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.is_read ? 'bg-indigo-500' : 'bg-gray-300'}`} />
+                <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${!n.is_read ? 'bg-blue-500' : 'bg-gray-300'}`} />
                 <div>
-                  <p className="text-sm font-semibold text-[#1E1B4B]">{n.title}</p>
+                  <p className="text-sm font-semibold text-[#1E4F8A]">{n.title}</p>
                   {n.body && <p className="text-xs text-gray-500 mt-0.5">{n.body}</p>}
                 </div>
               </Link>
@@ -308,7 +308,7 @@ export default function Navbar() {
         <div className="md:hidden border-t border-gray-200 bg-white px-4 py-4 space-y-1">
           {navLinks.map(l => (
             <Link key={l.href} href={l.href} onClick={() => setOpen(false)}
-              className="block py-2.5 px-4 rounded-xl text-gray-600 hover:text-[#4F46E5] hover:bg-indigo-50 font-medium transition-colors cursor-pointer">
+              className="block py-2.5 px-4 rounded-xl text-gray-600 hover:text-[#378ADD] hover:bg-blue-50 font-medium transition-colors cursor-pointer">
               {l.label}
             </Link>
           ))}
@@ -321,17 +321,17 @@ export default function Navbar() {
                   <img src={user.avatarUrl} alt={user.fullName}
                     className="w-9 h-9 rounded-full object-cover border-2 border-gray-200" />
                 ) : (
-                  <div className="w-9 h-9 rounded-full bg-[#4F46E5] flex items-center justify-center text-white text-sm font-bold">
+                  <div className="w-9 h-9 rounded-full bg-[#378ADD] flex items-center justify-center text-white text-sm font-bold">
                     {initials}
                   </div>
                 )}
                 <div>
-                  <p className="text-sm font-semibold text-[#1E1B4B] truncate">{user.fullName || user.email}</p>
+                  <p className="text-sm font-semibold text-[#1E4F8A] truncate">{user.fullName || user.email}</p>
                   <p className="text-xs text-gray-500">{ROLE_LABELS[user.role] ?? user.role} account</p>
                 </div>
               </div>
               <Link href={dashboardHref} onClick={() => setOpen(false)}
-                className="flex items-center gap-3 py-2.5 px-4 rounded-xl text-gray-600 hover:text-[#4F46E5] hover:bg-indigo-50 font-medium transition-colors cursor-pointer">
+                className="flex items-center gap-3 py-2.5 px-4 rounded-xl text-gray-600 hover:text-[#378ADD] hover:bg-blue-50 font-medium transition-colors cursor-pointer">
                 <LayoutDashboard className="w-4 h-4" />
                 Dashboard
               </Link>
@@ -344,11 +344,11 @@ export default function Navbar() {
           ) : (
             <>
               <Link href="/auth/login" onClick={() => setOpen(false)}
-                className="block py-2.5 px-4 rounded-xl text-gray-600 hover:text-[#4F46E5] font-medium cursor-pointer">
+                className="block py-2.5 px-4 rounded-xl text-gray-600 hover:text-[#378ADD] font-medium cursor-pointer">
                 Log in
               </Link>
               <Link href="/auth/signup" onClick={() => setOpen(false)}
-                className="block text-center bg-[#F97316] text-white font-bold py-3 px-4 rounded-xl
+                className="block text-center bg-[#F37321] text-white font-bold py-3 px-4 rounded-xl
                            border-[2px] border-orange-700/30 shadow-[0_4px_0_rgba(180,80,0,0.4)] cursor-pointer">
                 Get Started Free
               </Link>
