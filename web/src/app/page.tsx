@@ -7,6 +7,7 @@ import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import ScrollReveal from '@/components/ScrollReveal'
 import CountUp from '@/components/CountUp'
+import { AnimatedProgressRing, AnimatedProgressBar } from '@/components/AnimatedProgress'
 
 /* ── Data ──────────────────────────────────────────────────────────── */
 const COURSES = [
@@ -101,8 +102,6 @@ const TESTIMONIALS = [
     border: 'border-green-200', shadow: 'shadow-clay-green',
   },
 ]
-
-const CIRCUMFERENCE = 2 * Math.PI * 40 // r=40
 
 /* ── Page ──────────────────────────────────────────────────────────── */
 export default function LandingPage() {
@@ -359,21 +358,7 @@ export default function LandingPage() {
                 <div className="bg-white border-[2px] border-blue-100 rounded-3xl p-5 mb-4
                                 shadow-[0_4px_0_rgba(55,138,221,0.10)]">
                   <div className="flex items-center gap-6">
-                    <div className="relative shrink-0">
-                      <svg width="100" height="100" viewBox="0 0 100 100" aria-hidden="true">
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#EBF4FF" strokeWidth="10" />
-                        <circle cx="50" cy="50" r="40" fill="none" stroke="#378ADD" strokeWidth="10"
-                          strokeLinecap="round"
-                          strokeDasharray={CIRCUMFERENCE}
-                          strokeDashoffset={CIRCUMFERENCE * (1 - 0.67)}
-                          transform="rotate(-90 50 50)"
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="font-heading font-bold text-[#378ADD] text-xl leading-none">67%</span>
-                        <span className="text-[10px] text-gray-400 font-semibold">done</span>
-                      </div>
-                    </div>
+                    <AnimatedProgressRing target={67} />
                     <div>
                       <p className="font-heading font-bold text-[#1E4F8A] text-lg mb-1">Great progress!</p>
                       <p className="text-gray-500 text-sm">2 of 3 courses active</p>
@@ -393,9 +378,7 @@ export default function LandingPage() {
                         <span>{p.title}</span>
                         <span className={p.pct === 100 ? 'text-green-600' : 'text-gray-400'}>{p.pct}%</span>
                       </div>
-                      <div className="h-3 bg-gray-100 rounded-full overflow-hidden">
-                        <div className={`h-full ${p.bar} rounded-full transition-all`} style={{ width: `${p.pct}%` }} />
-                      </div>
+                      <AnimatedProgressBar target={p.pct} barColor={p.bar} />
                     </div>
                   ))}
                 </div>

@@ -167,6 +167,12 @@
   50%      { transform: translateY(-14px); }
 }
 
+/* Shimmer sweep across a filling progress bar */
+@keyframes shimmerSlide {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
 /* Shine sweep on hover (for CTA buttons / cards) */
 .hover-shine { position: relative; overflow: hidden; }
 .hover-shine::after {
