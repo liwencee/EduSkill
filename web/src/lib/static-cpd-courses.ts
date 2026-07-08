@@ -1457,4 +1457,571 @@ export const CPD_COURSES: CPDCourse[] = [
       },
     ],
   },
+
+  // ════════════════════════════════════════════════════════════════════════════
+  // 5. VOCATIONAL EDUCATION IN NIGERIA
+  // ════════════════════════════════════════════════════════════════════════════
+  {
+    slug: 'vocational-education-nigeria',
+    emoji: '🇳🇬',
+    title: 'Vocational Education in Nigeria',
+    description: 'Understand why vocational education matters, the real challenges facing it today, and your role in Nigeria\'s national skills strategy.',
+    long_description: 'Why does vocational education matter more than ever in Nigeria? This course grounds you in the real numbers behind Nigeria\'s skills gap, the policy framework governing TVET (NBTE, NSQF, TRCN), and the practical reality of teaching skills-based subjects in 2026. You\'ll finish understanding not just the "what" of vocational teaching, but the "why" — and how your work as a certified, technology-enabled teacher on Skillora connects directly to Nigeria\'s national skills strategy and the learners and employers who depend on it.',
+    weeks: 3,
+    total_lessons: 10,
+    total_enrolled: 860,
+    avg_rating: 4.9,
+    category: 'Vocational Education',
+    what_you_learn: [
+      'Why vocational education is central to solving Nigeria\'s youth unemployment crisis',
+      'The real, current challenges facing TVET delivery in Nigerian schools and centres',
+      'How technology bridges gaps that conventional classroom teaching cannot',
+      'Nigeria\'s vocational education policy landscape: NBTE, NSQF, UBEC, TETFund, NESRI',
+      'TRCN\'s Mandatory Continuing Professional Development requirement and why it matters for your licence',
+      'How to build a teacher profile that earns trust from learners and employers alike',
+    ],
+    who_its_for: [
+      'TVET and vocational subject instructors',
+      'Secondary school teachers introducing skills-based content',
+      'Teachers preparing for TRCN licence renewal',
+      'Anyone questioning whether vocational teaching is "real" teaching — this course answers that',
+    ],
+    nerdc_alignment: [
+      'National Board for Technical Education (NBTE) curriculum standards',
+      'Nigerian Skills Qualifications Framework (NSQF)',
+      'TRCN Mandatory Continuing Professional Development (MCPD) framework',
+      'Nigeria Education Sector Renewal Initiative (NESRI)',
+    ],
+    pass_mark: 75,
+    modules: [
+      {
+        id: 've-m1',
+        title: 'Why Vocational Education Matters',
+        description: 'Ground yourself in the real numbers and realities driving Nigeria\'s renewed focus on skills-based education.',
+        lessons: [
+          {
+            id: 've-m1-l1',
+            title: 'Nigeria\'s Skills Gap: The Case for Vocational Education',
+            duration_mins: 25,
+            content: [
+              'Nigeria is facing a youth employment crisis that a degree alone cannot solve. Recent labour force data shows 23% of young Nigerians are actively looking for work and cannot find it, while another 32% are entirely outside employment, education, or training — a combined crisis affecting more than half of Nigeria\'s youth population. At the same time, employers across construction, agriculture, ICT, and hospitality report persistent shortages of workers with practical, job-ready skills.',
+              'This is not primarily a shortage of graduates — Nigeria produces hundreds of thousands of degree holders every year. It is a mismatch between what the education system teaches and what the economy actually needs. A curriculum built around theory and examinations, with little hands-on, industry-linked practice, leaves many graduates unemployable in the very sectors crying out for workers.',
+              'The Federal Government has responded with its largest-ever commitment to technical and vocational education: the 2026 national budget allocates roughly ₦2.4 trillion to education, with a specific target of training over five million Nigerians through TVET programmes. This sits inside the Nigeria Education Sector Renewal Initiative (NESRI), a reform programme explicitly designed to align education with industry needs and real employment outcomes. As the Minister of Education put it, "the future of TVET must be industry-led, competency-based and labour-market driven."',
+              'This is the environment you are teaching into. Vocational education is not a fallback for "academically weak" students, as it is too often perceived — it is the fastest, most direct route Nigeria has to closing its skills gap, reducing youth unemployment, and giving learners a credible path to income. Every vocational lesson you teach is doing national work, not just classroom work.',
+            ],
+            key_takeaways: [
+              '23% of Nigerian youth are actively job-seeking; another 32% are outside employment, education, or training entirely',
+              'The core problem is a skills mismatch, not a shortage of graduates',
+              'The 2026 federal budget targets training over 5 million Nigerians through TVET, under the NESRI reform programme',
+              'Vocational education is a national economic strategy, not a lesser alternative to academic education',
+            ],
+            practical_activity: 'Write down three job-ready skills your current subject could teach that it currently does not. Pick one and sketch how you would add it to your next lesson plan.',
+            quiz: [
+              {
+                question: 'According to recent labour force data, what share of young Nigerians are entirely outside employment, education, or training (NEET)?',
+                options: [
+                  { text: '12%' },
+                  { text: '23%' },
+                  { text: '32%', correct: true },
+                  { text: '50%' },
+                ],
+                explanation: 'About 32% of young Nigerians are classified as NEET — not in employment, education, or training — on top of the 23% actively job-seeking.',
+              },
+              {
+                question: 'What is the core problem behind Nigeria\'s youth unemployment crisis, according to this lesson?',
+                options: [
+                  { text: 'Too few university graduates' },
+                  { text: 'A mismatch between what education teaches and what employers need', correct: true },
+                  { text: 'Too many vocational schools' },
+                  { text: 'Lack of interest in working' },
+                ],
+                explanation: 'Nigeria produces large numbers of graduates, but the skills mismatch between curricula and industry needs leaves many unemployable — this is what vocational, competency-based education is designed to fix.',
+              },
+              {
+                question: 'What reform programme is the 2026 TVET budget commitment part of?',
+                options: [
+                  { text: 'Universal Basic Education Act' },
+                  { text: 'Nigeria Education Sector Renewal Initiative (NESRI)', correct: true },
+                  { text: 'National Digital Economy Policy' },
+                  { text: 'ETF Skills Fund' },
+                ],
+                explanation: 'NESRI is the government\'s reform programme aimed at aligning education with industry needs and employment outcomes, and the 2026 TVET budget commitment sits within it.',
+              },
+            ],
+          },
+          {
+            id: 've-m1-l2',
+            title: 'The Real Challenges Facing Vocational Education Today',
+            duration_mins: 30,
+            content: [
+              'Understanding vocational education\'s importance means little without an honest look at what makes it hard to deliver well in Nigeria today. Underfunding is chronic: many TVET centres and vocational departments operate with outdated tools, insufficient workshop materials, and equipment that no longer matches what industry actually uses — so students train on machines or processes they will never encounter on the job.',
+              'Curricula in many institutions are still misaligned with real labour-market demand, and industry linkages — the partnerships that should connect training centres to employers for internships, equipment donations, and job placement — remain weak in most states. This is precisely the gap the Nigerian Skills Qualifications Framework (NSQF) was built to close: a system for recognising and standardising skills regardless of where or how they were learned, so that training actually maps to what employers are hiring for.',
+              'Vocational education also carries a stigma problem. It is too often seen as the pathway for students who "couldn\'t make it" academically, rather than a deliberate, respected career choice — a perception that discourages capable students and, in turn, weakens the pipeline of skilled talent Nigeria needs. Gender disparity compounds this: female enrolment in TVET programmes sits at only around 14%, meaning half the population is significantly underrepresented in fields with strong earning potential.',
+              'Finally, there is a people problem: brain drain among skilled vocational educators, driven by poor pay and limited career progression, means some of the most capable instructors leave the classroom — or the country — for better-paying work. Recognising these challenges honestly is not pessimism. It is the starting point for knowing exactly where your effort as a teacher — and where platforms like Skillora — can make the most difference.',
+            ],
+            key_takeaways: [
+              'Underfunding leaves many TVET centres training students on outdated equipment that doesn\'t match real industry tools',
+              'The NSQF exists specifically to standardise and recognise skills across formal and informal training, closing the curriculum-industry gap',
+              'Vocational education carries an unfair stigma as a "fallback" path, discouraging capable students from choosing it',
+              'Female enrolment in TVET is only around 14% — a major, addressable gap',
+            ],
+            practical_activity: 'List one piece of equipment, tool, or process your students train on that is now outdated in real industry use. Research what the current industry-standard version looks like.',
+            quiz: [
+              {
+                question: 'What was the Nigerian Skills Qualifications Framework (NSQF) specifically designed to fix?',
+                options: [
+                  { text: 'Teacher salaries' },
+                  { text: 'The mismatch between training curricula and real industry skill needs', correct: true },
+                  { text: 'School building infrastructure' },
+                  { text: 'University admission quotas' },
+                ],
+                explanation: 'The NSQF standardises and recognises skills training — whether formal or informal — specifically to close the gap between what is taught and what employers actually need.',
+              },
+              {
+                question: 'Approximately what share of TVET enrolment in Nigeria is female?',
+                options: [
+                  { text: '~14%', correct: true },
+                  { text: '~30%' },
+                  { text: '~45%' },
+                  { text: '~60%' },
+                ],
+                explanation: 'Female enrolment in TVET programmes sits at roughly 14%, a significant and addressable gender gap in vocational education.',
+              },
+              {
+                question: 'What effect does the "stigma" around vocational education have, according to the lesson?',
+                options: [
+                  { text: 'It increases funding for TVET centres' },
+                  { text: 'It discourages capable students from choosing vocational paths', correct: true },
+                  { text: 'It has no measurable effect' },
+                  { text: 'It improves industry linkages' },
+                ],
+                explanation: 'When vocational education is perceived as a fallback for weaker students rather than a deliberate career choice, it discourages capable students and weakens the overall talent pipeline.',
+              },
+            ],
+          },
+          {
+            id: 've-m1-l3',
+            title: 'From Classroom to Career: Why Conventional Teaching Falls Short',
+            duration_mins: 25,
+            content: [
+              'Nigeria does not have enough teachers, full stop. As of recent estimates, there is a shortage of roughly 278,000 teachers in basic education, with public primary schools alone short by nearly 195,000. The 915,593 teachers currently serving Nigeria\'s 31.8 million primary school pupils are stretched across enormous class sizes — and of the roughly 4 million teachers in service nationwide, only about 60% (roughly 2.4 million) are actually TRCN-qualified.',
+              'These numbers explain why conventional, one-size-fits-all, lecture-and-chalkboard teaching struggles to deliver real competency, especially in skills-based subjects. Large class sizes make individual, hands-on practice — the core of learning any practical skill — nearly impossible to deliver consistently. A single instructor cannot personally supervise dozens of students practising a hands-on task at once.',
+              'Rote learning, still common across much of the system, rewards memorisation over demonstrated ability — a serious mismatch for vocational subjects where the actual measure of learning is whether a student can competently perform a task, not recite a definition. This is why competency-based training (CBT), which measures what a learner can actually do rather than what they can recall, is now the direction NBTE and NSQF are pushing the whole system toward.',
+              'None of this is a reason for discouragement — it is the exact argument for the tools this course, and this platform, exist to give you. Where a Nigerian classroom cannot provide one instructor per student, structured digital content, video demonstration, and asynchronous practice tracking can extend a single teacher\'s reach dramatically further than a chalkboard ever could.',
+            ],
+            key_takeaways: [
+              'Nigeria has a shortage of roughly 278,000 teachers in basic education',
+              'Only about 60% of Nigeria\'s ~4 million in-service teachers are TRCN-qualified',
+              'Large class sizes and rote learning make hands-on, competency-based skills teaching especially difficult through conventional methods alone',
+              'Competency-based training (CBT) — measuring what a learner can do, not just recall — is the direction national policy is pushing vocational education',
+            ],
+            practical_activity: 'Estimate your average class size this term. Write down one hands-on task in your subject that is genuinely difficult to individually supervise at that class size — and one way technology could help you check each student\'s competency anyway.',
+            quiz: [
+              {
+                question: 'Approximately how many teachers are currently short in Nigeria\'s basic education system?',
+                options: [
+                  { text: '50,000' },
+                  { text: '120,000' },
+                  { text: '278,000', correct: true },
+                  { text: '500,000' },
+                ],
+                explanation: 'Recent TRCN and UBEC estimates put the basic education teacher shortage at roughly 278,000.',
+              },
+              {
+                question: 'What proportion of Nigeria\'s in-service teachers are actually TRCN-qualified?',
+                options: [
+                  { text: 'About 30%' },
+                  { text: 'About 60%', correct: true },
+                  { text: 'About 85%' },
+                  { text: 'Nearly 100%' },
+                ],
+                explanation: 'Of the roughly 4 million teachers in service, only about 60% (2.4 million) are TRCN-qualified — a major quality gap in the system.',
+              },
+              {
+                question: 'What does competency-based training (CBT) measure, in contrast to rote learning?',
+                options: [
+                  { text: 'How well a student memorises definitions' },
+                  { text: 'Whether a learner can actually perform a task', correct: true },
+                  { text: 'How fast a student completes an exam' },
+                  { text: 'A student\'s attendance record' },
+                ],
+                explanation: 'CBT measures demonstrated ability — can the learner actually do the task — rather than rewarding memorisation, which is a poor fit for vocational subjects.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 've-m2',
+        title: 'Technology as the Bridge',
+        description: 'See how technology solves problems conventional teaching alone cannot — and where Nigeria\'s national skills strategy is already headed.',
+        lessons: [
+          {
+            id: 've-m2-l1',
+            title: 'Why EdTech Adoption Lags — and How to Change That',
+            duration_mins: 25,
+            content: [
+              'If technology can extend a single teacher\'s reach so effectively, why hasn\'t it happened already? The honest answer is a set of specific, well-documented barriers. Most Nigerian teachers were never trained to use technology as part of their teaching practice — many have basic personal digital literacy (WhatsApp, social media) but little experience integrating tools purposefully into a lesson. This gap creates real hesitation, not laziness.',
+              'Infrastructure remains a genuine constraint in many areas: unreliable electricity and inconsistent internet access make tools that assume constant connectivity impractical for daily use. Add to this low teacher remuneration and limited career progression, which reduce the incentive for teachers to invest personal time in learning new skills that aren\'t formally recognised or rewarded — and school budgets that often treat EdTech as a discretionary expense rather than core infrastructure.',
+              'None of these barriers is really about technology itself — they are about training, incentive, and design. Tools built for the Nigerian context, not adapted from assumptions about constant high-speed internet, change the equation. A well-designed platform works offline-first, on low-end Android devices, over 2G connections, and rewards teachers with visible, career-relevant outcomes — certification, dashboard scores, employer visibility — for the time they invest in learning it.',
+              'This is the design philosophy behind Skillora itself: content that survives a patchy connection, lessons built for the phones teachers already own, and a direct, visible link between completing training and professional recognition. Understanding why past EdTech efforts struggled is what lets you evaluate — and use — the tools that are actually built to succeed in your classroom.',
+            ],
+            key_takeaways: [
+              'Most Nigerian teachers were never formally trained to integrate technology into teaching, not just to use devices personally',
+              'Infrastructure gaps (electricity, internet) and low incentive for skills investment are real, documented adoption barriers',
+              'The fix is tools designed for the Nigerian context — offline-first, low-bandwidth, smartphone-based — not assumptions borrowed from other countries',
+              'Career-relevant rewards (certification, visibility) are what make investing time in EdTech worthwhile for teachers',
+            ],
+            practical_activity: 'Identify the single biggest barrier (training, infrastructure, incentive, or budget) to using more technology in your own teaching. Write one small step you could take this month to reduce it.',
+            quiz: [
+              {
+                question: 'What is the main documented reason Nigerian teachers hesitate to integrate technology into teaching, according to the lesson?',
+                options: [
+                  { text: 'They dislike technology personally' },
+                  { text: 'They were never formally trained to integrate it purposefully into lessons', correct: true },
+                  { text: 'It is banned by government policy' },
+                  { text: 'Students refuse to use it' },
+                ],
+                explanation: 'The gap is training, not attitude — many teachers have basic personal digital literacy but little experience integrating technology purposefully into their teaching practice.',
+              },
+              {
+                question: 'What design approach helps EdTech tools succeed despite Nigeria\'s infrastructure constraints?',
+                options: [
+                  { text: 'Requiring constant high-speed internet' },
+                  { text: 'Offline-first, low-bandwidth design built for the phones teachers already own', correct: true },
+                  { text: 'Desktop-only software' },
+                  { text: 'Ignoring electricity and connectivity issues' },
+                ],
+                explanation: 'Tools designed for the Nigerian context — working on low-end Android devices, over 2G, offline where needed — succeed where tools built on different assumptions fail.',
+              },
+              {
+                question: 'What makes investing time in learning EdTech worthwhile for teachers, per this lesson?',
+                options: [
+                  { text: 'Nothing — it rarely pays off' },
+                  { text: 'Career-relevant, visible rewards like certification and professional recognition', correct: true },
+                  { text: 'Mandatory unpaid overtime' },
+                  { text: 'Social media popularity' },
+                ],
+                explanation: 'When completing training leads to visible outcomes — certification, dashboard scores, employer visibility — teachers have a real, career-relevant reason to invest the time.',
+              },
+            ],
+          },
+          {
+            id: 've-m2-l2',
+            title: 'Blended Learning for Skills-Based Subjects',
+            duration_mins: 25,
+            content: [
+              'Vocational subjects have a unique advantage in blended learning: the hands-on component cannot — and should not — be replaced by a screen, but everything around it can be made dramatically more effective with digital tools. Theory, demonstration, and assessment tracking are exactly where technology adds the most value without displacing practical workshop time.',
+              'Video demonstration is the single most powerful digital tool for vocational teaching. A well-recorded, three-minute smartphone video of a correct technique — wiring a socket, cutting a pattern, mixing a formulation — can be watched by every student before hands-on practice, reviewed as many times as needed, and referenced again months later. This directly addresses the large-class-size problem: every student gets a perfect, repeatable demonstration, not just the students standing closest during a live demo.',
+              'Asynchronous theory delivery — via structured WhatsApp lessons, short readings, or recorded voice notes — frees up scarce in-person workshop time for what actually requires physical presence: supervised practice. Students absorb the "what" and "why" on their own schedule; class time is reserved entirely for the "how," under direct supervision.',
+              'Digital competency tracking closes the loop. Instead of a single end-of-term exam, a teacher can record pass/fail or skill-level checkpoints for each student as they demonstrate competency throughout the term — building exactly the kind of verifiable, standardised skill record the NSQF is designed to recognise, and giving both the teacher and the learner a clear, evidence-based picture of readiness.',
+            ],
+            key_takeaways: [
+              'Hands-on practice time should never be replaced — but everything around it (theory, demonstration, tracking) can be enhanced digitally',
+              'Video demonstration solves the large-class-size problem: every student gets a perfect, repeatable demonstration',
+              'Asynchronous theory delivery frees scarce workshop time for supervised hands-on practice',
+              'Digital competency tracking builds a verifiable skill record aligned with the NSQF\'s standardisation goals',
+            ],
+            practical_activity: 'Record a 2–3 minute smartphone video demonstrating one technique from your subject. Share it with students before their next hands-on session and note whether it changes how prepared they are.',
+            quiz: [
+              {
+                question: 'What should never be replaced by digital tools in vocational teaching?',
+                options: [
+                  { text: 'Theory delivery' },
+                  { text: 'Supervised hands-on practice time', correct: true },
+                  { text: 'Assessment tracking' },
+                  { text: 'Video demonstrations' },
+                ],
+                explanation: 'Hands-on practice is the core of skills learning and cannot be replaced by a screen — but the theory, demonstration, and tracking around it can be significantly enhanced.',
+              },
+              {
+                question: 'How does video demonstration help solve the large-class-size problem?',
+                options: [
+                  { text: 'It reduces the number of students in a class' },
+                  { text: 'Every student gets a perfect, repeatable demonstration, not just those closest to a live demo', correct: true },
+                  { text: 'It eliminates the need for hands-on practice entirely' },
+                  { text: 'It automatically grades students' },
+                ],
+                explanation: 'A recorded demonstration can be watched by every student, as many times as needed — solving the problem of only some students getting a clear view during a live, in-person demo.',
+              },
+              {
+                question: 'What is the benefit of digital competency tracking, according to this lesson?',
+                options: [
+                  { text: 'It replaces the need for a teacher' },
+                  { text: 'It builds a verifiable skill record aligned with national standardisation goals like the NSQF', correct: true },
+                  { text: 'It only matters for digital subjects' },
+                  { text: 'It removes the need for hands-on assessment' },
+                ],
+                explanation: 'Recording competency checkpoints throughout the term — not just a final exam — builds exactly the kind of standardised, evidence-based skill record the NSQF is designed to recognise.',
+              },
+            ],
+          },
+          {
+            id: 've-m2-l3',
+            title: 'Technology in TVET: The Skills-to-Jobs Model',
+            duration_mins: 20,
+            content: [
+              'Nigeria\'s national direction on vocational education is already digital, and it is happening now. The 2026 Skills-to-Jobs Framework — a partnership between Co-Creation Hub, the Lagos Chamber of Commerce and Industry, and the Mastercard Foundation — is designed specifically to close digital skills gaps and build direct, trackable pathways from training to employment for young Nigerians.',
+              'The programme\'s first-year design gives a clear picture of what "technology-enabled vocational education" looks like in practice at national scale: 2,850 participants supported through 85,500 learning vouchers, delivered through partner hubs equipped with computer workstations, stable connectivity, and reliable electricity — infrastructure specifically built to solve the barriers covered in the previous lesson.',
+              'This was showcased at the 2026 National TVET Conference in Lagos, themed "Harnessing TVET as a Pathway to Employment: Building a System for Employability, Inclusion and Green Growth in Nigeria" — a theme that captures exactly the shift this course has been describing: from vocational education as an afterthought to vocational education as infrastructure for the national economy.',
+              'This is the model Skillora operates on at a platform level: structured, trackable skills training, connected directly to certification and employer-facing job matching through OpportunityHub. When you teach a CPD course, publish a SkillUp lesson, or verify your KYC on this platform, you are participating in exactly the "training-to-jobs pipeline" that national policy is now actively building infrastructure to support. You are not separate from this national effort — you are part of its delivery mechanism.',
+            ],
+            key_takeaways: [
+              'The 2026 Skills-to-Jobs Framework (CcHub, LCCI, Mastercard Foundation) is a live, national-scale example of technology-enabled vocational education',
+              'Its design — learning vouchers, connected hubs, reliable infrastructure — directly targets the adoption barriers covered earlier in this module',
+              'The 2026 National TVET Conference theme frames TVET explicitly as a pathway to employment, not a lesser educational track',
+              'Platforms connecting training directly to certification and job-matching are now the national policy direction, not an experiment',
+            ],
+            practical_activity: 'Look up whether a Skills-to-Jobs, NBTE TVET Initiative, or similar training-to-employment programme has reached your state or local area. Note one way your students could benefit from it.',
+            quiz: [
+              {
+                question: 'What is the Skills-to-Jobs Framework designed to do?',
+                options: [
+                  { text: 'Replace all vocational teachers with software' },
+                  { text: 'Close digital skills gaps and build trackable pathways from training to employment', correct: true },
+                  { text: 'Fund university scholarships only' },
+                  { text: 'Provide free laptops with no training component' },
+                ],
+                explanation: 'The Skills-to-Jobs Framework is a partnership specifically built to close digital skills gaps and create direct, trackable pathways from training to real employment for young Nigerians.',
+              },
+              {
+                question: 'What was the theme of the 2026 National TVET Conference in Lagos?',
+                options: [
+                  { text: '"Vocational Education as a Last Resort"' },
+                  { text: '"Harnessing TVET as a Pathway to Employment: Building a System for Employability, Inclusion and Green Growth"', correct: true },
+                  { text: '"Digital Literacy for All"' },
+                  { text: '"University Reform 2030"' },
+                ],
+                explanation: 'The 2026 conference theme explicitly framed TVET as a pathway to employment and a system for inclusion and growth — reflecting the national shift in how vocational education is positioned.',
+              },
+              {
+                question: 'How does this lesson describe a teacher\'s role when using Skillora\'s CPD, SkillUp, and KYC systems?',
+                options: [
+                  { text: 'As unrelated to national policy' },
+                  { text: 'As part of the same training-to-jobs pipeline national policy is now building', correct: true },
+                  { text: 'As a temporary workaround until better options exist' },
+                  { text: 'As purely optional extra work' },
+                ],
+                explanation: 'The lesson frames platform activity — CPD completion, content creation, KYC verification — as direct participation in the national training-to-employment pipeline, not a separate or lesser activity.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 've-m3',
+        title: 'Government Policy & National Frameworks',
+        description: 'Know the institutions and policies that govern vocational education and your professional standing as a teacher.',
+        lessons: [
+          {
+            id: 've-m3-l1',
+            title: 'Understanding Nigeria\'s TVET Policy Landscape',
+            duration_mins: 30,
+            content: [
+              'Four institutions define the policy environment you teach within. The National Board for Technical Education (NBTE) is the primary regulator for technical and vocational education and training — its mission is "the production of skilled technical and professional manpower for the development and sustenance of the national economy," and it is directly responsible for developing, updating, and maintaining the quality of TVET curricula nationwide.',
+              'The Nigerian Skills Qualifications Framework (NSQF), developed and maintained by NBTE, is the system that recognises, classifies, and standardises skills regardless of where or how they were acquired — whether in a formal polytechnic programme or an informal apprenticeship. Its explicit purpose is closing the skills gap created by mismatched curricula and industry needs, and improving quality, productivity, and competitiveness across both formal and informal sectors.',
+              'The Universal Basic Education Commission (UBEC) oversees basic education delivery and funding at the federal level, while the Tertiary Education Trust Fund (TETFund/ETF) channels dedicated tax-derived funding into infrastructure, training, and equipment for tertiary and technical institutions — one of the direct funding mechanisms behind efforts to modernise outdated TVET facilities.',
+              'Sitting above all of this is the Nigeria Education Sector Renewal Initiative (NESRI), the reform programme driving the current push toward industry-led, competency-based, labour-market-driven vocational education — the same initiative behind the 2026 budget\'s five-million-trainee TVET target. Knowing these names is not bureaucratic trivia: NBTE curriculum standards, NSQF skill recognition, and NESRI\'s employment-outcome focus are the actual framework your teaching is measured against, and the standard Skillora\'s CPD courses are built to align with.',
+            ],
+            key_takeaways: [
+              'NBTE is the primary regulator of TVET curriculum quality and standards in Nigeria',
+              'The NSQF standardises and recognises skills across both formal and informal training routes',
+              'UBEC funds basic education; TETFund/ETF channels dedicated funding into technical institution infrastructure and training',
+              'NESRI is the overarching reform initiative currently driving Nigeria\'s shift toward industry-aligned, competency-based education',
+            ],
+            practical_activity: 'Search for your subject area within NBTE\'s published curriculum standards or the NSQF. Note one skill or competency listed there that you are not currently explicitly teaching.',
+            quiz: [
+              {
+                question: 'Which body is the primary regulator responsible for TVET curriculum standards in Nigeria?',
+                options: [
+                  { text: 'UBEC' },
+                  { text: 'NBTE', correct: true },
+                  { text: 'TRCN' },
+                  { text: 'NERDC only' },
+                ],
+                explanation: 'The National Board for Technical Education (NBTE) is the primary regulatory body responsible for developing and maintaining TVET curriculum quality and standards.',
+              },
+              {
+                question: 'What is the core purpose of the Nigerian Skills Qualifications Framework (NSQF)?',
+                options: [
+                  { text: 'Setting teacher salaries' },
+                  { text: 'Standardising and recognising skills regardless of where or how they were learned', correct: true },
+                  { text: 'Approving new school buildings' },
+                  { text: 'Managing university admissions' },
+                ],
+                explanation: 'The NSQF recognises, classifies, and standardises skills and competencies acquired through formal or informal training, closing the gap between curricula and industry needs.',
+              },
+              {
+                question: 'What is NESRI?',
+                options: [
+                  { text: 'A teacher licensing exam' },
+                  { text: 'The reform initiative driving Nigeria\'s shift toward industry-led, competency-based education', correct: true },
+                  { text: 'A private EdTech company' },
+                  { text: 'A state-level scholarship programme' },
+                ],
+                explanation: 'The Nigeria Education Sector Renewal Initiative (NESRI) is the government\'s overarching reform programme aligning education — including the 2026 TVET budget commitment — with real industry and employment needs.',
+              },
+            ],
+          },
+          {
+            id: 've-m3-l2',
+            title: 'TRCN, Licensing & Why CPD Isn\'t Optional',
+            duration_mins: 25,
+            content: [
+              'The Teachers Registration Council of Nigeria (TRCN) is the statutory body responsible for regulating and licensing the teaching profession in Nigeria — and its numbers explain exactly why courses like this one exist. Of the roughly 4 million teachers currently in service nationwide, only about 60% are TRCN-qualified. Being unqualified is not just a technicality; it directly limits career progression, professional recognition, and in many cases, formal employment eligibility.',
+              'TRCN\'s Mandatory Continuing Professional Development (MCPD) framework requires practising teachers to earn defined credit units on an ongoing basis to keep their theory and practice current — and completing MCPD requirements is a stated condition for licence renewal. This is not a suggestion. It is the formal mechanism by which Nigeria maintains teaching quality across a profession serving nearly 32 million basic education pupils.',
+              'This is precisely the gap CPD courses on Skillora are designed to help close. A structured, NERDC- and NBTE-aligned course — with real content, a genuine knowledge check, and a verifiable certificate — is exactly the kind of credentialed professional development TRCN\'s MCPD framework is built around. Completing courses here is not just self-improvement; it is direct, documentable progress toward your professional licensing obligations.',
+              'This is also why this course — and every CPD course on the platform — requires a genuine passing score before issuing a certificate. A credential that anyone can claim without demonstrating real knowledge is worthless to TRCN, worthless to an employer evaluating your profile, and ultimately worthless to you. A verified 75%+ score means your certificate actually represents something.',
+            ],
+            key_takeaways: [
+              'TRCN is the statutory regulator and licensing body for the teaching profession in Nigeria',
+              'Only about 60% of Nigeria\'s ~4 million in-service teachers are currently TRCN-qualified',
+              'TRCN\'s Mandatory Continuing Professional Development (MCPD) framework requires ongoing credit units as a condition of licence renewal',
+              'Genuine, score-verified CPD certificates directly support your professional licensing standing — which is why this platform enforces a real passing threshold',
+            ],
+            practical_activity: 'Check your current TRCN registration and CPD/MCPD status. If you are not yet registered, note the next concrete step you need to take.',
+            quiz: [
+              {
+                question: 'What is TRCN\'s role in the Nigerian education system?',
+                options: [
+                  { text: 'Funding school infrastructure' },
+                  { text: 'Regulating and licensing the teaching profession', correct: true },
+                  { text: 'Writing the national curriculum' },
+                  { text: 'Managing university admissions' },
+                ],
+                explanation: 'The Teachers Registration Council of Nigeria (TRCN) is the statutory body responsible for regulating and licensing teachers nationwide.',
+              },
+              {
+                question: 'What does TRCN\'s Mandatory Continuing Professional Development (MCPD) framework require?',
+                options: [
+                  { text: 'Nothing — it is entirely optional' },
+                  { text: 'Ongoing credit units as a condition of licence renewal', correct: true },
+                  { text: 'A one-time exam taken before graduation' },
+                  { text: 'Annual salary deductions' },
+                ],
+                explanation: 'MCPD requires teachers to earn defined credit units on an ongoing basis, and completing these requirements is a stated condition for licence renewal.',
+              },
+              {
+                question: 'Why does Skillora enforce a genuine passing score before issuing a CPD certificate?',
+                options: [
+                  { text: 'To make the platform harder to use' },
+                  { text: 'Because an unverified credential has no real value to TRCN, employers, or the teacher', correct: true },
+                  { text: 'It is a random technical limitation' },
+                  { text: 'Only premium users need to pass' },
+                ],
+                explanation: 'A certificate that does not verify real knowledge is meaningless as professional development evidence — enforcing a genuine passing score is what makes the certificate credible and useful.',
+              },
+            ],
+          },
+        ],
+      },
+      {
+        id: 've-m4',
+        title: 'Your Role on Skillora',
+        description: 'Understand why your work as a teacher matters to the platform — and how to build a profile that succeeds.',
+        lessons: [
+          {
+            id: 've-m4-l1',
+            title: 'Why Teachers Are the Heart of the Platform',
+            duration_mins: 20,
+            content: [
+              'Skillora exists to connect three groups: youth learners who need practical, job-ready skills; employers who need to find candidates they can trust; and teachers, who are the actual source of the training, verification, and credibility that make the entire connection possible. Without teachers, there is no CPD content, no verified skill instruction, and no credible bridge between "someone claims they can do this" and "an employer can trust this person can do this."',
+              'This is the same core role this entire course has described: vocational and skills teachers exist to close Nigeria\'s skills gap. Skillora is simply a platform-level version of that same mission — with the added ability to make your work visible, measurable, and connected to employment outcomes at scale, in a way a single physical classroom cannot achieve on its own.',
+              'Every KYC-verified teacher, every completed CPD course, and every SkillUp lesson published on the platform strengthens the trust signal employers rely on through OpportunityHub. When an employer sees a teacher-verified certificate or a badge on a candidate\'s profile, they are trusting the credibility your work as an instructor established. Your professional standing directly shapes the opportunities available to the learners you teach and certify.',
+              'This is why the platform treats teacher verification, CPD certification, and profile completeness as core infrastructure, not optional extras. Your role is not peripheral to Skillora\'s mission — you are the mechanism by which the mission is actually delivered.',
+            ],
+            key_takeaways: [
+              'Teachers are the source of the training, verification, and credibility that make Skillora\'s learner-to-employer connection possible',
+              'Skillora\'s mission is the same skills-gap mission this course has described, delivered at platform scale',
+              'Employer trust in OpportunityHub candidates is built directly on teacher verification and certification work',
+              'Teacher verification and CPD are core platform infrastructure, not optional extras',
+            ],
+            practical_activity: 'Review your teacher profile. Identify one thing (KYC status, a course you haven\'t finished, a missing detail) that, if completed, would strengthen the trust signal your profile sends to employers.',
+            quiz: [
+              {
+                question: 'According to this lesson, what makes the connection between learners and employers on Skillora possible?',
+                options: [
+                  { text: 'Automated matching software alone' },
+                  { text: 'Teacher-provided training, verification, and credibility', correct: true },
+                  { text: 'Government subsidies' },
+                  { text: 'Social media marketing' },
+                ],
+                explanation: 'Teachers are described as the actual source of the training and verification that build the trust bridge between learners and employers — without them, the connection has no credibility.',
+              },
+              {
+                question: 'How does the lesson describe Skillora\'s relationship to the national skills-gap mission covered earlier in this course?',
+                options: [
+                  { text: 'As unrelated to it' },
+                  { text: 'As a platform-scale version of the same mission', correct: true },
+                  { text: 'As a replacement for government policy' },
+                  { text: 'As purely a business venture with no social purpose' },
+                ],
+                explanation: 'The lesson frames Skillora as delivering the same skills-gap-closing mission described throughout the course, just enabled at platform scale rather than a single classroom.',
+              },
+              {
+                question: 'Why does Skillora treat teacher verification and CPD certification as "core infrastructure"?',
+                options: [
+                  { text: 'Because they are legally required by law' },
+                  { text: 'Because employer trust in candidates is built directly on this teacher-driven credibility', correct: true },
+                  { text: 'Because they generate the most revenue' },
+                  { text: 'They are actually optional extras' },
+                ],
+                explanation: 'Employer trust in OpportunityHub candidates depends on the verification and certification work teachers provide — which is why the platform treats it as essential, not optional.',
+              },
+            ],
+          },
+          {
+            id: 've-m4-l2',
+            title: 'Building a Profile That Succeeds — KYC, Certification & Visibility',
+            duration_mins: 20,
+            content: [
+              'Success on Skillora as a teacher is not accidental — it follows a clear, practical pattern. It starts with KYC verification: completing your identity and credential checks is the foundation every other trust signal on your profile builds on. An unverified profile, no matter how good your content is, sends a weaker signal to employers than a verified one.',
+              'From there, CPD certification is your visible, evidence-based track record. Each course you complete — including this one — requires a genuine 75% pass mark across its knowledge checks before a certificate is issued. If you don\'t reach that score on your first attempt, you can retake the relevant quizzes; there is no penalty for retaking, only for claiming a credential you haven\'t actually earned. Your best verified score becomes part of your permanent teacher record.',
+              'That record now appears directly on your teacher dashboard, showing your CPD courses completed and your certified scores at a glance — and, importantly, this same information is visible to employers browsing verified candidates on OpportunityHub. A strong, verified CPD record is no longer just a personal credential sitting in a drawer; it is an active, visible part of how employers evaluate you.',
+              'The practical advice is simple: keep your profile current, complete your KYC early, take CPD courses seriously enough to actually pass them rather than rush them, and treat every course completion as a real addition to your professional standing — because on this platform, it genuinely is one.',
+            ],
+            key_takeaways: [
+              'KYC verification is the foundation every other trust signal on your teacher profile depends on',
+              'CPD courses require a genuine 75% pass mark; failing simply means retaking the relevant knowledge checks — there is no penalty for retaking',
+              'Your CPD scores now appear on your teacher dashboard and are visible to employers evaluating candidates on OpportunityHub',
+              'Treating CPD courses seriously — rather than rushing them — directly strengthens your professional standing on the platform',
+            ],
+            practical_activity: 'Check your KYC verification status today. If incomplete, list the exact documents or steps needed to finish it this week.',
+            quiz: [
+              {
+                question: 'What is described as the foundation every other trust signal on a teacher\'s Skillora profile depends on?',
+                options: [
+                  { text: 'Number of courses browsed' },
+                  { text: 'KYC verification', correct: true },
+                  { text: 'Profile picture quality' },
+                  { text: 'Account age' },
+                ],
+                explanation: 'KYC verification is described as the foundation every other trust signal builds on — an unverified profile sends a weaker signal regardless of content quality.',
+              },
+              {
+                question: 'What happens if a teacher does not reach the 75% pass mark on a CPD course\'s knowledge checks?',
+                options: [
+                  { text: 'Their account is suspended' },
+                  { text: 'They can retake the relevant quizzes with no penalty', correct: true },
+                  { text: 'They are permanently blocked from that course' },
+                  { text: 'The certificate is issued anyway' },
+                ],
+                explanation: 'Falling short of the pass mark simply means retaking the relevant quizzes — there is no penalty for retaking, only for claiming a credential that wasn\'t genuinely earned.',
+              },
+              {
+                question: 'Where do a teacher\'s CPD scores appear, according to this lesson?',
+                options: [
+                  { text: 'Nowhere — they are private and unused' },
+                  { text: 'On the teacher dashboard, and visible to employers on OpportunityHub', correct: true },
+                  { text: 'Only in an emailed PDF' },
+                  { text: 'Only visible to the platform admin' },
+                ],
+                explanation: 'CPD scores now appear on the teacher\'s own dashboard and are visible to employers browsing verified candidates — making them an active part of how the teacher is evaluated professionally.',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
 ]
