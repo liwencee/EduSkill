@@ -10,6 +10,9 @@ const logger = require('./utils/logger');
 
 const app = express();
 
+// Trust proxy — Railway and other proxies set X-Forwarded-For
+app.set('trust proxy', 1);
+
 // Request ID
 app.use((req, res, next) => {
   req.id = req.headers['x-request-id'] || uuidv4();
@@ -40,6 +43,11 @@ app.use(morgan('combined', {
 // Disable x-powered-by (already done by helmet but explicit)
 app.disable('x-powered-by');
 
+// Health check at root
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'Skillora API is running', timestamp: new Date().toISOString() });
+});
+
 // Routes
 app.use('/api/v1', routes);
 
@@ -48,3 +56,4 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 module.exports = app;
+
