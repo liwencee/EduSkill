@@ -97,11 +97,12 @@ describe('Protected routes redirect to 401', () => {
 });
 
 describe('Input size limit', () => {
-  it('rejects payload larger than 10kb', async () => {
-    const bigPayload = { data: 'x'.repeat(11 * 1024) };
+  it('rejects payload larger than 10mb', async () => {
+    const bigPayload = { data: 'x'.repeat(11 * 1024 * 1024) };
     const res = await request(app)
       .post('/api/v1/auth/login')
       .send(bigPayload);
     expect(res.status).toBe(413);
+    expect(res.body).toEqual({ success: false, message: 'Payload too large' });
   });
 });
