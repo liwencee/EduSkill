@@ -73,8 +73,10 @@ function LoginForm() {
       window.location.href = destination
 
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'An unexpected error occurred.'
-      setError(msg)
+      // Log the real cause for developers (e.g. missing Supabase env vars) —
+      // never show raw internal error text to a real user on the login form.
+      console.error('[Skillora] Login failed:', err)
+      setError('Something went wrong. Please try again in a moment.')
       setLoading(false)
     }
   }
