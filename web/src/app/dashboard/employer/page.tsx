@@ -20,8 +20,6 @@ function calcMatchScore(t: any): number {
 }
 
 export default async function EmployerDashboard() {
-  const supabase = createClient()
-
   // Live stats
   let activeListings  = 0
   let totalApplicants = 0
@@ -29,6 +27,7 @@ export default async function EmployerDashboard() {
   let topTeachers: any[] = []
 
   try {
+    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (user) {

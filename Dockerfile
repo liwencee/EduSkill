@@ -59,7 +59,11 @@ USER skillbridge
 
 EXPOSE 3000
 
+# Use $PORT if the platform injects one (Railway, etc.) — falls back to 3000
+# for local `docker run`. Hardcoding 3000 here silently breaks the healthcheck
+# on any host that assigns a different port, which Railway marks unhealthy
+# and stops routing to (502 Bad Gateway) even though the app is running fine.
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD wget -qO- http://localhost:3000/api/v1/health || exit 1
+  CMD wget -qO- "http://localhost:${PORT:-3000}/api/v1/health" || exit 1
 
 CMD ["node", "src/server.js"]

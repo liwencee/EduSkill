@@ -4,6 +4,10 @@ import Navbar            from '@/components/Navbar'
 import Link              from 'next/link'
 import { ArrowLeft, MessageSquare, Briefcase } from 'lucide-react'
 
+// Auth-gated, cookie-reading page — must render per request, never at build time
+// (createClient() throws if Supabase env vars are absent during the build).
+export const dynamic = 'force-dynamic'
+
 export default async function TeacherMessagesPage() {
   const supabase = createClient()
 

@@ -32,11 +32,11 @@ interface Props {
 }
 
 export default async function CandidatesPage({ searchParams }: Props) {
-  const supabase = createClient()
   let teachers: any[] = []
   let totalCount = 0
 
   try {
+    const supabase = createClient()
     // Base query: join profiles + teacher_profiles, only display_to_employers=true
     let query = supabase
       .from('teacher_profiles')
