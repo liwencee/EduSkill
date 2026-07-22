@@ -97,15 +97,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     loadUser()
 
-    // Re-load whenever the session changes (sign-in / sign-out / token refresh)
-    const supabase = createClient()
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (!session) { setUser(null); setLoading(false) }
-        else           loadUser()
-      }
-    )
-    return () => subscription.unsubscribe()
+    // Re-load whenever the session changes (sign-in / sign-out / token refresh).
+    // Guarded: if Supabase env vars are missing, createClient() throws — we must
+    // NOT let that bubble out of this effect, or React unmounts the whole app
+    // (AuthProvider wraps every page) and the site white-screens with a generic
+    // "client-side exception". Instead, log it and let the app render without
+    // live auth so the marketing pages still work.
+    try {
+      const supabase = createClient()
+      const { data: { subscription } } = supabase.auth.onAuthStateChange(
+        (_event, session) => {
+          if (!session) { setUser(null); setLoading(false) }
+          else           loadUser()
+        }
+      )
+      return () => subscription.unsubscribe()
+    } catch (err) {
+      console.error('[Skillora] Auth subscription unavailable:', err)
+      setLoading(false)
+    }
   }, [loadUser])
 
   const role = user?.role ?? ''
