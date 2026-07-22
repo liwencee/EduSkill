@@ -55,6 +55,12 @@ app.use(morgan('combined', {
 // Disable x-powered-by (already done by helmet but explicit)
 app.disable('x-powered-by');
 
+// Root health check — this API has no HTML routes; Railway/uptime monitors
+// that probe "/" (rather than /api/v1/health) previously got a bare 404.
+app.get('/', (req, res) => {
+  res.json({ success: true, message: 'Skillora API is running', timestamp: new Date().toISOString() });
+});
+
 // Routes
 app.use('/api/v1', routes);
 
