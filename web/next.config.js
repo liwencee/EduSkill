@@ -16,6 +16,27 @@ const nextConfig = {
 
   // ── HTTP Cache-Control + Security Headers ──────────────────────
   async headers() {
+    // Derive the Supabase API origin from the env var so the CSP always
+    // matches wherever Supabase actually lives (self-hosted Kong on Railway,
+    // a custom domain like api.skillora.ng, or Supabase Cloud). Without this,
+    // the browser blocks every auth/data fetch as a connect-src violation.
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+    let supabaseHost = ''
+    try { supabaseHost = new URL(supabaseUrl).host } catch { supabaseHost = '' }
+    const supabaseHttp = supabaseHost ? `https://${supabaseHost}` : ''
+    const supabaseWs   = supabaseHost ? `wss://${supabaseHost}`   : ''
+
+    const connectSrc = [
+      "'self'",
+      supabaseHttp,
+      supabaseWs,
+      'https://*.supabase.co',       // legacy Supabase Cloud (harmless fallback)
+      'wss://*.supabase.co',
+      'https://api.openai.com',
+      'https://paystack.com',
+      'https://cloudflareinsights.com', // Cloudflare Web Analytics beacon
+    ].filter(Boolean).join(' ')
+
     /** Security headers applied to every route */
     const securityHeaders = [
       { key: 'X-Content-Type-Options',    value: 'nosniff' },
@@ -31,13 +52,13 @@ const nextConfig = {
         key: 'Content-Security-Policy',
         value: [
           "default-src 'self'",
-          "script-src 'self' 'unsafe-inline' 'unsafe-eval'",   // Next.js needs unsafe-inline
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://static.cloudflareinsights.com",   // Next.js needs unsafe-inline
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
           "img-src 'self' data: blob: https:",
           // Allow YouTube embeds + Paystack iframes
           "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://paystack.com",
-          "connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.openai.com https://paystack.com",
+          `connect-src ${connectSrc}`,
           "frame-ancestors 'none'",
         ].join('; '),
       },
