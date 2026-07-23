@@ -19,7 +19,8 @@ export default function ForgotPasswordPage() {
       redirectTo: `${window.location.origin}/auth/update-password`,
     })
     if (error) {
-      toast.error(error.message)
+      console.error('[Skillora] Password reset request failed:', error)
+      toast.error('Something went wrong. Please try again in a moment.')
     } else {
       setSent(true)
     }

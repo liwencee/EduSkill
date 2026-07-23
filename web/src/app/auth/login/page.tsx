@@ -48,7 +48,8 @@ function LoginForm() {
         ) {
           setError('Wrong email or password. Please try again.')
         } else {
-          setError(authError.message || 'Login failed. Please try again.')
+          console.error('[Skillora] Login failed:', authError)
+          setError('Something went wrong. Please try again in a moment.')
         }
         setLoading(false)
         return

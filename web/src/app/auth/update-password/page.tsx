@@ -44,7 +44,8 @@ export default function UpdatePasswordPage() {
       const supabase = createClient()
       const { error } = await supabase.auth.updateUser({ password })
       if (error) {
-        toast.error(error.message)
+        console.error('[Skillora] Password update failed:', error)
+        toast.error('Something went wrong. Please try again in a moment.')
       } else {
         setDone(true)
       }

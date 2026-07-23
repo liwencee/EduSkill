@@ -35,7 +35,7 @@ export async function signupAction(formData: FormData) {
 
   if (error) {
     const msg = error.message.toLowerCase()
-    let friendly = error.message
+    let friendly = 'Something went wrong. Please try again in a moment.'
 
     if (msg.includes('already registered') || msg.includes('already exists') || msg.includes('user already')) {
       friendly = 'An account with this email already exists. Try logging in instead.'
@@ -45,6 +45,8 @@ export async function signupAction(formData: FormData) {
       friendly = 'Please enter a valid email address.'
     } else if (msg.includes('weak password') || msg.includes('password')) {
       friendly = 'Password is too weak. Use at least 8 characters.'
+    } else {
+      console.error('[Skillora] Signup failed:', error)
     }
 
     redirect(`/auth/signup?error=${encodeURIComponent(friendly)}&role=${role}`)
