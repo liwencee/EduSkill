@@ -21,7 +21,7 @@ const SECTIONS = [
   },
   {
     title: '5. Your Rights',
-    content: `Under Nigeria's NDPR (Nigeria Data Protection Regulation), you have the right to: access the personal data we hold about you; correct inaccurate data; request deletion of your account and associated data; withdraw consent for marketing communications; and lodge a complaint with NITDA (National Information Technology Development Agency). To exercise any of these rights, email privacy@skillbridge.ng.`,
+    content: `Under Nigeria's NDPR (Nigeria Data Protection Regulation), you have the right to: access the personal data we hold about you; correct inaccurate data; request deletion of your account and associated data; withdraw consent for marketing communications; and lodge a complaint with NITDA (National Information Technology Development Agency). To exercise any of these rights, email privacy@skillora.ng.`,
   },
   {
     title: '6. Cookies',
@@ -37,7 +37,7 @@ const SECTIONS = [
   },
   {
     title: '9. Contact',
-    content: `For any privacy-related questions or requests, contact our Data Protection Officer at: privacy@skillbridge.ng or write to 14 Broad Street, Lagos Island, Lagos, Nigeria.`,
+    content: `For any privacy-related questions or requests, contact our Data Protection Officer at: privacy@skillora.ng or write to 14 Broad Street, Lagos Island, Lagos, Nigeria.`,
   },
 ]
 

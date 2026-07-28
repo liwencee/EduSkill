@@ -13,7 +13,7 @@ const SECTIONS = [
   },
   {
     title: '3. Account Responsibilities',
-    content: `You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You must provide accurate information during registration. You may not share your account with others or use another person's account. Notify us immediately at support@skillbridge.ng if you suspect unauthorised access.`,
+    content: `You are responsible for maintaining the confidentiality of your account credentials and for all activity that occurs under your account. You must provide accurate information during registration. You may not share your account with others or use another person's account. Notify us immediately at support@skillora.ng if you suspect unauthorised access.`,
   },
   {
     title: '4. Acceptable Use',

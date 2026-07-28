@@ -37,7 +37,7 @@ const FAQS = [
     items: [
       { q: 'How does EduPro work for teachers?', a: 'EduPro gives teachers access to CPD courses, an AI-powered lesson planner, and peer communities. Schools can onboard their entire staff under one institutional account.' },
       { q: 'How do I post jobs on OpportunityHub?', a: 'Employers can register on the Employer page, verify their business, and post job listings for free. Listings are matched to certified graduates who fit the role.' },
-      { q: 'Can I customise training for my company\'s workforce?', a: 'Yes. We offer custom corporate training programmes. Contact our partnerships team at partners@skillbridge.ng for a tailored proposal.' },
+      { q: 'Can I customise training for my company\'s workforce?', a: 'Yes. We offer custom corporate training programmes. Contact our partnerships team at partners@skillora.ng for a tailored proposal.' },
     ],
   },
 ]

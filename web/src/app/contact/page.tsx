@@ -46,7 +46,7 @@ export default function ContactPage() {
               <p className="text-gray-600 leading-relaxed">Reach us through any of the channels below. Our support team is based in Lagos and responds within 24 hours.</p>
 
               {[
-                { Icon: Mail, label: 'Email', value: 'hello@skillbridge.ng', href: 'mailto:hello@skillbridge.ng' },
+                { Icon: Mail, label: 'Email', value: 'hello@skillora.ng', href: 'mailto:hello@skillora.ng' },
                 { Icon: Phone, label: 'Phone', value: '+234 800 SKILL (75455)', href: 'tel:+23480075455' },
                 { Icon: MessageCircle, label: 'WhatsApp', value: '+234 800 000 0000', href: 'https://wa.me/2348000000000' },
                 { Icon: MapPin, label: 'Office', value: '14 Broad Street, Lagos Island, Lagos', href: '#' },
