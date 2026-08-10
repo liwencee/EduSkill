@@ -32,7 +32,7 @@ services:
   api-dev:
     build:
       context: .
-      target: builder
+      target: backend-builder
     image: eduskill:dev
     container_name: Eduskill-dev
     ports:
