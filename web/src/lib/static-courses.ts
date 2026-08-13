@@ -196,4 +196,33 @@ export const STATIC_COURSES: Course[] = [
     is_published: true, is_offline_ready: true, price_ngn: 10000,
     total_lessons: 36, total_enrolled: 890, avg_rating: 4.8, tags: ['music', 'keyboard', 'piano', 'performance', 'entrepreneurship'],
   },
+  {
+    id: 'static-22', slug: 'guitar-music-business',
+    title: 'Guitar: Music Performance & Business',
+    description: 'Learn acoustic and electric guitar from scratch, then turn it into income. Covers chords, strumming, lead guitar, playing by ear, live performance with a band, home recording, and how to price, market and grow a music career playing for churches, weddings, studios and events across Nigeria.',
+    category: 'music', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'yo', 'pcm'], duration_weeks: 6, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    total_lessons: 36, total_enrolled: 610, avg_rating: 4.7, tags: ['music', 'guitar', 'performance', 'entrepreneurship'],
+  },
+  {
+    id: 'static-23', slug: 'drums-music-business',
+    title: 'Drums: Music Performance & Business',
+    description: 'Learn to play the drum kit from scratch, then turn it into income. Covers grooves, rudiments, fills, playing with a band, home recording, and how to price, market and grow a music career playing for churches, weddings, studios and events across Nigeria.',
+    category: 'music', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'yo', 'pcm'], duration_weeks: 6, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    total_lessons: 36, total_enrolled: 430, avg_rating: 4.7, tags: ['music', 'drums', 'performance', 'entrepreneurship'],
+  },
+
+  // ── Tech Product / Startup ────────────────────────────────────────────
+  {
+    id: 'static-24', slug: 'tech-product-launch',
+    title: 'Tech Product Launch: Idea to Market',
+    description: 'A step-by-step guide to building and launching a tech product in Nigeria — from validating your idea and choosing a tech stack, to building an MVP, launching, growing your first users and raising funding or bootstrapping. For coders, no-coders and aspiring founders.',
+    category: 'coding', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'pcm'], duration_weeks: 6, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 12000,
+    total_lessons: 36, total_enrolled: 650, avg_rating: 4.7, tags: ['tech', 'startup', 'product', 'MVP', 'entrepreneurship'],
+  },
 ]
