@@ -164,9 +164,18 @@ export default async function JobDetailPage({ params }: Props) {
                     <Building2 className="w-5 h-5 text-brand-blue" /> About the Employer
                   </h2>
                   <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-brand-blueLight flex items-center justify-center text-brand-blue font-bold text-lg shrink-0">
-                      {job.employer.full_name?.charAt(0) ?? 'E'}
-                    </div>
+                    {job.employer.avatar_url ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={job.employer.avatar_url}
+                        alt={job.employer.full_name ?? 'Employer'}
+                        className="w-12 h-12 rounded-xl object-cover shrink-0"
+                      />
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-brand-blueLight flex items-center justify-center text-brand-blue font-bold text-lg shrink-0">
+                        {job.employer.full_name?.charAt(0) ?? 'E'}
+                      </div>
+                    )}
                     <div>
                       <p className="font-semibold text-brand-ink">{job.employer.full_name}</p>
                       {job.employer.state && (

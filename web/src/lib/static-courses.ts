@@ -185,4 +185,15 @@ export const STATIC_COURSES: Course[] = [
     is_published: true, is_offline_ready: true, price_ngn: 13000,
     total_lessons: 37, total_enrolled: 1430, avg_rating: 4.8, tags: ['hausa', 'language', 'culture', 'teaching'],
   },
+
+  // ── Music ──────────────────────────────────────────────────────────────
+  {
+    id: 'static-21', slug: 'keyboard-piano-music-business',
+    title: 'Keyboard & Piano: Music Performance & Business',
+    description: 'Learn to play keyboard and piano from scratch, then turn it into income. Covers music theory, chords, playing by ear, live performance with a band, home recording, and how to price, market and grow a music career playing for churches, weddings, studios and events across Nigeria.',
+    category: 'music', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'yo', 'pcm'], duration_weeks: 6, is_free: false,
+    is_published: true, is_offline_ready: true, price_ngn: 10000,
+    total_lessons: 36, total_enrolled: 890, avg_rating: 4.8, tags: ['music', 'keyboard', 'piano', 'performance', 'entrepreneurship'],
+  },
 ]
