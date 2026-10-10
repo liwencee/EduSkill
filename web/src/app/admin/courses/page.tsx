@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { BookOpen, Search, Users, Star, Eye, EyeOff } from 'lucide-react'
 import CourseAdminActions from './CourseAdminActions'
+import InstructorAssign from './InstructorAssign'
 
 interface Props {
   searchParams: { q?: string; status?: string }
@@ -15,7 +16,7 @@ export default async function AdminCoursesPage({ searchParams }: Props) {
     const supabase = createClient()
     let query = supabase
       .from('courses')
-      .select('id, title, slug, category, price_ngn, is_free, is_published, total_enrolled, avg_rating, created_at')
+      .select('id, title, slug, category, price_ngn, is_free, is_published, total_enrolled, avg_rating, created_at, instructor:profiles(full_name, email)')
       .order('created_at', { ascending: false })
 
     if (searchParams.q)
@@ -80,6 +81,7 @@ export default async function AdminCoursesPage({ searchParams }: Props) {
                 <tr className="border-b border-[#E0DDD5] bg-brand-bg">
                   <th className="text-left px-4 py-3 font-semibold text-brand-inkMid text-xs uppercase tracking-wide">Course</th>
                   <th className="text-left px-4 py-3 font-semibold text-brand-inkMid text-xs uppercase tracking-wide hidden md:table-cell">Category</th>
+                  <th className="text-left px-4 py-3 font-semibold text-brand-inkMid text-xs uppercase tracking-wide">Creator</th>
                   <th className="text-right px-4 py-3 font-semibold text-brand-inkMid text-xs uppercase tracking-wide">Price</th>
                   <th className="text-center px-4 py-3 font-semibold text-brand-inkMid text-xs uppercase tracking-wide">Enrolled</th>
                   <th className="text-center px-4 py-3 font-semibold text-brand-inkMid text-xs uppercase tracking-wide hidden lg:table-cell">Rating</th>
@@ -98,6 +100,13 @@ export default async function AdminCoursesPage({ searchParams }: Props) {
                       <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-blue-50 text-brand-blue capitalize">
                         {c.category ?? '—'}
                       </span>
+                    </td>
+                    <td className="px-4 py-3">
+                      <InstructorAssign
+                        courseId={c.id}
+                        instructorName={c.instructor?.full_name ?? null}
+                        instructorEmail={c.instructor?.email ?? null}
+                      />
                     </td>
                     <td className="px-4 py-3 text-right">
                       {c.is_free

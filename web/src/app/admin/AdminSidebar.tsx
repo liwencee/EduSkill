@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   LayoutDashboard, Briefcase, GraduationCap, Users,
-  Handshake, LogOut, ShieldCheck, ChevronRight, BookOpen, CreditCard,
+  Handshake, LogOut, ShieldCheck, ChevronRight, BookOpen, CreditCard, BarChart3,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
@@ -16,6 +16,7 @@ const NAV = [
   { href: '/admin/users',        label: 'Users',        icon: Users           },
   { href: '/admin/negotiations', label: 'Negotiations', icon: Handshake       },
   { href: '/admin/payments',     label: 'Payments',     icon: CreditCard      },
+  { href: '/dashboard/creator',  label: 'Video Analytics', icon: BarChart3    },
 ]
 
 export default function AdminSidebar() {

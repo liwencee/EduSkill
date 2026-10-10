@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Navbar from '@/components/Navbar'
@@ -9,6 +9,7 @@ import {
 } from 'lucide-react'
 import { COURSE_CURRICULUM, findLesson, allLessons } from '@/lib/course-content'
 import { STATIC_COURSES } from '@/lib/static-courses'
+import { useVideoWatchTracking } from '@/lib/use-video-watch-tracking'
 
 /** Extract YouTube video ID from any YouTube URL format */
 function getYouTubeId(url: string): string | null {
@@ -132,6 +133,15 @@ export default function LessonPage() {
       .then(data => { setContent(data.content); setLoading(false) })
       .catch(() => setLoading(false))
   }, [lessonId, slug, accessState])
+
+  // ── Step 4: report real watch time to the creator analytics dashboard ────
+  const videoRef = useRef<HTMLIFrameElement>(null)
+  useVideoWatchTracking(videoRef, {
+    courseSlug:  slug,
+    lessonKey:   lessonId,
+    lessonTitle: found?.lesson.title ?? lessonId,
+    enabled:     accessState === 'allowed' && videoOk === true,
+  })
 
   function submitQuiz() {
     if (!content) return
@@ -302,7 +312,8 @@ export default function LessonPage() {
                 <div className="bg-white rounded-2xl border border-blue-100 shadow-sm overflow-hidden">
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                     <iframe
-                      src={`https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1&disablekb=0&fs=1`}
+                      ref={videoRef}
+                      src={`https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1&disablekb=0&fs=1&enablejsapi=1&origin=${encodeURIComponent(typeof window !== 'undefined' ? window.location.origin : '')}`}
                       title={lesson.title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                       allowFullScreen

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import {
   BookOpen, Award, Users, ArrowRight, Zap, FileText,
   TrendingUp, MessageSquare, ChevronRight, Lightbulb, Star,
-  ClipboardList, ShieldCheck, Briefcase, CheckCircle,
+  ClipboardList, ShieldCheck, Briefcase, CheckCircle, BarChart3,
 } from 'lucide-react'
 import { CPD_COURSES } from '@/lib/static-cpd-courses'
 import { createClient } from '@/lib/supabase/server'
@@ -175,6 +175,7 @@ export default async function TeacherDashboard() {
               <div className="space-y-2">
                 {[
                   { href: '/dashboard/teacher/profile',  icon: ShieldCheck,   label: 'My Profile & KYC',     bg: 'bg-blue-50',  color: 'text-[#378ADD]' },
+                  { href: '/dashboard/creator',          icon: BarChart3,     label: 'My Course Video Analytics', bg: 'bg-indigo-50', color: 'text-indigo-600' },
                   { href: '/opportunity-hub/jobs',      icon: Briefcase,     label: 'Browse & Apply Jobs',  bg: 'bg-blue-50',    color: 'text-blue-600'  },
                   { href: '/edupro/lesson-planner',   icon: Zap,           label: 'AI Lesson Planner',    bg: 'bg-orange-50',  color: 'text-[#F37321]' },
                   { href: '/edupro/result-generator', icon: ClipboardList, label: 'Generate Result Sheet', bg: 'bg-amber-50',   color: 'text-amber-500' },
