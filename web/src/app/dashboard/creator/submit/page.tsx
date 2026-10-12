@@ -8,8 +8,9 @@ import { createClient } from '@/lib/supabase/client'
 import { STATIC_COURSES } from '@/lib/static-courses'
 import { COURSE_CURRICULUM } from '@/lib/course-content'
 import { youTubeThumb } from '@/lib/youtube'
+import { lessonBrief, courseVideoTotal, LESSON_VIDEO_MIN, LESSON_VIDEO_MAX, COURSE_VIDEO_MINUTES } from '@/lib/video-briefs'
 import {
-  ArrowLeft, Loader2, Upload, CheckCircle, XCircle, Clock, Video, AlertTriangle, FileVideo, X,
+  ArrowLeft, Loader2, Upload, CheckCircle, XCircle, Clock, Video, AlertTriangle, FileVideo, X, Film, Star,
 } from 'lucide-react'
 
 const LANGUAGES = [
@@ -79,7 +80,10 @@ export default function SubmitVideoPage() {
 
   const modules = courseSlug ? COURSE_CURRICULUM[courseSlug] ?? [] : []
   const lesson  = modules.flatMap(m => m.lessons).find(l => l.id === lessonKey) ?? null
+  const brief   = lesson ? lessonBrief(courseSlug, lesson.id) : null
   const uploading = progress !== null
+  const mins      = Number(duration)
+  const lengthOk  = !!duration && mins >= LESSON_VIDEO_MIN && mins <= LESSON_VIDEO_MAX
 
   // Sign-in required: submissions are tied to the creator's account.
   useEffect(() => {
@@ -120,11 +124,16 @@ export default function SubmitVideoPage() {
     if (!f.type.startsWith('video/')) { toast.error('Choose a video file (MP4 recommended).'); return }
     if (f.size > MAX_BYTES) { toast.error('That file is larger than 4 GB. Please export a smaller version.'); return }
     setFile(f)
-    const mins = await readDurationMins(f)
-    if (mins) setDuration(String(mins))
+    const detected = await readDurationMins(f)
+    if (detected) {
+      setDuration(String(detected))
+      if (detected < LESSON_VIDEO_MIN || detected > LESSON_VIDEO_MAX) {
+        toast.error(`This video is about ${detected} minutes. Lesson videos must be ${LESSON_VIDEO_MIN}–${LESSON_VIDEO_MAX} minutes.`)
+      }
+    }
   }
 
-  const canSubmit = !!user && configured === true && !!lesson && !!file && agreed && !uploading
+  const canSubmit = !!user && configured === true && !!lesson && !!file && lengthOk && agreed && !uploading
 
   async function submit(e: React.FormEvent) {
     e.preventDefault()
@@ -269,6 +278,43 @@ export default function SubmitVideoPage() {
                   </select>
                 </div>
               </div>
+              {brief && (
+                <div className="rounded-xl border border-blue-100 bg-[#F7FAFE] p-4 text-sm space-y-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-semibold text-[#1E4F8A]">Video brief</span>
+                    <span className="inline-flex items-center gap-1 text-xs font-bold bg-green-50 text-green-800 px-2 py-0.5 rounded-full">
+                      <Clock className="w-3 h-3" /> Target {brief.targetMins} min
+                    </span>
+                    <span className="inline-flex items-center gap-1 text-xs font-semibold bg-blue-50 text-[#1E4F8A] px-2 py-0.5 rounded-full">
+                      <Film className="w-3 h-3" /> {brief.style.label}
+                    </span>
+                    {brief.isFreePreview && (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold bg-amber-50 text-amber-800 px-2 py-0.5 rounded-full">
+                        <Star className="w-3 h-3" /> Free preview
+                      </span>
+                    )}
+                  </div>
+                  <ol className="space-y-1">
+                    {brief.outline.map(o => (
+                      <li key={o.at} className="flex gap-3">
+                        <span className="text-xs font-bold text-[#378ADD] tabular-nums w-10 shrink-0 pt-0.5">{o.at}</span>
+                        <span className="text-gray-700">{o.what}</span>
+                      </li>
+                    ))}
+                  </ol>
+                  <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                    {brief.style.how.map(h => <li key={h}>{h}</li>)}
+                  </ul>
+                  {brief.next && <p className="text-xs text-gray-600"><strong>Leave for the next video:</strong> “{brief.next}”.</p>}
+                  <p className="text-xs text-gray-600">
+                    This course has about {Math.round(courseVideoTotal(courseSlug) / 60 * 10) / 10} hours of video in total ({COURSE_VIDEO_MINUTES / 60}-hour target).{' '}
+                    <Link href={`/creators/video-briefs?course=${courseSlug}`} target="_blank" className="text-[#378ADD] font-semibold hover:underline">
+                      See every lesson’s brief
+                    </Link>
+                  </p>
+                </div>
+              )}
+
               {lesson?.youtube_url && (
                 <p className="text-xs text-amber-800 bg-amber-50 rounded-lg px-3 py-2 flex gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
@@ -302,8 +348,14 @@ export default function SubmitVideoPage() {
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label htmlFor="duration" className={label}>Video length (minutes)</label>
-                  <input id="duration" type="number" min={1} max={600} className={input} value={duration}
-                    placeholder={lesson ? String(lesson.duration_mins) : 'e.g. 12'} onChange={e => setDuration(e.target.value)} />
+                  <input id="duration" type="number" min={LESSON_VIDEO_MIN} max={LESSON_VIDEO_MAX} required className={input} value={duration}
+                    placeholder={brief ? String(brief.targetMins) : 'e.g. 10'} onChange={e => setDuration(e.target.value)}
+                    aria-describedby="duration-help" />
+                  <p id="duration-help" className={`mt-1 text-xs ${duration && !lengthOk ? 'text-red-700 font-semibold' : 'text-gray-500'}`}>
+                    {duration && !lengthOk
+                      ? `Lesson videos must be ${LESSON_VIDEO_MIN}–${LESSON_VIDEO_MAX} minutes. Please edit the video and choose the new file.`
+                      : `Must be ${LESSON_VIDEO_MIN}–${LESSON_VIDEO_MAX} minutes. Filled in from your file when possible.`}
+                  </p>
                 </div>
                 <div>
                   <label htmlFor="language" className={label}>Language</label>
