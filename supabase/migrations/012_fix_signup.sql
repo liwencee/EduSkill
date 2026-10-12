@@ -79,3 +79,9 @@ CREATE POLICY "Service role can insert any profile"
   ON profiles FOR INSERT
   TO service_role
   WITH CHECK (true);
+
+
+-- ── Course category for Nigerian language courses (used by 013) ────────────
+-- Lives here rather than in 013 because Postgres can't use a new enum value
+-- in the same transaction that added it.
+ALTER TYPE course_category ADD VALUE IF NOT EXISTS 'languages';

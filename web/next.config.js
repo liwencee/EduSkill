@@ -21,10 +21,15 @@ const nextConfig = {
     // a custom domain like api.skillora.ng, or Supabase Cloud). Without this,
     // the browser blocks every auth/data fetch as a connect-src violation.
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-    let supabaseHost = ''
-    try { supabaseHost = new URL(supabaseUrl).host } catch { supabaseHost = '' }
-    const supabaseHttp = supabaseHost ? `https://${supabaseHost}` : ''
-    const supabaseWs   = supabaseHost ? `wss://${supabaseHost}`   : ''
+    // Keep the configured scheme: production is https/wss, while a local
+    // `supabase start` stack is plain http/ws on 127.0.0.1:54321.
+    let supabaseHttp = ''
+    let supabaseWs   = ''
+    try {
+      const u = new URL(supabaseUrl)
+      supabaseHttp = `${u.protocol}//${u.host}`
+      supabaseWs   = `${u.protocol === 'http:' ? 'ws:' : 'wss:'}//${u.host}`
+    } catch { /* unset or malformed — middleware logs this */ }
 
     const connectSrc = [
       "'self'",

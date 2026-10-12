@@ -5,8 +5,8 @@
 -- Safe to re-run — uses ON CONFLICT (slug) DO UPDATE
 -- ============================================================
 
--- 1. Extend the course_category enum to include Nigerian languages
-ALTER TYPE course_category ADD VALUE IF NOT EXISTS 'languages';
+-- 1. The 'languages' course_category value is added at the end of 012:
+--    Postgres can't use a new enum value in the transaction that added it.
 
 -- 2. Insert all Youth SkillUp courses
 INSERT INTO courses (
