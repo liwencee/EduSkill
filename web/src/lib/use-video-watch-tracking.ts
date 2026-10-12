@@ -1,5 +1,6 @@
 'use client'
 import { useCallback, useEffect, useState, type RefObject } from 'react'
+import { createClient } from '@/lib/supabase/client'
 
 /**
  * Tracks how a learner watches an embedded lesson video and sends
@@ -15,6 +16,8 @@ import { useCallback, useEffect, useState, type RefObject } from 'react'
 const YT_ORIGIN    = 'https://www.youtube.com'
 const BUNNY_ORIGIN = 'https://iframe.mediadelivery.net'
 const PLAYERJS     = { context: 'player.js', version: '0.0.11' }
+/** Played time is recorded in blocks of this many seconds (ticks on video parts). */
+export const WATCH_BLOCK_SECS = 10
 const FLUSH_EVERY  = 15_000   // ms between heartbeats while playing
 const VIEWER_KEY   = 'skillora_viewer_id'
 
@@ -43,11 +46,15 @@ export function useVideoWatchTracking(
   iframeRef: RefObject<HTMLIFrameElement>,
   { provider, courseSlug, lessonKey, lessonTitle, enabled }: Options,
 ) {
-  // Whole-second playback position and length, for the chapter list under the player
+  // Whole-second playback position and length, for the parts list under the player
   const [time, setTime] = useState({ position: 0, duration: 0 })
+  // 10-second blocks this learner has actually played (saved in the database:
+  // by account when signed in, so ticks follow them across devices)
+  const [watched, setWatched] = useState<Set<number>>(new Set())
 
   useEffect(() => {
     setTime({ position: 0, duration: 0 })
+    setWatched(new Set())
     const iframe = iframeRef.current
     if (!enabled || !iframe) return
 
@@ -60,8 +67,33 @@ export function useVideoWatchTracking(
     let heardBack = false
     let lastSentPos = -1
     let everPlayed  = false
+    let blockPos: number | null = null      // last position seen, for continuous-play detection
+    const newBlocks = new Set<number>()     // played since the last heartbeat
+    let cancelled = false
+
+    // What this learner already watched (any device, if signed in)
+    ;(async () => {
+      try {
+        const { data } = await createClient().rpc('my_watched_blocks', {
+          p_viewer_key: viewerKey, p_course_slug: courseSlug, p_lesson_key: lessonKey,
+        })
+        if (!cancelled && Array.isArray(data) && data.length) {
+          setWatched(w => new Set([...w, ...data.filter((b: unknown) => Number.isInteger(b))]))
+        }
+      } catch { /* offline or DB unavailable — ticks start fresh */ }
+    })()
 
     function report() {
+      // Only continuous playback counts: a jump (seek) doesn't mark what was skipped
+      const prev = blockPos
+      blockPos = position
+      if (prev !== null && position > prev && position - prev <= 5) {
+        const added: number[] = []
+        for (let b = Math.floor(prev / WATCH_BLOCK_SECS); b <= Math.floor((position - 0.5) / WATCH_BLOCK_SECS); b++) {
+          if (!newBlocks.has(b)) { newBlocks.add(b); added.push(b) }
+        }
+        if (added.length) setWatched(w => (added.every(b => w.has(b)) ? w : new Set([...w, ...added])))
+      }
       const p = Math.floor(position), d = Math.floor(duration)
       setTime(t => (t.position === p && t.duration === d ? t : { position: p, duration: d }))
     }
@@ -69,13 +101,15 @@ export function useVideoWatchTracking(
     const payload = () => JSON.stringify({
       viewerKey, courseSlug, lessonKey, lessonTitle,
       deltaSecs: Math.round(pending), positionSecs: position, durationSecs: duration,
+      blocks: [...newBlocks].slice(0, 12),
     })
 
     function flush(useBeacon = false) {
       // A "view" only counts once the video has actually played.
       if (!everPlayed) return
-      if (pending < 1 && Math.round(position) === lastSentPos) return
+      if (pending < 1 && Math.round(position) === lastSentPos && newBlocks.size === 0) return
       const body = payload()
+      ;[...newBlocks].slice(0, 12).forEach(b => newBlocks.delete(b))
       pending = 0
       lastSentPos = Math.round(position)
       try {
@@ -174,6 +208,7 @@ export function useVideoWatchTracking(
     document.addEventListener('visibilitychange', onVisibility)
 
     return () => {
+      cancelled = true
       tick()
       flush(true)
       clearInterval(handshake)
@@ -199,5 +234,5 @@ export function useVideoWatchTracking(
     }
   }, [iframeRef, provider])
 
-  return { position: time.position, duration: time.duration, seekTo }
+  return { position: time.position, duration: time.duration, watched, seekTo }
 }

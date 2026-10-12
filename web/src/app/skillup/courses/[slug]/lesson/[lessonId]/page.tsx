@@ -344,9 +344,9 @@ export default function LessonPage() {
                     />
                   </div>
                   <VideoChapters
-                    storageKey={`skillora_parts_${slug}_${lessonId}`}
                     position={player.position}
                     duration={player.duration}
+                    watched={player.watched}
                     onSeek={player.seekTo}
                   />
                   <div className="px-4 py-2 bg-blue-50 flex items-center gap-2">

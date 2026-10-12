@@ -10,7 +10,7 @@ export const dynamic = 'force-dynamic'
  * creators can see real watch behaviour on /dashboard/creator.
  *
  * Accepts JSON or text/plain (navigator.sendBeacon on page hide).
- * Body: { viewerKey, courseSlug, lessonKey, lessonTitle, deltaSecs, positionSecs, durationSecs }
+ * Body: { viewerKey, courseSlug, lessonKey, lessonTitle, deltaSecs, positionSecs, durationSecs, blocks? }
  *
  * The heavy lifting (clamping, upsert, signed-in user attribution) happens in
  * the SECURITY DEFINER function track_video_watch — see migration 022.
@@ -43,6 +43,10 @@ export async function POST(req: NextRequest) {
       p_delta_secs:    num(body?.deltaSecs),
       p_position_secs: num(body?.positionSecs),
       p_duration_secs: num(body?.durationSecs),
+      // 10-second blocks played since the last heartbeat (ticks on video parts)
+      p_blocks: Array.isArray(body?.blocks)
+        ? body.blocks.filter((b: unknown) => Number.isInteger(b)).slice(0, 12)
+        : null,
     })
     if (error) return NextResponse.json({ ok: false }, { status: 202 })
     return NextResponse.json({ ok: true })
