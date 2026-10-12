@@ -9,7 +9,7 @@ import {
 } from 'recharts'
 import {
   Loader2, Users, PlayCircle, Eye, Clock, CheckCircle, BarChart3,
-  ShieldCheck, UserCheck, Video, Info, ArrowLeft,
+  ShieldCheck, UserCheck, Video, Info, ArrowLeft, Upload,
 } from 'lucide-react'
 
 // ── Shapes returned by the creator_dashboard() SQL function (migration 022) ──
@@ -154,6 +154,10 @@ export default function CreatorDashboardPage() {
               real playback time, how far they got, and who finished.
               {data?.is_admin && ' (Admin view: showing every course.)'}
             </p>
+            <Link href="/dashboard/creator/submit"
+              className="inline-flex items-center gap-2 mt-4 bg-[#F37321] text-white text-sm font-bold px-4 py-2 rounded-xl hover:bg-orange-600 transition-colors">
+              <Upload className="w-4 h-4" /> Submit a lesson video
+            </Link>
           </div>
         </div>
 
@@ -170,9 +174,13 @@ export default function CreatorDashboardPage() {
             </div>
             <p className="font-semibold text-[#1E4F8A] mb-1">No courses linked to your account yet</p>
             <p className="text-sm text-gray-600 max-w-md mx-auto">
-              Once the Skillora team links your course videos to <strong>{user?.email}</strong>,
-              your sign-ups and watch statistics will appear here automatically.
+              Submit your first lesson video. Once the Skillora team approves it, your course is linked
+              to <strong>{user?.email}</strong> and your sign-ups and watch statistics appear here automatically.
             </p>
+            <Link href="/dashboard/creator/submit"
+              className="inline-flex items-center gap-2 mt-4 bg-[#378ADD] text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors">
+              <Upload className="w-4 h-4" /> Submit a lesson video
+            </Link>
           </div>
         ) : (
           <>

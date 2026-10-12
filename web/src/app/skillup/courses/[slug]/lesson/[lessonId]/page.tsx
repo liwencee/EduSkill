@@ -10,12 +10,8 @@ import {
 import { COURSE_CURRICULUM, findLesson, allLessons } from '@/lib/course-content'
 import { STATIC_COURSES } from '@/lib/static-courses'
 import { useVideoWatchTracking } from '@/lib/use-video-watch-tracking'
-
-/** Extract YouTube video ID from any YouTube URL format */
-function getYouTubeId(url: string): string | null {
-  const m = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([^&\n?#]{11})/)
-  return m ? m[1] : null
-}
+import { getYouTubeId, checkYouTubeAvailable } from '@/lib/youtube'
+import { createClient } from '@/lib/supabase/client'
 
 interface QuizQuestion {
   question: string
@@ -93,24 +89,33 @@ export default function LessonPage() {
       .catch(() => setAccessState('allowed')) // fail open on network error
   }, [lessonId, slug])
 
-  // ── Step 2: verify YouTube video is still available ──────────────────────
-  // YouTube returns a tiny 120×90 placeholder for deleted/unavailable videos.
-  // We detect this by loading the thumbnail image and checking its width.
+  // ── Step 2: pick the lesson video and verify it is still available ───────
+  // A creator's video approved in Admin → Video submissions takes priority over
+  // the built-in curriculum link. YouTube serves a tiny 120×90 placeholder
+  // thumbnail for deleted/private videos, which is how availability is checked.
+  const [videoId, setVideoId] = useState<string | null>(null)
   useEffect(() => {
-    if (!found?.lesson.youtube_url) { setVideoOk(false); return }
-    const vid = getYouTubeId(found.lesson.youtube_url)
-    if (!vid) { setVideoOk(false); return }
-
+    let cancelled = false
+    const fallback = found?.lesson.youtube_url ? getYouTubeId(found.lesson.youtube_url) : null
+    setVideoId(fallback)
     setVideoOk(null) // reset while checking
 
-    const img = new Image()
-    img.onload = () => {
-      // mqdefault.jpg is 320×180 for real videos; 120×90 means the video is unavailable
-      setVideoOk(img.naturalWidth > 120)
-    }
-    img.onerror = () => setVideoOk(false)
-    img.src = `https://img.youtube.com/vi/${vid}/mqdefault.jpg`
-  }, [lessonId])
+    ;(async () => {
+      let vid = fallback
+      try {
+        const { data } = await createClient().rpc('approved_lesson_video', {
+          p_course_slug: slug, p_lesson_key: lessonId,
+        })
+        if (typeof data === 'string' && data) vid = data
+      } catch { /* DB unavailable — use the curriculum video */ }
+      if (cancelled) return
+      setVideoId(vid)
+      if (!vid) { setVideoOk(false); return }
+      const ok = await checkYouTubeAvailable(vid)
+      if (!cancelled) setVideoOk(ok)
+    })()
+    return () => { cancelled = true }
+  }, [lessonId, slug]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // ── Step 3: fetch lesson content (only when access is confirmed) ─────────
   useEffect(() => {
@@ -278,9 +283,8 @@ export default function LessonPage() {
             </div>
 
             {/* ── YouTube Video Player ── */}
-            {lesson.youtube_url && (() => {
-              const vid = getYouTubeId(lesson.youtube_url)
-              if (!vid) return null
+            {videoId && (() => {
+              const vid = videoId
 
               // videoOk === null means still checking thumbnail — show nothing yet
               if (videoOk === null) return null
