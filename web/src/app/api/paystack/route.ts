@@ -22,7 +22,7 @@ const PLAN_MIN_NGN: Record<string, number> = {
   teacher_monthly:    2000,
   institutional_term: 50000,
   result_gen_monthly: 5000,
-  course_purchase:    8000,
+  course_purchase:    19000,
 }
 
 export async function POST(req: NextRequest) {

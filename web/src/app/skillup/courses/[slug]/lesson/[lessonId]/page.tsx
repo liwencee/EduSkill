@@ -45,7 +45,7 @@ export default function LessonPage() {
   type AccessState = 'checking' | 'allowed' | 'locked'
   const [accessState,  setAccessState]  = useState<AccessState>('checking')
   const [paywallUrl,   setPaywallUrl]   = useState('')
-  const [paywallPrice, setPaywallPrice] = useState(8000)
+  const [paywallPrice, setPaywallPrice] = useState(19000)
 
   // ── Video availability check ──────────────────────────────────────────────
   // null = not yet checked, true = video ok, false = broken/unavailable
@@ -82,7 +82,7 @@ export default function LessonPage() {
         if (data.enrolled && data.is_paid) {
           setAccessState('allowed')
         } else {
-          setPaywallPrice(data.price_ngn ?? 8000)
+          setPaywallPrice(data.price_ngn ?? 19000)
           setPaywallUrl('https://paystack.shop/pay/g2wgifbf3r')
           setAccessState('locked')
         }

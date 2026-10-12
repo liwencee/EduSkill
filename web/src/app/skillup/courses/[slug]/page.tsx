@@ -86,7 +86,7 @@ export default async function CourseDetailPage({ params }: Props) {
             <CourseEnrollCard
               courseId={c.id}
               slug={params.slug}
-              price={c.price_ngn ?? 8000}
+              price={c.price_ngn ?? 19000}
               isFree={!!c.is_free}
               firstLessonId={firstLesson?.id ?? null}
               totalLessons={c.total_lessons ?? staticCurriculum.reduce((acc, m) => acc + m.lessons.length, 0)}

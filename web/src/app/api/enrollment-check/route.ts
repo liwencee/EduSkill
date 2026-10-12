@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
   const slug = req.nextUrl.searchParams.get('slug')
 
   if (!slug) {
-    return NextResponse.json({ enrolled: false, is_paid: false, is_free: false, course_id: null, price_ngn: 8000, user_id: null, email: null })
+    return NextResponse.json({ enrolled: false, is_paid: false, is_free: false, course_id: null, price_ngn: 19000, user_id: null, email: null })
   }
 
   try {
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
         is_paid:   false,
         is_free:   course?.is_free ?? false,
         course_id: course?.id ?? null,
-        price_ngn: course?.price_ngn ?? 8000,
+        price_ngn: course?.price_ngn ?? 19000,
         user_id:   null,
         email:     null,
       })
@@ -59,7 +59,7 @@ export async function GET(req: NextRequest) {
         is_paid:   true,
         is_free:   true,
         course_id: null,
-        price_ngn: 8000,
+        price_ngn: 19000,
         user_id:   user.id,
         email:     user.email ?? null,
       })
@@ -91,12 +91,12 @@ export async function GET(req: NextRequest) {
       is_paid:   enrollment?.is_paid ?? false,
       is_free:   false,
       course_id: course.id,
-      price_ngn: course.price_ngn ?? 8000,
+      price_ngn: course.price_ngn ?? 19000,
       user_id:   user.id,
       email:     user.email ?? null,
     })
   } catch {
     // Fail open — allow access if DB check errors (prevents lockout during outages)
-    return NextResponse.json({ enrolled: true, is_paid: true, is_free: true, course_id: null, price_ngn: 8000, user_id: null, email: null })
+    return NextResponse.json({ enrolled: true, is_paid: true, is_free: true, course_id: null, price_ngn: 19000, user_id: null, email: null })
   }
 }
