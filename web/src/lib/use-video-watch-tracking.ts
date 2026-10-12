@@ -2,15 +2,19 @@
 import { useEffect, type RefObject } from 'react'
 
 /**
- * Tracks how a learner watches an embedded YouTube lesson video and sends
+ * Tracks how a learner watches an embedded lesson video and sends
  * heartbeats to /api/video-watch for the creator analytics dashboard.
  *
- * Uses YouTube's iframe postMessage protocol directly (the embed must have
- * `enablejsapi=1`), so no external script is loaded — the CSP stays as is.
+ * Talks to the player over postMessage directly, so no external script is
+ * loaded and the CSP stays as is:
+ *   - YouTube: the iframe API protocol (the embed must have `enablejsapi=1`)
+ *   - Bunny Stream: the player.js protocol its embed player implements
  * Only real playback time is counted: paused/buffering time is ignored.
  */
 
 const YT_ORIGIN    = 'https://www.youtube.com'
+const BUNNY_ORIGIN = 'https://iframe.mediadelivery.net'
+const PLAYERJS     = { context: 'player.js', version: '0.0.11' }
 const FLUSH_EVERY  = 15_000   // ms between heartbeats while playing
 const VIEWER_KEY   = 'skillora_viewer_id'
 
@@ -28,6 +32,7 @@ function getViewerKey(): string {
 }
 
 interface Options {
+  provider:    'youtube' | 'bunny'
   courseSlug:  string
   lessonKey:   string
   lessonTitle: string
@@ -36,7 +41,7 @@ interface Options {
 
 export function useVideoWatchTracking(
   iframeRef: RefObject<HTMLIFrameElement>,
-  { courseSlug, lessonKey, lessonTitle, enabled }: Options,
+  { provider, courseSlug, lessonKey, lessonTitle, enabled }: Options,
 ) {
   useEffect(() => {
     const iframe = iframeRef.current
@@ -80,12 +85,30 @@ export function useVideoWatchTracking(
       lastTick = now
     }
 
+    const origin = provider === 'bunny' ? BUNNY_ORIGIN : YT_ORIGIN
+
     function onMessage(e: MessageEvent) {
-      if (e.origin !== YT_ORIGIN || e.source !== iframe?.contentWindow) return
+      if (e.origin !== origin || e.source !== iframe?.contentWindow) return
       let data: any
       try { data = typeof e.data === 'string' ? JSON.parse(e.data) : e.data } catch { return }
-      heardBack = true
 
+      if (provider === 'bunny') {
+        if (data?.context !== 'player.js') return
+        heardBack = true
+        switch (data.event) {
+          case 'ready':      subscribe(); break
+          case 'play':       tick(); playing = true; break
+          case 'pause':      tick(); playing = false; flush(); break
+          case 'ended':      tick(); playing = false; position = duration || position; flush(); break
+          case 'timeupdate':
+            if (typeof data.value?.seconds === 'number') position = data.value.seconds
+            if (typeof data.value?.duration === 'number' && data.value.duration > 0) duration = data.value.duration
+            break
+        }
+        return
+      }
+
+      heardBack = true
       const info = data?.info
       if (data?.event === 'onStateChange' && typeof info === 'number') {
         tick()
@@ -101,10 +124,26 @@ export function useVideoWatchTracking(
       }
     }
 
+    // Bunny (player.js): once the player says "ready", subscribe to its events.
+    function subscribe() {
+      for (const ev of ['play', 'pause', 'ended', 'timeupdate']) {
+        iframe?.contentWindow?.postMessage(
+          JSON.stringify({ ...PLAYERJS, method: 'addEventListener', value: ev, listener: `skillora-${ev}` }),
+          BUNNY_ORIGIN,
+        )
+      }
+    }
+
     // Ask the embed to start streaming its state to us. Retry until it answers
     // (the iframe may still be loading when this effect first runs).
     function listen() {
-      iframe?.contentWindow?.postMessage(JSON.stringify({ event: 'listening', id: lessonKey, channel: 'widget' }), YT_ORIGIN)
+      if (provider === 'bunny') {
+        // A player that was ready before we listened won't repeat "ready" —
+        // subscribing directly covers that case too.
+        subscribe()
+      } else {
+        iframe?.contentWindow?.postMessage(JSON.stringify({ event: 'listening', id: lessonKey, channel: 'widget' }), YT_ORIGIN)
+      }
     }
     let tries = 0
     const handshake = setInterval(() => {
@@ -134,5 +173,5 @@ export function useVideoWatchTracking(
       window.removeEventListener('pagehide', onHide)
       document.removeEventListener('visibilitychange', onVisibility)
     }
-  }, [iframeRef, courseSlug, lessonKey, lessonTitle, enabled])
+  }, [iframeRef, provider, courseSlug, lessonKey, lessonTitle, enabled])
 }

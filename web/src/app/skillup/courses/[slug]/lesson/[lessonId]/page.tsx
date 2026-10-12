@@ -11,7 +11,6 @@ import { COURSE_CURRICULUM, findLesson, allLessons } from '@/lib/course-content'
 import { STATIC_COURSES } from '@/lib/static-courses'
 import { useVideoWatchTracking } from '@/lib/use-video-watch-tracking'
 import { getYouTubeId, checkYouTubeAvailable } from '@/lib/youtube'
-import { createClient } from '@/lib/supabase/client'
 
 interface QuizQuestion {
   question: string
@@ -91,24 +90,34 @@ export default function LessonPage() {
   }, [lessonId, slug])
 
   // ── Step 2: pick the lesson video and verify it is still available ───────
-  // A creator's video approved in Admin → Video submissions takes priority over
-  // the built-in curriculum link. YouTube serves a tiny 120×90 placeholder
-  // thumbnail for deleted/private videos, which is how availability is checked.
-  const [videoId, setVideoId] = useState<string | null>(null)
+  // /api/lesson-video returns the creator's approved Bunny upload (as a signed,
+  // expiring player URL — only for viewers allowed to watch), else a YouTube
+  // video (approved submission or the built-in curriculum link). YouTube serves
+  // a tiny 120×90 placeholder thumbnail for deleted/private videos, which is
+  // how YouTube availability is checked.
+  const [videoId,  setVideoId]  = useState<string | null>(null)   // YouTube
+  const [bunnyUrl, setBunnyUrl] = useState<string | null>(null)   // Bunny Stream
   useEffect(() => {
     let cancelled = false
     const fallback = found?.lesson.youtube_url ? getYouTubeId(found.lesson.youtube_url) : null
     setVideoId(fallback)
+    setBunnyUrl(null)
     setVideoOk(null) // reset while checking
 
     ;(async () => {
       let vid = fallback
       try {
-        const { data } = await createClient().rpc('approved_lesson_video', {
-          p_course_slug: slug, p_lesson_key: lessonId,
-        })
-        if (typeof data === 'string' && data) vid = data
-      } catch { /* DB unavailable — use the curriculum video */ }
+        const res  = await fetch(`/api/lesson-video?slug=${encodeURIComponent(slug)}&lesson=${encodeURIComponent(lessonId)}`)
+        const data = await res.json()
+        if (cancelled) return
+        if (data?.provider === 'bunny' && data.embedUrl) {
+          setVideoId(null)
+          setBunnyUrl(data.embedUrl)
+          setVideoOk(true)
+          return
+        }
+        if (res.ok) vid = data?.provider === 'youtube' ? data.videoId : null
+      } catch { /* network/DB unavailable — use the curriculum video */ }
       if (cancelled) return
       setVideoId(vid)
       if (!vid) { setVideoOk(false); return }
@@ -148,6 +157,7 @@ export default function LessonPage() {
   // ── Step 4: report real watch time to the creator analytics dashboard ────
   const videoRef = useRef<HTMLIFrameElement>(null)
   useVideoWatchTracking(videoRef, {
+    provider:    bunnyUrl ? 'bunny' : 'youtube',
     courseSlug:  slug,
     lessonKey:   lessonId,
     lessonTitle: found?.lesson.title ?? lessonId,
@@ -288,9 +298,10 @@ export default function LessonPage() {
               </div>
             </div>
 
-            {/* ── YouTube Video Player ── */}
-            {videoId && (() => {
-              const vid = videoId
+            {/* ── Video Player (Bunny Stream, or YouTube until replaced) ── */}
+            {(videoId || bunnyUrl) && (() => {
+              const src = bunnyUrl
+                ?? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&disablekb=0&fs=1&enablejsapi=1&origin=${encodeURIComponent(typeof window !== 'undefined' ? window.location.origin : '')}`
 
               // videoOk === null means still checking thumbnail — show nothing yet
               if (videoOk === null) return null
@@ -323,7 +334,7 @@ export default function LessonPage() {
                   <div className="relative w-full" style={{ paddingBottom: '56.25%' }}>
                     <iframe
                       ref={videoRef}
-                      src={`https://www.youtube.com/embed/${vid}?rel=0&modestbranding=1&disablekb=0&fs=1&enablejsapi=1&origin=${encodeURIComponent(typeof window !== 'undefined' ? window.location.origin : '')}`}
+                      src={src}
                       title={lesson.title}
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                       allowFullScreen

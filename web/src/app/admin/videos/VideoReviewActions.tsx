@@ -1,11 +1,10 @@
 'use client'
 import { useState } from 'react'
-import { createClient } from '@/lib/supabase/client'
 import toast from 'react-hot-toast'
 import { Check, X, Loader2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
-export default function VideoReviewActions({ submissionId }: { submissionId: string }) {
+export default function VideoReviewActions({ submissionId, canApprove }: { submissionId: string; canApprove: boolean }) {
   const [note, setNote] = useState('')
   const [busy, setBusy] = useState<'approve' | 'reject' | null>(null)
   const router = useRouter()
@@ -16,14 +15,20 @@ export default function VideoReviewActions({ submissionId }: { submissionId: str
       return
     }
     setBusy(approve ? 'approve' : 'reject')
-    const { error } = await createClient().rpc('admin_review_video_submission', {
-      p_id: submissionId, p_approve: approve, p_note: note.trim() || null,
-    })
-    if (error) {
-      toast.error(error.message)
-    } else {
-      toast.success(approve ? 'Approved. The video is now live on the lesson.' : 'Rejected. The creator will see your note.')
-      router.refresh()
+    try {
+      const res = await fetch('/api/admin/videos/review', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: submissionId, approve, note: note.trim() || null }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) {
+        toast.error(data?.error ?? 'Could not save the review')
+      } else {
+        toast.success(approve ? 'Approved. The video is now live on the lesson.' : 'Rejected. The creator will see your note.')
+        router.refresh()
+      }
+    } catch {
+      toast.error('Could not save the review. Check your connection.')
     }
     setBusy(null)
   }
@@ -37,8 +42,9 @@ export default function VideoReviewActions({ submissionId }: { submissionId: str
         className="w-full text-sm border border-[#D5D2C8] rounded-xl px-3 py-2"
       />
       <div className="flex gap-2">
-        <button onClick={() => review(true)} disabled={!!busy}
-          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-green-600 text-white text-sm font-semibold px-3 py-2 rounded-xl hover:bg-green-700 disabled:opacity-50">
+        <button onClick={() => review(true)} disabled={!!busy || !canApprove}
+          title={canApprove ? undefined : 'Available once the video has finished processing'}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-green-600 text-white text-sm font-semibold px-3 py-2 rounded-xl hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed">
           {busy === 'approve' ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />} Approve
         </button>
         <button onClick={() => review(false)} disabled={!!busy}

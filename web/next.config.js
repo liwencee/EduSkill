@@ -40,6 +40,7 @@ const nextConfig = {
       'https://api.openai.com',
       'https://paystack.com',
       'https://cloudflareinsights.com', // Cloudflare Web Analytics beacon
+      'https://video.bunnycdn.com',     // Bunny Stream: creators' direct (TUS) video uploads
     ].filter(Boolean).join(' ')
 
     /** Security headers applied to every route */
@@ -61,8 +62,8 @@ const nextConfig = {
           "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
           "font-src 'self' https://fonts.gstatic.com",
           "img-src 'self' data: blob: https:",
-          // Allow YouTube embeds + Paystack iframes
-          "frame-src 'self' https://www.youtube.com https://www.youtube-nocookie.com https://paystack.com",
+          // Allow Bunny Stream + YouTube players and Paystack iframes
+          "frame-src 'self' https://iframe.mediadelivery.net https://www.youtube.com https://www.youtube-nocookie.com https://paystack.com",
           `connect-src ${connectSrc}`,
           "frame-ancestors 'none'",
         ].join('; '),

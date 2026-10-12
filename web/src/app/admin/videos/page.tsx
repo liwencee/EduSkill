@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { Video, ExternalLink } from 'lucide-react'
 import VideoReviewActions from './VideoReviewActions'
+import { bunnyEmbedUrl, bunnyThumbnailUrl, getBunnyVideo, BUNNY_STATUS } from '@/lib/bunny'
 
 interface Props {
   searchParams: { status?: string }
@@ -32,7 +33,7 @@ export default async function AdminVideosPage({ searchParams }: Props) {
     const supabase = createClient()
     let query = supabase
       .from('video_submissions')
-      .select('id, course_slug, course_title, lesson_key, lesson_title, youtube_url, youtube_id, duration_mins, language, notes, status, admin_note, created_at, submitter:profiles!submitter_id(full_name, email)')
+      .select('id, course_slug, course_title, lesson_key, lesson_title, video_provider, youtube_url, youtube_id, bunny_video_id, duration_mins, language, notes, status, admin_note, created_at, submitter:profiles!submitter_id(full_name, email)')
       .order('created_at', { ascending: false })
       .limit(200)
     if (status !== 'all') query = query.eq('status', status)
@@ -44,6 +45,22 @@ export default async function AdminVideosPage({ searchParams }: Props) {
     if (error) failed = true
     rows = data ?? []
     pendingCount = count ?? 0
+
+    // Bunny: watch link (signed), thumbnail, and processing state for pending videos
+    rows = await Promise.all(rows.map(async r => {
+      if (r.video_provider !== 'bunny') {
+        return { ...r, watchUrl: `https://www.youtube.com/watch?v=${r.youtube_id}`,
+                 thumb: `https://img.youtube.com/vi/${r.youtube_id}/mqdefault.jpg`, ready: true, bunnyStatus: null }
+      }
+      const info = r.status === 'pending' ? await getBunnyVideo(r.bunny_video_id) : null
+      return {
+        ...r,
+        watchUrl:    bunnyEmbedUrl(r.bunny_video_id),
+        thumb:       bunnyThumbnailUrl(r.bunny_video_id),
+        ready:       r.status !== 'pending' || info?.status === 4,
+        bunnyStatus: info ? (BUNNY_STATUS[info.status] ?? `Status ${info.status}`) : (r.status === 'pending' ? 'Status unavailable' : null),
+      }
+    }))
   } catch { failed = true }
 
   return (
@@ -79,11 +96,17 @@ export default async function AdminVideosPage({ searchParams }: Props) {
         <div className="space-y-4">
           {rows.map(r => (
             <div key={r.id} className="card p-4 flex flex-col md:flex-row gap-4">
-              <a href={`https://www.youtube.com/watch?v=${r.youtube_id}`} target="_blank" rel="noopener noreferrer"
-                className="shrink-0 relative group" title="Watch on YouTube">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`https://img.youtube.com/vi/${r.youtube_id}/mqdefault.jpg`} alt=""
-                  className="w-full md:w-56 aspect-video object-cover rounded-xl bg-brand-bg" />
+              <a href={r.watchUrl} target="_blank" rel="noopener noreferrer"
+                className="shrink-0 relative group" title="Watch the video">
+                {r.thumb ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={r.thumb} alt=""
+                    className="w-full md:w-56 aspect-video object-cover rounded-xl bg-brand-bg" />
+                ) : (
+                  <div className="w-full md:w-56 aspect-video rounded-xl bg-brand-bg flex items-center justify-center">
+                    <Video className="w-8 h-8 text-brand-blue" />
+                  </div>
+                )}
                 <span className="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-0.5 rounded-md inline-flex items-center gap-1">
                   Watch <ExternalLink className="w-3 h-3" />
                 </span>
@@ -107,15 +130,20 @@ export default async function AdminVideosPage({ searchParams }: Props) {
                   {r.submitter?.email && <> · {r.submitter.email}</>}
                 </p>
                 <p className="text-xs text-brand-inkLight">
-                  {r.duration_mins ? `${r.duration_mins} min · ` : ''}{LANG[r.language] ?? r.language}
+                  {r.video_provider === 'bunny' ? 'Bunny Stream' : 'YouTube'} · {r.duration_mins ? `${r.duration_mins} min · ` : ''}{LANG[r.language] ?? r.language}
                 </p>
+                {r.bunnyStatus && (
+                  <p className={`text-xs font-semibold ${r.ready ? 'text-green-700' : 'text-amber-800'}`}>
+                    Video: {r.bunnyStatus}{!r.ready && ' — you can approve it once processing finishes'}
+                  </p>
+                )}
                 {r.notes && <p className="text-sm text-brand-ink bg-brand-bg rounded-lg px-3 py-2">“{r.notes}”</p>}
                 {r.admin_note && <p className="text-xs text-brand-inkMid">Review note: {r.admin_note}</p>}
               </div>
 
               {r.status === 'pending' && (
                 <div className="md:w-64 shrink-0">
-                  <VideoReviewActions submissionId={r.id} />
+                  <VideoReviewActions submissionId={r.id} canApprove={r.ready} />
                 </div>
               )}
             </div>
