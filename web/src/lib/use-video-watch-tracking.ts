@@ -1,5 +1,5 @@
 'use client'
-import { useEffect, type RefObject } from 'react'
+import { useCallback, useEffect, useState, type RefObject } from 'react'
 
 /**
  * Tracks how a learner watches an embedded lesson video and sends
@@ -43,7 +43,11 @@ export function useVideoWatchTracking(
   iframeRef: RefObject<HTMLIFrameElement>,
   { provider, courseSlug, lessonKey, lessonTitle, enabled }: Options,
 ) {
+  // Whole-second playback position and length, for the chapter list under the player
+  const [time, setTime] = useState({ position: 0, duration: 0 })
+
   useEffect(() => {
+    setTime({ position: 0, duration: 0 })
     const iframe = iframeRef.current
     if (!enabled || !iframe) return
 
@@ -56,6 +60,11 @@ export function useVideoWatchTracking(
     let heardBack = false
     let lastSentPos = -1
     let everPlayed  = false
+
+    function report() {
+      const p = Math.floor(position), d = Math.floor(duration)
+      setTime(t => (t.position === p && t.duration === d ? t : { position: p, duration: d }))
+    }
 
     const payload = () => JSON.stringify({
       viewerKey, courseSlug, lessonKey, lessonTitle,
@@ -105,6 +114,7 @@ export function useVideoWatchTracking(
             if (typeof data.value?.duration === 'number' && data.value.duration > 0) duration = data.value.duration
             break
         }
+        report()
         return
       }
 
@@ -122,6 +132,7 @@ export function useVideoWatchTracking(
           playing = info.playerState === 1
         }
       }
+      report()
     }
 
     // Bunny (player.js): once the player says "ready", subscribe to its events.
@@ -174,4 +185,19 @@ export function useVideoWatchTracking(
       document.removeEventListener('visibilitychange', onVisibility)
     }
   }, [iframeRef, provider, courseSlug, lessonKey, lessonTitle, enabled])
+
+  /** Jump to a point in the video and play from there. */
+  const seekTo = useCallback((seconds: number) => {
+    const win = iframeRef.current?.contentWindow
+    if (!win) return
+    if (provider === 'bunny') {
+      win.postMessage(JSON.stringify({ ...PLAYERJS, method: 'setCurrentTime', value: seconds }), BUNNY_ORIGIN)
+      win.postMessage(JSON.stringify({ ...PLAYERJS, method: 'play' }), BUNNY_ORIGIN)
+    } else {
+      win.postMessage(JSON.stringify({ event: 'command', func: 'seekTo', args: [seconds, true] }), YT_ORIGIN)
+      win.postMessage(JSON.stringify({ event: 'command', func: 'playVideo', args: [] }), YT_ORIGIN)
+    }
+  }, [iframeRef, provider])
+
+  return { position: time.position, duration: time.duration, seekTo }
 }

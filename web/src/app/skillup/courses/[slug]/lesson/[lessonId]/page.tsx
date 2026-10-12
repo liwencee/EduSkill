@@ -10,6 +10,7 @@ import {
 import { COURSE_CURRICULUM, findLesson, allLessons } from '@/lib/course-content'
 import { STATIC_COURSES } from '@/lib/static-courses'
 import { useVideoWatchTracking } from '@/lib/use-video-watch-tracking'
+import VideoChapters from '@/components/VideoChapters'
 import { getYouTubeId, checkYouTubeAvailable } from '@/lib/youtube'
 
 interface QuizQuestion {
@@ -156,7 +157,7 @@ export default function LessonPage() {
 
   // ── Step 4: report real watch time to the creator analytics dashboard ────
   const videoRef = useRef<HTMLIFrameElement>(null)
-  useVideoWatchTracking(videoRef, {
+  const player = useVideoWatchTracking(videoRef, {
     provider:    bunnyUrl ? 'bunny' : 'youtube',
     courseSlug:  slug,
     lessonKey:   lessonId,
@@ -342,6 +343,12 @@ export default function LessonPage() {
                       style={{ border: 0 }}
                     />
                   </div>
+                  <VideoChapters
+                    storageKey={`skillora_parts_${slug}_${lessonId}`}
+                    position={player.position}
+                    duration={player.duration}
+                    onSeek={player.seekTo}
+                  />
                   <div className="px-4 py-2 bg-blue-50 flex items-center gap-2">
                     <span className="text-xs text-[#378ADD] font-semibold">🎬 Video Lesson</span>
                     <span className="text-xs text-gray-400">· Continue with the AI lesson notes below</span>
