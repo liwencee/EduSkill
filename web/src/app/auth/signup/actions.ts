@@ -8,7 +8,11 @@ export async function signupAction(formData: FormData) {
   const email    = (formData.get('email')    as string)?.trim().toLowerCase()
   const password = formData.get('password')  as string
   const fullName = (formData.get('fullName') as string)?.trim()
-  const role     = ((formData.get('role')    as string) || 'youth') as UserRole
+  // The role comes from a hidden form field, so never trust it: only the
+  // self-service roles are allowed. Admins are promoted by an existing admin.
+  const SELF_SERVICE_ROLES: UserRole[] = ['youth', 'teacher', 'employer']
+  const requested = formData.get('role') as UserRole
+  const role: UserRole = SELF_SERVICE_ROLES.includes(requested) ? requested : 'youth'
 
   if (!email) {
     redirect(`/auth/signup?error=${encodeURIComponent('Email is required.')}&role=${role}`)
