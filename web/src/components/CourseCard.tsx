@@ -22,6 +22,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   entrepreneurship: 'badge-amber',
   languages: 'badge-purple',
   music: 'badge-gold',
+  soft_skills: 'badge-purple',
 }
 
 export default function CourseCard({ course, showEnroll = true }: Props) {

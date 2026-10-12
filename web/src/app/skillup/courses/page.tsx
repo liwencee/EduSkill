@@ -14,6 +14,7 @@ const CATEGORIES = [
   { value: 'agribusiness',      label: 'Agribusiness'      },
   { value: 'financial_literacy',label: 'Financial Literacy'},
   { value: 'entrepreneurship',  label: 'Entrepreneurship'  },
+  { value: 'soft_skills',       label: 'Soft Skills'       },
   { value: 'languages',         label: '🇳🇬 Nigerian Languages' },
   { value: 'music',             label: 'Music'             },
 ]

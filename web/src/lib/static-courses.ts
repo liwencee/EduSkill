@@ -225,4 +225,13 @@ export const STATIC_COURSES: Course[] = [
     is_published: true, is_offline_ready: true, price_ngn: 12000,
     total_lessons: 36, total_enrolled: 650, avg_rating: 4.7, tags: ['tech', 'startup', 'product', 'MVP', 'entrepreneurship'],
   },
+  {
+    id: 'static-25', slug: 'soft-skills-for-work',
+    title: 'Soft Skills for Work & Business',
+    description: 'The people skills that get you hired, paid and recommended — clear communication, teamwork, punctuality and time management, customer service, problem solving, handling pressure, and acing job interviews. Built for Nigerian workplaces, markets and freelancers.',
+    category: 'soft_skills', target_role: 'youth', language: 'en',
+    available_langs: ['en', 'pcm'], duration_weeks: 6, is_free: true,
+    is_published: true, is_offline_ready: true, price_ngn: 0,
+    total_lessons: 36, total_enrolled: 0, avg_rating: 0, tags: ['soft skills', 'communication', 'teamwork', 'customer service', 'employability', 'interviews'],
+  },
 ]

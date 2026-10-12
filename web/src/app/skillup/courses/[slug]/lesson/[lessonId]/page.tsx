@@ -36,6 +36,7 @@ export default function LessonPage() {
 
   const [content,     setContent]     = useState<LessonContent | null>(null)
   const [loading,     setLoading]     = useState(true)
+  const [needsLogin,  setNeedsLogin]  = useState(false)
   const [selected,    setSelected]    = useState<(number | null)[]>([])
   const [submitted,   setSubmitted]   = useState(false)
   const [score,       setScore]       = useState(0)
@@ -122,6 +123,7 @@ export default function LessonPage() {
     if (!found || !course || accessState !== 'allowed') return
     setContent(null)
     setLoading(true)
+    setNeedsLogin(false)
     setSelected([])
     setSubmitted(false)
 
@@ -134,8 +136,12 @@ export default function LessonPage() {
         lessonTitle: found.lesson.title,
       }),
     })
-      .then(r => r.json())
-      .then(data => { setContent(data.content); setLoading(false) })
+      .then(r => {
+        // AI lesson notes are for signed-in learners only
+        if (r.status === 401) { setNeedsLogin(true); return null }
+        return r.json()
+      })
+      .then(data => { if (data) setContent(data.content); setLoading(false) })
       .catch(() => setLoading(false))
   }, [lessonId, slug, accessState])
 
@@ -342,6 +348,29 @@ export default function LessonPage() {
                 <p className="font-semibold text-[#1E4F8A] mb-1">AI Tutor is preparing your lesson…</p>
                 <p className="text-sm text-gray-400">Generating personalised content for you</p>
                 <Loader2 className="w-5 h-5 text-[#378ADD] animate-spin mx-auto mt-4" />
+              </div>
+            )}
+
+            {/* Signed out: AI lesson notes need an account */}
+            {needsLogin && !loading && (
+              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-10 text-center">
+                <div className="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Lock className="w-8 h-8 text-[#378ADD]" />
+                </div>
+                <p className="font-semibold text-[#1E4F8A] mb-1">Sign in to read this lesson</p>
+                <p className="text-sm text-gray-600 mb-5 max-w-sm mx-auto">
+                  The AI tutor notes, examples and quiz are available to Skillora learners. It’s free to create an account.
+                </p>
+                <div className="flex flex-wrap justify-center gap-3">
+                  <Link href={`/auth/login?next=${encodeURIComponent(`/skillup/courses/${slug}/lesson/${lessonId}`)}`}
+                    className="inline-flex items-center gap-2 bg-[#378ADD] hover:bg-blue-700 text-white font-bold px-6 py-2.5 rounded-xl transition-colors text-sm">
+                    Sign in
+                  </Link>
+                  <Link href={`/auth/signup?next=${encodeURIComponent(`/skillup/courses/${slug}/lesson/${lessonId}`)}`}
+                    className="inline-flex items-center gap-2 border border-[#378ADD] text-[#378ADD] hover:bg-blue-50 font-bold px-6 py-2.5 rounded-xl transition-colors text-sm">
+                    Create free account
+                  </Link>
+                </div>
               </div>
             )}
 
