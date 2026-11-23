@@ -1,69 +1,63 @@
+# syntax=docker/dockerfile:1.7
 # =============================================================
-# Skillora — multi-stage Dockerfile
-#   Stage 1 (lint)       : runs ESLint — build fails on errors
-#   Stage 2 (builder)    : installs production-only deps
-#   Stage 3 (production) : lean, non-root, read-only image
+# Skillora API — multi-stage, distroless, non-root
+#   Stage 1 (lint)       : ESLint — the build fails on errors
+#   Stage 2 (deps)       : production-only node_modules
+#   Stage 3 (production) : distroless Node 22 — no shell, no package
+#                          manager, runs as the unprivileged "nonroot" user
+#
+# Build stages use Debian (glibc) to match the distroless runtime, so any
+# native add-on compiled here would also load there.
 # =============================================================
+ARG NODE_IMAGE=node:22-bookworm-slim
+ARG RUNTIME_IMAGE=gcr.io/distroless/nodejs22-debian12:nonroot
 
 # ---- Stage 1: Lint ----
-FROM node:20-alpine AS lint
-
+FROM ${NODE_IMAGE} AS lint
 WORKDIR /app
-
-# Install ALL deps (devDependencies include ESLint + plugins)
-COPY package*.json ./
-RUN npm ci
-
-# Copy source tree for linting
-COPY src/       ./src/
-COPY tests/     ./tests/
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY src/ ./src/
+COPY tests/ ./tests/
 COPY .eslintrc.js ./
+RUN npm run lint && touch /lint-passed
 
-# Lint gate — the entire build fails here if ESLint reports errors
-RUN npm run lint
-
-# ---- Stage 2: Builder ----
-FROM node:20-alpine AS builder
-
+# ---- Stage 2: Production dependencies ----
+FROM ${NODE_IMAGE} AS deps
 WORKDIR /app
+ENV NODE_ENV=production
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force
+# BuildKit skips stages the final image doesn't use, so make the lint gate
+# a real dependency of the build (otherwise linting would silently not run).
+COPY --from=lint /lint-passed /lint-passed
 
-COPY package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+# ---- Stage 3: Production (distroless) ----
+FROM ${RUNTIME_IMAGE} AS production
 
-# ---- Stage 3: Production ----
-FROM node:18-alpine AS production
-
-ARG NODE_ENV=production
-ENV NODE_ENV=$NODE_ENV
-
-LABEL org.opencontainers.image.title="Skillora" \
-      org.opencontainers.image.description="Skillora API" \
+LABEL org.opencontainers.image.title="Skillora API" \
+      org.opencontainers.image.description="Skillora API (distroless, non-root)" \
       org.opencontainers.image.vendor="Skillora" \
       org.opencontainers.image.source="https://github.com/liwencee/EduSkill"
 
-# Create non-root user
-RUN addgroup -g 1001 -S nodejs \
- && adduser -S skillbridge -u 1001 -G nodejs
-
+ENV NODE_ENV=production
 WORKDIR /app
 
-# Copy production node_modules from builder
-COPY --from=builder --chown=skillbridge:nodejs /app/node_modules ./node_modules
+# Files stay owned by root and read-only to the app user: the process can
+# read its code but never modify it.
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json ./
+COPY src/ ./src/
 
-# Copy application source
-COPY --chown=skillbridge:nodejs src/         ./src/
-COPY --chown=skillbridge:nodejs package*.json ./
-
-# Drop to non-root
-USER skillbridge
+# uid/gid 65532 ("nonroot" in distroless) — never root
+USER 65532:65532
 
 EXPOSE 3000
 
-# Use $PORT if the platform injects one (Railway, etc.) — falls back to 3000
-# for local `docker run`. Hardcoding 3000 here silently breaks the healthcheck
-# on any host that assigns a different port, which Railway marks unhealthy
-# and stops routing to (502 Bad Gateway) even though the app is running fine.
+# No shell or wget in distroless — probe with Node itself. Uses $PORT when the
+# platform injects one (Railway), else 3000.
 HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
-  CMD wget -qO- "http://localhost:${PORT:-3000}/api/v1/health" || exit 1
+  CMD ["/nodejs/bin/node", "-e", "fetch('http://127.0.0.1:'+(process.env.PORT||3000)+'/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
 
-CMD ["node", "src/server.js"]
+# The distroless entrypoint is already the node binary
+CMD ["src/server.js"]

@@ -18,3 +18,11 @@ Thumbs.db
 .claude/settings.local.json
 .claude/worktrees/
 EduSkill/
+
+# Supabase CLI local scratch state (per-machine, never shared)
+supabase/.temp/
+supabase/.branches/
+web/supabase/
+
+# TypeScript incremental build cache
+*.tsbuildinfo

@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Docker builds (web/Dockerfile) set NEXT_OUTPUT=standalone: Next then emits
+  // a minimal server with only the node_modules it actually uses, which keeps
+  // the production image small. Other builds keep the default output.
+  ...(process.env.NEXT_OUTPUT === 'standalone' ? { output: 'standalone' } : {}),
+
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: '*.supabase.co' },

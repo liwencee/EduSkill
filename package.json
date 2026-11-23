@@ -1,7 +1,7 @@
 {
   "name": "skillbridge-nigeria-api",
   "version": "1.0.0",
-  "description": "Skillora — two-sided platform for teacher upskilling and youth vocational training",
+  "description": "Skillora \u2014 two-sided platform for teacher upskilling and youth vocational training",
   "main": "src/server.js",
   "engines": {
     "node": ">=18.0.0"
@@ -44,8 +44,7 @@
     "morgan": "^1.10.1",
     "openai": "^6.35.0",
     "uuid": "^9.0.1",
-    "winston": "^3.19.0",
-    "xss": "^1.0.15"
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "eslint": "^8.57.1",

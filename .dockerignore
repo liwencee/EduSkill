@@ -1,38 +1,47 @@
-# Dependencies — never copy into build context
-node_modules/
+# Build context for the API image (root Dockerfile). The image only needs
+# package*.json, src/, tests/ and .eslintrc.js — keep everything else out so
+# builds upload less and secrets can never be copied in.
 
-# Test artefacts
-coverage/
-.nyc_output/
+# Dependencies and build output, at any depth
+**/node_modules/
+**/.next/
+**/dist/
+**/build/
+**/coverage/
+**/.nyc_output/
 
-# Build outputs
-dist/
-build/
+# The web app has its own Dockerfile and build context (web/)
+web/
+
+# Database, docs, scripts, tooling
+supabase/
+database/
+docs/
+scripts/
+mobile/
+.github/
+.claude/
+.vscode/
+.idea/
 
 # Logs
 *.log
 logs/
 
 # Secrets
-.env
-.env.local
-.env.production
-.env.*.local
+**/.env
+**/.env.*
+!.env.example
 
 # Version control
 .git/
 .gitignore
 
-# CI / tooling
-.github/
-.claude/
-# .eslintrc.js is intentionally kept — needed by the lint stage
-
-# Docs & DB scripts (not needed at runtime)
-database/
+# Docs (not needed at runtime)
 README*.md
 SECURITY.md
 LICENSE
+*.md
 
 # Docker files themselves
 Dockerfile
@@ -40,5 +49,5 @@ docker-compose*.yml
 .dockerignore
 
 # OS noise
-.DS_Store
-Thumbs.db
+**/.DS_Store
+**/Thumbs.db
