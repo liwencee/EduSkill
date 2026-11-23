@@ -4,6 +4,8 @@ import Link from 'next/link'
 import Navbar from '@/components/Navbar'
 import { useAuth } from '@/components/AuthProvider'
 import { createClient } from '@/lib/supabase/client'
+import ViewerInsights from './_components/ViewerInsights'
+import DropOffChart from './_components/DropOffChart'
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, Legend,
 } from 'recharts'
@@ -110,11 +112,10 @@ export default function CreatorDashboardPage() {
       .sort((a, b) => b.enrolled_at.localeCompare(a.enrolled_at)).slice(0, 50)
   }, [courses, current])
 
-  const viewers = useMemo(() => {
-    const scope = current ? [current] : courses
-    return scope.flatMap(c => c.recent_viewers.map(v => ({ ...v, course: c.title })))
-      .sort((a, b) => b.last_seen_at.localeCompare(a.last_seen_at)).slice(0, 50)
-  }, [courses, current])
+  const videoOptions = useMemo(() => (current ? [current] : courses).flatMap(c => c.lessons.map(l => ({
+    course_slug: c.slug, course_title: c.title, lesson_key: l.lesson_key,
+    lesson_title: l.lesson_title ?? l.lesson_key, views: l.views,
+  }))), [courses, current])
 
   const chartData = (data?.daily ?? []).map(d => ({
     day: new Date(d.day).toLocaleDateString('en-NG', { day: 'numeric', month: 'short' }),
@@ -300,7 +301,9 @@ export default function CreatorDashboardPage() {
               </div>
             </div>
 
-            <div className="grid lg:grid-cols-2 gap-6">
+            <DropOffChart videos={videoOptions} />
+            <ViewerInsights scopeSlug={current?.slug ?? null} scopeTitle={current ? current.title : 'all your courses'} />
+
               {/* Who signed up */}
               <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
                 <h2 className="font-bold text-[#1E4F8A] text-lg mb-1">Who signed up</h2>
@@ -329,45 +332,11 @@ export default function CreatorDashboardPage() {
                 )}
               </div>
 
-              {/* Recent viewers */}
-              <div className="bg-white rounded-2xl border border-blue-100 shadow-sm p-6">
-                <h2 className="font-bold text-[#1E4F8A] text-lg mb-1">Recent viewers</h2>
-                <p className="text-xs text-gray-500 mb-4">Who watched which video, how much of it, and when</p>
-                {viewers.length === 0 ? (
-                  <p className="text-sm text-gray-500 text-center py-6">No video plays recorded yet.</p>
-                ) : (
-                  <ul className="divide-y divide-blue-50">
-                    {viewers.map((v, i) => (
-                      <li key={i} className="py-3 flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-full font-bold text-sm flex items-center justify-center shrink-0 ${
-                          v.signed_in ? 'bg-orange-50 text-[#F37321]' : 'bg-blue-50 text-[#1E4F8A]'
-                        }`}>
-                          {v.signed_in ? v.name.charAt(0).toUpperCase() : '?'}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-semibold text-[#1E4F8A] truncate">{v.name}</p>
-                          <p className="text-xs text-gray-500 truncate">
-                            {v.lesson_title ?? 'Lesson'}{!current && <> · {v.course}</>} · {fmtDate(v.last_seen_at, true)}
-                          </p>
-                        </div>
-                        <div className="text-right shrink-0">
-                          <p className="text-xs font-bold text-[#1E4F8A]">{v.watched_pct ?? 0}% watched</p>
-                          <p className="text-xs text-gray-500">
-                            {v.is_completed ? <span className="text-green-700 font-semibold">Completed</span> : fmtDuration(v.watch_secs)}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
-
             <p className="text-xs text-gray-500 mt-6 flex items-start gap-1.5">
               <Info className="w-3.5 h-3.5 mt-0.5 shrink-0" />
-              Watch time counts only while a video is actually playing. A video counts as completed when the
-              learner reaches 90% of it. Guests who are not signed in appear as “Guest viewer”. Learners’
-              contact details are never shown here.
+              Watch time counts only while a video is actually playing. “% watched” and “finished” count only
+              what was actually played, so skipping ahead doesn’t count. Guests who are not signed in appear as
+              “Guest viewer”. Learners’ contact details are never shown here.
             </p>
           </>
         )}
