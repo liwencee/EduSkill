@@ -157,21 +157,6 @@ export interface TeacherProfile {
   total_students: number
 }
 
-export interface JobApplication {
-  id: string
-  job_id: string
-  applicant_id: string
-  cover_note?: string
-  status: 'pending' | 'reviewed' | 'shortlisted' | 'rejected' | 'hired'
-  applied_at: string
-  teacher_uid_snapshot?: string
-  cert_type_snapshot?: string
-  years_service_snapshot?: number
-  badge_snapshot?: boolean
-  applicant?: Profile & { teacher_profile?: TeacherProfile }
-  job?: JobListing
-}
-
 export interface CommunityPost {
   id: string
   author_id: string

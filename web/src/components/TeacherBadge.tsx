@@ -88,13 +88,3 @@ export default function TeacherBadge({
     </span>
   )
 }
-
-/** Compact dot-only badge for avatars */
-export function TeacherBadgeDot({ kycStatus, hasBadge }: { kycStatus?: string; hasBadge?: boolean }) {
-  if (!hasBadge && kycStatus !== 'approved') return null
-  return (
-    <span className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-blue-600 rounded-full border-2 border-white flex items-center justify-center">
-      <BadgeCheck className="w-2.5 h-2.5 text-white" />
-    </span>
-  )
-}
