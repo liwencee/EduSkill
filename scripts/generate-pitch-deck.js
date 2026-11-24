@@ -588,7 +588,7 @@ function txt(slide, text, x, y, w, h, opts) {
   const colW = (CW - 0.3) / 4;
   const phases = [
     { q:'Q2 2025', c:C.blue,
-      items:['Launch paid subscriptions\n(Paystack)','WhatsApp AI Lesson Bot','Android mobile app','First 1,000 paying users'] },
+      items:['Launch paid subscriptions\n(Paystack)','WhatsApp AI Lesson Bot','First 1,000 paying users'] },
     { q:'Q3 2025', c:C.amberDark,
       items:['TRCN accreditation','Video library (200+ hrs)','Corporate training vertical','10,000 users milestone'] },
     { q:'Q4 2025', c:C.green,
@@ -669,7 +669,7 @@ function txt(slide, text, x, y, w, h, opts) {
   txt(s, 'Use of Funds', ML, CY, 4.8, 0.36, { fontSize:13, bold:true });
 
   const funds = [
-    { pct:40, label:'Product & Engineering',  desc:'Mobile app · Video platform · AI fine-tuning',     c:C.blue,     bg:C.blueLight },
+    { pct:40, label:'Product & Engineering',  desc:'Video platform · AI fine-tuning',     c:C.blue,     bg:C.blueLight },
     { pct:25, label:'Sales & Marketing',       desc:'Teacher communities · School outreach · BD team',   c:C.amberDark, bg:C.amberLight },
     { pct:20, label:'Content Production',      desc:'200+ video lessons · TRCN accreditation process',   c:C.green,    bg:C.greenLight },
     { pct:10, label:'Operations',              desc:'Legal · Finance · NDPR compliance',                  c:C.purple,   bg:C.purpleLight },
