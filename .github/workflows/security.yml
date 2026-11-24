@@ -54,7 +54,8 @@ jobs:
         run: npm ci
 
       - name: Run ESLint security plugin
-        run: npx eslint src --ext .js --plugin security --rule 'security/detect-non-literal-fs-filename: error' --rule 'security/detect-object-injection: warn' --format json --output-file eslint-security-report.json || true
+        run: |
+          npx eslint src --ext .js --plugin security --rule 'security/detect-non-literal-fs-filename: error' --rule 'security/detect-object-injection: warn' --format json --output-file eslint-security-report.json || true
 
       - name: Upload SAST results
         uses: actions/upload-artifact@v4
